@@ -1,6 +1,5 @@
 package kanten.solutions;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -10,21 +9,52 @@ import net.dongliu.requests.Session;
 import java.io.IOException;
 import java.util.*;
 
+/***
+ * @author Ola Kanten
+ * @description An API-wrapper for NorgesGruppens API.
+ */
+
 public class NorgesGruppenAPI {
     private int storeID;
     private Session session;
+    private static final String BEGIN_IMAGE_URL = "https://res.cloudinary.com/norgesgruppen/image/upload/c_pad,b_transparent,f_auto,h_640,q_50,w_640/";
+    /*
+        Spar - 1210
+        Joker - 1220
+        Meny - 1300
+     */
 
     public NorgesGruppenAPI(int storeID) {
         this.storeID = storeID;
         this.session = Requests.session();
     }
 
-    public float getPrice(String ISBN) throws IOException {
-        Session getActualPrice = Requests.session();
+    public String getTitle(String ISBN) {
+        JsonObject obj = fixTheUglyJson(ISBN);
+        return obj.get("title").getAsString();
+    }
 
-        String response = getActualPrice.get("https://spar.no/").send().readToText();
+    public float getPrice(String ISBN) throws IOException {
+        JsonObject obj = fixTheUglyJson(ISBN);
+        float originalPrice = obj.get("pricePerUnitOriginal").getAsFloat();
+        float pricePerUnit = obj.get("pricePerUnit").getAsFloat();
+        if (originalPrice != pricePerUnit) {
+            System.out.println("Tilbud!!");
+        }
+        return originalPrice;
+    }
+
+    public String getImageURL(String ISBN) {
+        JsonObject obj = fixTheUglyJson(ISBN);
+        String imageURL = BEGIN_IMAGE_URL + obj.get("imageName").getAsString();
+        return imageURL;
+    }
+
+    private JsonObject fixTheUglyJson(String ISBN) {
+        Session getProperJson = Requests.session();
+        getProperJson.get("https://meny.no/").send();
         Map<String, Object> headers = new HashMap<>();
-        headers.put("x-csrf-token", getActualPrice.currentCookies().get(0).getValue());
+        headers.put("x-csrf-token", getProperJson.currentCookies().get(0).getValue());
 
         Map<String, Object> params = new HashMap<>();
         params.put("types", "products,articles");
@@ -35,16 +65,16 @@ public class NorgesGruppenAPI {
 
 
         String responseFromNG =
-                getActualPrice.get("https://platform-rest-prod.ngdata.no/api/episearch/1210/all")
-                .headers(headers)
-                .params(params)
-                .send().readToText();
+                getProperJson.get("https://platform-rest-prod.ngdata.no/api/episearch/" + this.storeID + "/all")
+                        .headers(headers)
+                        .params(params)
+                        .send().readToText();
         /*
             Tungvint måte for å se hvordan json-et er satt opp. Bra jobba NG ;-)
          */
+        System.out.println(responseFromNG);
         JsonParser parser = new JsonParser();
         JsonObject obj = parser.parse(responseFromNG).getAsJsonObject();
-        JsonObject childOfObj = (JsonObject)obj.get("products");
         String pricePerUnit = obj.get("products").toString();
         obj = parser.parse(pricePerUnit).getAsJsonObject();
         pricePerUnit = obj.get("hits").toString();
@@ -57,11 +87,9 @@ public class NorgesGruppenAPI {
         obj = parser.parse(pricePerUnit).getAsJsonObject();
         pricePerUnit = obj.get("_source").toString();
         obj = parser.parse(pricePerUnit).getAsJsonObject();
-        float pricePerUnit2 = obj.get("pricePerUnitOriginal").getAsFloat();
-        System.out.println(response + "\n");
-        System.out.println(pricePerUnit2 + "eeeee\n");
-        return pricePerUnit2;
+        return obj;
     }
+
 }
 
 
