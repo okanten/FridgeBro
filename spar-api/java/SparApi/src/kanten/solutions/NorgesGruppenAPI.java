@@ -50,6 +50,51 @@ public class NorgesGruppenAPI {
         return imageURL;
     }
 
+    public String getShoppingListGroupName(String ISBN) {
+        JsonObject obj = fixTheUglyJson(ISBN);
+        return obj.get("shoppingListGroupName").getAsString();
+    }
+
+    public String getCategoryName(String ISBN) {
+        JsonObject obj = fixTheUglyJson(ISBN);
+        return obj.get("categoryName").getAsString();
+    }
+
+    public Boolean getProductByWeightSoldAsItem(String ISBN) {
+        JsonObject obj = fixTheUglyJson(ISBN);
+        return obj.get("productByWeightSoldAsItem").getAsBoolean();
+    }
+
+    public String getBrand(String ISBN) {
+        JsonObject obj = fixTheUglyJson(ISBN);
+        return obj.get("brand").getAsString();
+    }
+
+    public Boolean getContainsAlcohol(String ISBN) {
+        JsonObject obj = fixTheUglyJson(ISBN);
+        return obj.get("containsAlcohol").getAsBoolean();
+    }
+
+    public Boolean getIsOffer(String ISBN) {
+        JsonObject obj = fixTheUglyJson(ISBN);
+        return obj.get("isOffer").getAsBoolean();
+    }
+
+    public float getWeight(String ISBN) {
+        JsonObject obj = fixTheUglyJson(ISBN);
+        return obj.get("weight").getAsFloat();
+    }
+
+    public String getCalcUnit(String ISBN) {
+        JsonObject obj = fixTheUglyJson(ISBN);
+        return obj.get("calcUnit").getAsString();
+    }
+
+    public String getCalcUnitType(String ISBN) {
+        JsonObject obj = fixTheUglyJson(ISBN);
+        return obj.get("calcUnitType").getAsString();
+    }
+
     private JsonObject fixTheUglyJson(String ISBN) {
         Session getProperJson = Requests.session();
         getProperJson.get("https://meny.no/").send();
