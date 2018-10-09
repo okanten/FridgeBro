@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 public class addActivity extends AppCompatActivity {
 
+    // eid
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
