@@ -3,11 +3,11 @@ package no.hiof.fridgebro;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class AddActivity extends AppCompatActivity {
+public class ShoppingList extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add);
+        setContentView(R.layout.activity_shopping_list);
     }
 }
