@@ -7,7 +7,7 @@
         <item
             android:id="@+id/shoppinglist"
             android:icon="@drawable/ic_shoppinglist"
-            android:title="Shopping list" />
+            android:title="@string/shopping_list" />
     </group>
 
 </menu>
