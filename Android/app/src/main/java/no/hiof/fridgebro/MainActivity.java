@@ -13,44 +13,62 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity  {
-
+//implements NavigationView.OnNavigationItemSelectedListener
     private ArrayList<String> productNames = new ArrayList<>();
     private ArrayList<String> productImages = new ArrayList<>();
-    private DrawerLayout drawer;
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mToggle;
+
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mToolbar = findViewById(R.id.nav_action);
+        setSupportActionBar(mToolbar);
+
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+        mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+        mDrawerLayout.addDrawerListener(mToggle);
+        mToggle.syncState();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         getImageBitmaps();
         setUpRecyclerView();
+    }
 
-        /*Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(mToggle.onOptionsItemSelected(item)){
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-        drawer = findViewById(R.id.drawer_layout);
+        /*
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
 
         //må byttes ut med det som skal starte når vi kjører appen(recycleviewet)
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new ShoppingListFragemnt()).commit();
-            navigationView.setCheckedItem(R.id.nav_shoppinglist);
+                    new FridgeFragment()).commit();
+            navigationView.setCheckedItem(R.id.nav_fridgelist);
         }
 
-        */
-
-
     }
-    /*
+
+
+
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
@@ -58,21 +76,25 @@ public class MainActivity extends AppCompatActivity  {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new ShoppingListFragemnt()).commit();
                 break;
+            case R.id.nav_fridgelist:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new FridgeFragment()).commit();
+                break;
         }
 
-        drawer.closeDrawer(GravityCompat.START);
+        mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
-    }
+    }*/
 
     @Override
     public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
     }
-    */
+
 
     private void getImageBitmaps(){
         productImages.add("https://i.redd.it/oir304dowbs11.jpg");
