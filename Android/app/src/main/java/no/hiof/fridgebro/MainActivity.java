@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.drawer_layout,
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new RecyclerViewFragment()).commit();
             navigationView.setCheckedItem(R.id.nav_fridgelist);
         }
@@ -79,15 +79,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // denne overriden skal være være i stedet for onOptionsItemSelected override med fragments , all koden skal være goodie
 
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-            case R.id.nav_shoppinglist:
-                getSupportFragmentManager().beginTransaction().replace(R.id.drawer_layout,
-                        new ShoppingListFragemnt()).commit();
-                break;
+    public boolean onNavigationItemSelected(@NonNull MenuItem Item) {
+        switch (Item.getItemId()) {
+
             case R.id.nav_fridgelist:
-                getSupportFragmentManager().beginTransaction().replace(R.id.drawer_layout,
-                        new FridgeFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new RecyclerViewFragment()).commit();
+                break;
+            case R.id.nav_shoppinglist:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new ShoppingListFragemnt()).commit();
                 break;
         }
 
