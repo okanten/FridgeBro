@@ -15,7 +15,7 @@ import android.view.MenuItem;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 // denne må etter appcompat for at koden skal funke med fragments:  implements NavigationView.OnNavigationItemSelectedListener
     private ArrayList<String> productNames = new ArrayList<>();
     private ArrayList<String> productImages = new ArrayList<>();
@@ -40,9 +40,21 @@ public class MainActivity extends AppCompatActivity  {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        getImageBitmaps();
-        setUpRecyclerView();
+        //getImageBitmaps();
+        //setUpRecyclerView();
+
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.drawer_layout,
+                    new RecyclerViewFragment()).commit();
+            navigationView.setCheckedItem(R.id.nav_fridgelist);
+        }
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -50,20 +62,15 @@ public class MainActivity extends AppCompatActivity  {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
 
-        /*
+
+
+
         // for at den implementerte klassen skal funke må denne inn og
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
 
         //Fragmentet som vises når appen startes, savedinstance
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new FridgeFragment()).commit();
-            navigationView.setCheckedItem(R.id.nav_fridgelist);
-        }
+
 
     }
 
@@ -75,18 +82,20 @@ public class MainActivity extends AppCompatActivity  {
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.nav_shoppinglist:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                getSupportFragmentManager().beginTransaction().replace(R.id.drawer_layout,
                         new ShoppingListFragemnt()).commit();
                 break;
             case R.id.nav_fridgelist:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                getSupportFragmentManager().beginTransaction().replace(R.id.drawer_layout,
                         new FridgeFragment()).commit();
                 break;
         }
 
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
-    }*/
+    }
+
+
 
     @Override
     public void onBackPressed() {
@@ -98,7 +107,7 @@ public class MainActivity extends AppCompatActivity  {
     }
 
 
-    private void getImageBitmaps(){
+    /*private void getImageBitmaps(){
         productImages.add("https://i.redd.it/oir304dowbs11.jpg");
         productNames.add("TEST 1");
 
@@ -172,12 +181,12 @@ public class MainActivity extends AppCompatActivity  {
 
         productImages.add("https://i.redd.it/0pidjjktjcs11.jpg");
         productNames.add("TEST 25");
-    }
+    }*/
 
-    private void setUpRecyclerView(){
+    /*private void setUpRecyclerView(){
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(productNames,productImages,this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-    }
+    }*/
 }
