@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity  {
-//implements NavigationView.OnNavigationItemSelectedListener
+// denne må etter appcompat for at koden skal funke med fragments:  implements NavigationView.OnNavigationItemSelectedListener
     private ArrayList<String> productNames = new ArrayList<>();
     private ArrayList<String> productImages = new ArrayList<>();
     private DrawerLayout mDrawerLayout;
@@ -53,11 +53,12 @@ public class MainActivity extends AppCompatActivity  {
     }
 
         /*
+        // for at den implementerte klassen skal funke må denne inn og
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        //må byttes ut med det som skal starte når vi kjører appen(recycleviewet)
+        //Fragmentet som vises når appen startes, savedinstance
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new FridgeFragment()).commit();
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity  {
 
 
 
+    // denne overriden skal være være i stedet for onOptionsItemSelected override med fragments , all koden skal være goodie
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
