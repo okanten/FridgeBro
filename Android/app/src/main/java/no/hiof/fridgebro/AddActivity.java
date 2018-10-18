@@ -1,9 +1,13 @@
 package no.hiof.fridgebro;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -30,7 +34,9 @@ public class AddActivity extends AppCompatActivity {
     private RecyclerViewFragment rcFrag;
     private ArrayList<String> productNames;
     private ArrayList<String> productImages;
+    private RecyclerViewAdapter mAdapter;
     private NorgesGruppenAPI ng = new NorgesGruppenAPI(1300);
+    private MainActivity mainActivity;
 
 
 
@@ -45,7 +51,16 @@ public class AddActivity extends AppCompatActivity {
         txtPrice = (EditText) findViewById(R.id.txtPrice);
         imgItem = (ImageView) findViewById(R.id.imgItem);
         lblProductName = (TextView) findViewById(R.id.lblProductName);
-    }
+
+        productNames = (ArrayList<String>) getIntent().getSerializableExtra("productName");
+        productImages = (ArrayList<String>) getIntent().getSerializableExtra("productImage");
+        Integer position = getIntent().getIntExtra("position", 0);
+        lblProductName.setText(productNames.get(position));
+        Glide.with(getApplicationContext())
+                .load(productImages.get(position))
+                .apply(new RequestOptions().transform(new FitCenter()))
+                .into(imgItem);
+     }
 
     public void getPriceFromNg(View view) {
         String isbn = String.valueOf(txtISBN.getText());
@@ -55,14 +70,15 @@ public class AddActivity extends AppCompatActivity {
 
     // TODO: Return metode / en måte å skille mellom shoppinglist og fridgelist.
     public void updateListOfItems(View view) {
-        //productNames = rcFrag.getProductNames();
-        //productImages = rcFrag.getProductImages();
-        //rcFrag.getProductNames().add("hurr");
-        //rcFrag.getProductImages().add(ng.getImageURL(null, ngJson));
-        //productNames.add(ng.getTitle(null, ngJson));
-        //productImages.add(ng.getImageURL(null, ngJson));
-        /*rcFrag.setProductImages(productImages);
-        rcFrag.setProductNames(productNames);*/
+        productNames.add(ng.getTitle(null, ngJson));
+        productImages.add(ng.getImageURL(null, ngJson));
+        Intent resultIntent = new Intent();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("productNames", productNames);
+        bundle.putSerializable("productImages", productImages);
+        resultIntent.putExtras(bundle);
+        setResult(Activity.RESULT_OK, resultIntent);
+        finish();
     }
 
 
