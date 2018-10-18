@@ -1,5 +1,6 @@
 package no.hiof.fridgebro;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -40,7 +41,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
         Glide.with(mContext)
                 .asBitmap()
                 .load(productImage.get(i))
@@ -52,12 +53,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             @Override
             public void onClick(View view) {
                 //onClick listener for å gå videre til detaljvisningen til et produkt
-                Intent intent = new Intent(view.getContext(), AddActivity.class);
-                /*Bundle bundle = new Bundle();
-                bundle.putSerializable("productName", rcFrag.getProductNames());
-                bundle.putSerializable("productImage", rcFrag.getProductImages());
-                intent.putExtras(bundle);*/
-                view.getContext().startActivity(intent);
+                Intent intent = new Intent(mContext, AddActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("productName", productName);
+                bundle.putSerializable("productImage", productImage);
+                bundle.putInt("position", viewHolder.getAdapterPosition());
+                intent.putExtras(bundle);
+                ((Activity) mContext).startActivityForResult(intent, 222);
+
             }
         });
     }
@@ -80,6 +83,4 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             parentLayout = itemView.findViewById(R.id.parentLayoutList);
         }
     }
-
-
 }
