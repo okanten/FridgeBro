@@ -37,6 +37,7 @@ public class AddActivity extends AppCompatActivity {
     private RecyclerViewAdapter mAdapter;
     private NorgesGruppenAPI ng = new NorgesGruppenAPI(1300);
     private MainActivity mainActivity;
+    private Integer position;
 
 
 
@@ -54,12 +55,14 @@ public class AddActivity extends AppCompatActivity {
 
         productNames = (ArrayList<String>) getIntent().getSerializableExtra("productName");
         productImages = (ArrayList<String>) getIntent().getSerializableExtra("productImage");
-        Integer position = getIntent().getIntExtra("position", 0);
-        lblProductName.setText(productNames.get(position));
-        Glide.with(getApplicationContext())
-                .load(productImages.get(position))
-                .apply(new RequestOptions().transform(new FitCenter()))
-                .into(imgItem);
+        position = getIntent().getIntExtra("position", -1);
+        if (position > -1) {
+            lblProductName.setText(productNames.get(position));
+            Glide.with(getApplicationContext())
+                    .load(productImages.get(position))
+                    .apply(new RequestOptions().transform(new FitCenter()))
+                    .into(imgItem);
+        }
      }
 
     public void getPriceFromNg(View view) {
@@ -76,6 +79,7 @@ public class AddActivity extends AppCompatActivity {
             productImages.add(ng.getImageURL(null, ngJson));
             Intent resultIntent = new Intent();
             Bundle bundle = new Bundle();
+            bundle.putInt("pos", position);
             bundle.putSerializable("productNames", productNames);
             bundle.putSerializable("productImages", productImages);
             resultIntent.putExtras(bundle);
