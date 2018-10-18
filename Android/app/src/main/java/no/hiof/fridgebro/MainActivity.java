@@ -1,5 +1,6 @@
 package no.hiof.fridgebro;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -23,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ActionBarDrawerToggle mToggle;
 
     private Toolbar mToolbar;
+    private RecyclerViewFragment recyclerViewFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +51,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         if (savedInstanceState == null) {
+            if (recyclerViewFragment == null) {
+                recyclerViewFragment = new RecyclerViewFragment();
+            }
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new RecyclerViewFragment()).commit();
+                    recyclerViewFragment).commit();
             navigationView.setCheckedItem(R.id.nav_fridgelist);
         }
     }
@@ -84,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             case R.id.nav_fridgelist:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new RecyclerViewFragment()).commit();
+                        recyclerViewFragment).commit();
                 break;
             case R.id.nav_shoppinglist:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
@@ -104,6 +110,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 222) {
+            if (resultCode == RESULT_OK) {
+                productImages = (ArrayList<String>) data.getSerializableExtra("productImages");
+                productNames = (ArrayList<String>) data.getSerializableExtra("productNames");
+                System.out.println(productImages.get(productImages.size() - 1));
+                ArrayList<String> test = recyclerViewFragment.getProductNames();
+                System.out.println(test.get(test.size() - 1));
+                recyclerViewFragment.updateAdapter(productImages, productNames);
+            }
         }
     }
 
