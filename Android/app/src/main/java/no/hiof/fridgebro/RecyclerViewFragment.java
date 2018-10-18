@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -65,6 +67,7 @@ public class RecyclerViewFragment extends Fragment {
     }
 
     private void getImageBitmaps(){
+
         productImages.add("https://i.redd.it/oir304dowbs11.jpg");
         productNames.add("TEST 1");
 
@@ -95,7 +98,6 @@ public class RecyclerViewFragment extends Fragment {
 
         productImages.add("https://i.redd.it/0pidjjktjcs11.jpg");
         productNames.add("TEST 10");*/
-
 
     }
 
