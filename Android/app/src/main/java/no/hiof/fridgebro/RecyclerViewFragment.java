@@ -142,6 +142,7 @@ public class RecyclerViewFragment extends Fragment {
         return adapter;
     }
 
+    //TODO: Trenger muligens fix?
     public void updateItem(Integer position, String newImg, String newName) {
         this.productImages.set(position, newImg);
         this.productNames.set(position, newName);
@@ -149,6 +150,7 @@ public class RecyclerViewFragment extends Fragment {
         adapter.notifyItemChanged(position);
     }
 
+    //TODO: Trenger muligens fix?
     public void deleteItem(Integer position) {
         this.productNames.remove(position);
         this.productImages.remove(position);
