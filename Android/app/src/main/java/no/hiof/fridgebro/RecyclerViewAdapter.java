@@ -1,6 +1,8 @@
 package no.hiof.fridgebro;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +23,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ArrayList<String> productName = new ArrayList<>();
     private ArrayList<String> productImage = new ArrayList<>();
     private Context mContext;
+    private RecyclerViewFragment rcFrag;
 
     public RecyclerViewAdapter(ArrayList<String> productName, ArrayList<String> productImage, Context mContext) {
         this.productName = productName;
@@ -49,6 +52,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             @Override
             public void onClick(View view) {
                 //onClick listener for å gå videre til detaljvisningen til et produkt
+                Intent intent = new Intent(view.getContext(), AddActivity.class);
+                /*Bundle bundle = new Bundle();
+                bundle.putSerializable("productName", rcFrag.getProductNames());
+                bundle.putSerializable("productImage", rcFrag.getProductImages());
+                intent.putExtras(bundle);*/
+                view.getContext().startActivity(intent);
             }
         });
     }
