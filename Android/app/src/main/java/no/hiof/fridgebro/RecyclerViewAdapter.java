@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,6 +33,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.mContext = mContext;
     }
 
+    public RecyclerViewAdapter(ArrayList<String> productName, ArrayList<String> productImage, Context mContext, RecyclerViewFragment recyclerViewFragment) {
+        this.productName = productName;
+        this.productImage = productImage;
+        this.mContext = mContext;
+        this.rcFrag = recyclerViewFragment;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -49,6 +57,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         viewHolder.text.setText(productName.get(i));
 
+        ImageButton deleteButton = (ImageButton) viewHolder.parentLayout.getViewById(R.id.deleteButton);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Integer pos = viewHolder.getAdapterPosition();
+                rcFrag.deleteItem(pos);
+            }
+        });
+
+
         viewHolder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -60,7 +77,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 bundle.putInt("position", viewHolder.getAdapterPosition());
                 intent.putExtras(bundle);
                 ((Activity) mContext).startActivityForResult(intent, 100);
-
             }
         });
     }
