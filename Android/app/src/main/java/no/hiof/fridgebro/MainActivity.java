@@ -72,18 +72,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
-
-        // for at den implementerte klassen skal funke må denne inn og
-
-
-        //Fragmentet som vises når appen startes, savedinstance
-
-
     }
 
 
 
-    // denne overriden skal være være i stedet for onOptionsItemSelected override med fragments , all koden skal være goodie
+
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem Item) {
