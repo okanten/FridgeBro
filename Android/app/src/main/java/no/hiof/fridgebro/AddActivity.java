@@ -15,16 +15,21 @@ import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.JsonObject;
 
+import java.util.ArrayList;
+
 import no.hiof.olaka.*;
 
 
 public class AddActivity extends AppCompatActivity {
 
-    private TextView lblDate;
     private EditText txtISBN;
     private EditText txtPrice;
     private ImageView imgItem;
+    private TextView lblProductName;
     private JsonObject ngJson;
+    private RecyclerViewFragment rcFrag;
+    private NorgesGruppenAPI ng = new NorgesGruppenAPI(1300);
+
 
 
     @Override
@@ -34,6 +39,7 @@ public class AddActivity extends AppCompatActivity {
         txtISBN = (EditText) findViewById(R.id.txtISBN);
         txtPrice = (EditText) findViewById(R.id.txtPrice);
         imgItem = (ImageView) findViewById(R.id.imgItem);
+        lblProductName = (TextView) findViewById(R.id.lblProductName);
 
     }
 
@@ -43,9 +49,20 @@ public class AddActivity extends AppCompatActivity {
         new asyncLoadJson().execute(isbn);
     }
 
+    // TODO: Return metode / en måte å skille mellom shoppinglist og fridgelist.
+    public void updateListOfItems(View view) {
+        ArrayList<String> productNames = rcFrag.getProductNames();
+        ArrayList<String> productImages = rcFrag.getProductImages();
+        productNames.add((String) lblProductName.getText());
+        productImages.add(ng.getImageURL(null, ngJson));
+        rcFrag.setProductImages(productImages);
+        rcFrag.setProductNames(productNames);
+    }
+
+
+    // TODO: Error handling - Appen kræsjer om den returnerer null.
     public class asyncLoadJson extends AsyncTask<String, Integer, JsonObject> {
         private JsonObject rJson;
-        private NorgesGruppenAPI ng = new NorgesGruppenAPI(1300);
 
         @Override
         protected JsonObject doInBackground(String... strings) {
@@ -60,6 +77,7 @@ public class AddActivity extends AppCompatActivity {
 
         protected void onPostExecute(JsonObject json) {
             ngJson = json;
+            lblProductName.setText(ng.getTitle(null, json));
             txtPrice.setText(ng.getPrice(null, json));
             String imgUrl = ng.getImageURL(null, json);
             Glide.with(getApplicationContext())
