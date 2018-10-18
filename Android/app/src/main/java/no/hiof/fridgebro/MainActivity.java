@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -102,8 +103,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-
-
     @Override
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -115,13 +114,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 222) {
+        if (requestCode == 200) {
             if (resultCode == RESULT_OK) {
                 productImages = (ArrayList<String>) data.getSerializableExtra("productImages");
                 productNames = (ArrayList<String>) data.getSerializableExtra("productNames");
                 System.out.println(productImages.get(productImages.size() - 1));
                 ArrayList<String> test = recyclerViewFragment.getProductNames();
                 System.out.println(test.get(test.size() - 1));
+                recyclerViewFragment.updateAdapter(productImages, productNames);
+            }
+        }
+        if (requestCode == 100) {
+            if (resultCode == RESULT_OK) {
+                productImages = (ArrayList<String>) data.getSerializableExtra("productImages");
+                productNames = (ArrayList<String>) data.getSerializableExtra("productNames");
+                Integer position = data.getIntExtra("pos", 0);
+                // TODO: Gjøre dette ordentlig.
+                productImages.set(position, productImages.get(productImages.size() - 1));
+                productNames.set(position, productNames.get(productNames.size() - 1));
+                productImages.remove(productImages.size() - 1);
+                productNames.remove(productNames.size() - 1);
                 recyclerViewFragment.updateAdapter(productImages, productNames);
             }
         }
