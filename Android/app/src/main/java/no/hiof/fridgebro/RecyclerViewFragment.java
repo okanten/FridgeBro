@@ -1,6 +1,7 @@
 package no.hiof.fridgebro;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
 
@@ -39,9 +43,23 @@ public class RecyclerViewFragment extends Fragment {
         adapter = new RecyclerViewAdapter(productNames,productImages,getContext());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        final FloatingActionsMenu mainFab = v.findViewById(R.id.myFab);
+        FloatingActionButton fabManual = v.findViewById(R.id.fabManual);
+        fabManual.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                mainFab.collapseImmediately();
+                Intent intent = new Intent(getContext(), AddActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("productName", productNames);
+                bundle.putSerializable("productImage", productImages);
+                intent.putExtras(bundle);
+                ((Activity) getContext()).startActivityForResult(intent, 200);
+            }
+        });
+
         return v;
     }
-
 
     private void getImageBitmaps(){
         productImages.add("https://i.redd.it/oir304dowbs11.jpg");
