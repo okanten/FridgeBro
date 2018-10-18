@@ -1,27 +1,22 @@
 package no.hiof.fridgebro;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.FitCenter;
-import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.gson.JsonObject;
 
 import no.hiof.olaka.*;
 
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.IOException;
 
 public class AddActivity extends AppCompatActivity {
 
@@ -29,8 +24,8 @@ public class AddActivity extends AppCompatActivity {
     private EditText txtISBN;
     private EditText txtPrice;
     private ImageView imgItem;
+    private JsonObject ngJson;
 
-    //private NorgesGruppenAPI ng = new NorgesGruppenAPI(1300);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,27 +38,35 @@ public class AddActivity extends AppCompatActivity {
     }
 
     public void getPriceFromNg(View view) {
-        final String[] imgUrl = {null};
-        new Thread() {
-            public void run() {
-                String isbn = String.valueOf(txtISBN.getText());
-                NorgesGruppenAPI ng = new NorgesGruppenAPI(1300);
-                System.out.println("################");
-                System.out.println(ng.getTitle("2000301700003"));
-                System.out.println(ng.getImageURL(isbn));
-                txtPrice.setText(ng.getPrice(isbn));
-                imgUrl[0] = ng.getImageURL(isbn);
-            }
-        }.start();
-
-        // TODO: Finne en bedre metode å vente på at bildet er lastet ferdig (strengen). Atm henger hele GUI'et.
-        while (imgUrl[0] == null);
-
-        Glide.with(getApplicationContext())
-                .load(imgUrl[0])
-                .apply(new RequestOptions().transform(new FitCenter()))
-                .into(imgItem);
+        String isbn = String.valueOf(txtISBN.getText());
+        //String isbn = String.valueOf(txtISBN.getText());
+        new asyncLoadJson().execute(isbn);
     }
 
+    public class asyncLoadJson extends AsyncTask<String, Integer, JsonObject> {
+        private JsonObject rJson;
+        private NorgesGruppenAPI ng = new NorgesGruppenAPI(1300);
 
+        @Override
+        protected JsonObject doInBackground(String... strings) {
+            rJson = new JsonObject();
+            /* Klar over at det blir overskrevet om flere blir requestet */
+            //for (String isbn: strings) {
+            rJson = ng.getJson(strings[0]);
+            System.out.println(rJson);
+            //}
+            return rJson;
+        }
+
+        protected void onPostExecute(JsonObject json) {
+            ngJson = json;
+            txtPrice.setText(ng.getPrice(null, json));
+            String imgUrl = ng.getImageURL(null, json);
+            Glide.with(getApplicationContext())
+                    .load(imgUrl)
+                    .apply(new RequestOptions().transform(new FitCenter()))
+                    .into(imgItem);
+        }
+
+    }
 }
