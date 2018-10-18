@@ -1,6 +1,7 @@
 package no.hiof.fridgebro;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,11 +12,15 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
+import static android.app.Activity.RESULT_OK;
+
 
 public class RecyclerViewFragment extends Fragment {
 
     private ArrayList<String> productNames = new ArrayList<>();
     private ArrayList<String> productImages = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private RecyclerViewAdapter adapter;
     View v;
 
     public RecyclerViewFragment() {
@@ -26,14 +31,15 @@ public class RecyclerViewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        getImageBitmaps();
+        if (productNames.isEmpty() && productImages.isEmpty()) {
+            getImageBitmaps();
+        }
         View v =  inflater.inflate(R.layout.fragment_recycler_view, container, false);
-        RecyclerView recyclerView = v.findViewById(R.id.recyclerView);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(productNames,productImages,getContext());
+        recyclerView = v.findViewById(R.id.recyclerView);
+        adapter = new RecyclerViewAdapter(productNames,productImages,getContext());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         return v;
-
     }
 
 
@@ -114,20 +120,25 @@ public class RecyclerViewFragment extends Fragment {
         productNames.add("TEST 25");
     }
 
-    public ArrayList<String> getProductNames() {
-        return productNames;
+    public RecyclerViewAdapter getAdapter() {
+        return adapter;
     }
 
-    public void setProductNames(ArrayList<String> productNames) {
-        this.productNames = productNames;
+    public void updateAdapter(ArrayList<String> productImages, ArrayList<String> productNames) {
+        this.productNames.clear();
+        this.productNames.addAll(productNames);
+        this.productImages.clear();
+        this.productImages.addAll(productImages);
+        adapter.notifyDataSetChanged();
+    }
+
+    public ArrayList<String> getProductNames() {
+        return productNames;
     }
 
     public ArrayList<String> getProductImages() {
         return productImages;
     }
 
-    public void setProductImages(ArrayList<String> productImages) {
-        this.productImages = productImages;
-    }
 
 }
