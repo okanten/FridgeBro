@@ -30,17 +30,24 @@
         app:layout_constraintHorizontal_bias="0.972"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/recyclerView"
-        app:layout_constraintVertical_bias="0.963">
+        app:layout_constraintVertical_bias="0.963"
+        app:fab_labelStyle="@style/custom_fab">
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_action1"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            app:fab_icon="@drawable/fab3"
+            app:fab_size="mini"
+            app:fab_title="legg til med scanner"/>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_action2"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            app:fab_icon="@drawable/fab3"
+            app:fab_size="mini"
+            app:fab_title="legg til manuelt"/>
 
         <!--<android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
