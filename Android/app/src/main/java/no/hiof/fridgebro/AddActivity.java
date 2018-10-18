@@ -69,16 +69,20 @@ public class AddActivity extends AppCompatActivity {
     }
 
     // TODO: Return metode / en måte å skille mellom shoppinglist og fridgelist.
+    // TODO: Vurdere alternativer til ngJson != null
     public void updateListOfItems(View view) {
-        productNames.add(ng.getTitle(null, ngJson));
-        productImages.add(ng.getImageURL(null, ngJson));
-        Intent resultIntent = new Intent();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("productNames", productNames);
-        bundle.putSerializable("productImages", productImages);
-        resultIntent.putExtras(bundle);
-        setResult(Activity.RESULT_OK, resultIntent);
+        if (ngJson != null) {
+            productNames.add(ng.getTitle(null, ngJson));
+            productImages.add(ng.getImageURL(null, ngJson));
+            Intent resultIntent = new Intent();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("productNames", productNames);
+            bundle.putSerializable("productImages", productImages);
+            resultIntent.putExtras(bundle);
+            setResult(Activity.RESULT_OK, resultIntent);
+        }
         finish();
+
     }
 
 
