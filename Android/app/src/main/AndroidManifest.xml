@@ -22,7 +22,10 @@
         </activity>
         <activity android:name=".SettingsActivity" />
         <activity android:name=".ShoppingList" />
-        <activity android:name=".AddActivity"/>
+        <activity
+            android:name=".AddActivity"
+            android:label="@string/add_activity_title"
+            android:parentActivityName=".MainActivity"/>
     </application>
 
 </manifest>
