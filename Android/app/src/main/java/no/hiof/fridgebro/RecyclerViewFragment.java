@@ -79,7 +79,7 @@ public class RecyclerViewFragment extends Fragment {
 
         productImages.add("https://i.redd.it/0pidjjktjcs11.jpg");
         productNames.add("TEST 5");
-
+ /*
         productImages.add("https://i.redd.it/oir304dowbs11.jpg");
         productNames.add("TEST 6");
 
@@ -92,8 +92,9 @@ public class RecyclerViewFragment extends Fragment {
         productImages.add("https://i.redd.it/mz978u71ncs11.jpg");
         productNames.add("TEST 9");
 
+
         productImages.add("https://i.redd.it/0pidjjktjcs11.jpg");
-        productNames.add("TEST 10");
+        productNames.add("TEST 10");*/
 
 
     }
@@ -114,6 +115,10 @@ public class RecyclerViewFragment extends Fragment {
     public void deleteItem(Integer position) {
         this.productNames.remove(position);
         this.productImages.remove(position);
+        // TODO: Finne ut hvorfor i helvete dette ikke funker uten å slette siste element også :-))) - Virker som det spawnes et nytt (dupe) element etter det siste
+        this.productNames.remove(this.productNames.size() - 1);
+        this.productImages.remove(this.productImages.size() - 1);
+
         adapter.notifyItemRemoved(position);
     }
 
