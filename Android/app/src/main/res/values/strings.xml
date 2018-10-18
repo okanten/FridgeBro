@@ -7,5 +7,6 @@
     <string name="productimage">productimage</string>
     <string name="removeitem">removeitem</string>
     <string name="fridge">Fridge</string>
+    <string name="add_activity_title">Legg til ny vare</string>
     
 </resources>
