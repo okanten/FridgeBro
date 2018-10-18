@@ -105,15 +105,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 200) {
             if (resultCode == RESULT_OK) {
                 productImages = (ArrayList<String>) data.getSerializableExtra("productImages");
                 productNames = (ArrayList<String>) data.getSerializableExtra("productNames");
-                System.out.println(productImages.get(productImages.size() - 1));
                 ArrayList<String> test = recyclerViewFragment.getProductNames();
-                System.out.println(test.get(test.size() - 1));
                 recyclerViewFragment.updateAdapter(productImages, productNames);
             }
         }
