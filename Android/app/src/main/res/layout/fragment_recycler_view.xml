@@ -46,7 +46,6 @@
             android:id="@+id/fabManual"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="openManualAdd"
             app:fab_icon="@drawable/fab3"
             app:fab_size="mini"
             app:fab_title="Legg til manuelt"/>
