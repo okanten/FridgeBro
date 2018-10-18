@@ -17,6 +17,7 @@
     </android.support.v7.widget.RecyclerView>
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/myFab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -34,20 +35,21 @@
         app:fab_labelStyle="@style/custom_fab">
 
         <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_action1"
+            android:id="@+id/fabScanner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:fab_icon="@drawable/fab3"
             app:fab_size="mini"
-            app:fab_title="legg til med scanner"/>
+            app:fab_title="Legg til med scanner"/>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_action2"
+            android:id="@+id/fabManual"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="openManualAdd"
             app:fab_icon="@drawable/fab3"
             app:fab_size="mini"
-            app:fab_title="legg til manuelt"/>
+            app:fab_title="Legg til manuelt"/>
 
         <!--<android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
