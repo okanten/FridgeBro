@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -42,7 +43,7 @@ public class RecyclerViewFragment extends Fragment {
 
         View v =  inflater.inflate(R.layout.fragment_recycler_view, container, false);
         recyclerView = v.findViewById(R.id.recyclerView);
-        adapter = new RecyclerViewAdapter(productNames,productImages,getContext());
+        adapter = new RecyclerViewAdapter(productNames, productImages, getContext(), this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -113,7 +114,7 @@ public class RecyclerViewFragment extends Fragment {
     public void deleteItem(Integer position) {
         this.productNames.remove(position);
         this.productImages.remove(position);
-        adapter.notifyDataSetChanged();
+        adapter.notifyItemRemoved(position);
     }
 
     public void updateAdapter(ArrayList<String> productImages, ArrayList<String> productNames) {
