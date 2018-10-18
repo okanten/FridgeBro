@@ -59,7 +59,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 bundle.putSerializable("productImage", productImage);
                 bundle.putInt("position", viewHolder.getAdapterPosition());
                 intent.putExtras(bundle);
-                ((Activity) mContext).startActivityForResult(intent, 222);
+                ((Activity) mContext).startActivityForResult(intent, 100);
 
             }
         });
