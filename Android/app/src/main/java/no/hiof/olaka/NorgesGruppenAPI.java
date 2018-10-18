@@ -1,5 +1,7 @@
 package no.hiof.olaka;
 
+import android.support.annotation.Nullable;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -29,13 +31,17 @@ public class NorgesGruppenAPI {
         this.session = Requests.session();
     }
 
-    public String getTitle(String ISBN) {
-        JsonObject obj = fixTheUglyJson(ISBN);
+    public String getTitle(@Nullable String ISBN, @Nullable JsonObject obj) {
+        if (obj == null) {
+            obj = fixTheUglyJson(ISBN);
+        }
         return obj.get("title").getAsString();
     }
 
-    public String getPrice(String ISBN) {
-        JsonObject obj = fixTheUglyJson(ISBN);
+    public String getPrice(@Nullable String ISBN, @Nullable JsonObject obj) {
+        if (obj == null) {
+            obj = fixTheUglyJson(ISBN);
+        }
         String originalPrice = obj.get("pricePerUnitOriginal").getAsString();
         String pricePerUnit = obj.get("pricePerUnit").getAsString();
         if (originalPrice != pricePerUnit) {
@@ -44,54 +50,74 @@ public class NorgesGruppenAPI {
         return originalPrice;
     }
 
-    public String getImageURL(String ISBN) {
-        JsonObject obj = fixTheUglyJson(ISBN);
+    public String getImageURL(@Nullable String ISBN, @Nullable JsonObject obj) {
+        if (obj == null) {
+            obj = fixTheUglyJson(ISBN);
+        }
         String imageURL = BEGIN_IMAGE_URL + obj.get("imageName").getAsString();
         return imageURL;
     }
 
-    public String getShoppingListGroupName(String ISBN) {
-        JsonObject obj = fixTheUglyJson(ISBN);
+    public String getShoppingListGroupName(@Nullable String ISBN, @Nullable JsonObject obj) {
+        if (obj == null) {
+            obj = fixTheUglyJson(ISBN);
+        }
         return obj.get("shoppingListGroupName").getAsString();
     }
 
-    public String getCategoryName(String ISBN) {
-        JsonObject obj = fixTheUglyJson(ISBN);
+    public String getCategoryName(@Nullable String ISBN, @Nullable JsonObject obj) {
+        if (obj == null) {
+            obj = fixTheUglyJson(ISBN);
+        }
         return obj.get("categoryName").getAsString();
     }
 
-    public Boolean getProductByWeightSoldAsItem(String ISBN) {
-        JsonObject obj = fixTheUglyJson(ISBN);
+    public Boolean getProductByWeightSoldAsItem(@Nullable String ISBN, @Nullable JsonObject obj) {
+        if (obj == null) {
+            obj = fixTheUglyJson(ISBN);
+        }
         return obj.get("productByWeightSoldAsItem").getAsBoolean();
     }
 
-    public String getBrand(String ISBN) {
-        JsonObject obj = fixTheUglyJson(ISBN);
+    public String getBrand(@Nullable String ISBN, @Nullable JsonObject obj) {
+        if (obj == null) {
+            obj = fixTheUglyJson(ISBN);
+        }
         return obj.get("brand").getAsString();
     }
 
-    public Boolean getContainsAlcohol(String ISBN) {
-        JsonObject obj = fixTheUglyJson(ISBN);
+    public Boolean getContainsAlcohol(@Nullable String ISBN, @Nullable JsonObject obj) {
+        if (obj == null) {
+            obj = fixTheUglyJson(ISBN);
+        }
         return obj.get("containsAlcohol").getAsBoolean();
     }
 
-    public Boolean getIsOffer(String ISBN) {
-        JsonObject obj = fixTheUglyJson(ISBN);
+    public Boolean getIsOffer(@Nullable String ISBN, @Nullable JsonObject obj) {
+        if (obj == null) {
+            obj = fixTheUglyJson(ISBN);
+        }
         return obj.get("isOffer").getAsBoolean();
     }
 
-    public float getWeight(String ISBN) {
-        JsonObject obj = fixTheUglyJson(ISBN);
+    public float getWeight(@Nullable String ISBN, @Nullable JsonObject obj) {
+        if (obj == null) {
+            obj = fixTheUglyJson(ISBN);
+        }
         return obj.get("weight").getAsFloat();
     }
 
-    public String getCalcUnit(String ISBN) {
-        JsonObject obj = fixTheUglyJson(ISBN);
+    public String getCalcUnit(@Nullable String ISBN, @Nullable JsonObject obj) {
+        if (obj == null) {
+            obj = fixTheUglyJson(ISBN);
+        }
         return obj.get("calcUnit").getAsString();
     }
 
-    public String getCalcUnitType(String ISBN) {
-        JsonObject obj = fixTheUglyJson(ISBN);
+    public String getCalcUnitType(@Nullable String ISBN, @Nullable JsonObject obj) {
+        if (obj == null) {
+            obj = fixTheUglyJson(ISBN);
+        }
         return obj.get("calcUnitType").getAsString();
     }
 
@@ -100,7 +126,8 @@ public class NorgesGruppenAPI {
         return obj;
     }
 
-    private JsonObject fixTheUglyJson(String ISBN) {
+
+    private JsonObject fixTheUglyJson(@Nullable String ISBN) {
         Session getProperJson = Requests.session();
         getProperJson.get("https://meny.no/").send();
         Map<String, Object> headers = new HashMap<>();
@@ -119,9 +146,7 @@ public class NorgesGruppenAPI {
                         .headers(headers)
                         .params(params)
                         .send().readToText();
-        /*
-            Tungvint måte for å se hvordan json-et er satt opp. Bra jobba NG ;-)
-         */
+
         System.out.println(responseFromNG);
         JsonParser parser = new JsonParser();
         JsonObject obj = parser.parse(responseFromNG).getAsJsonObject();
