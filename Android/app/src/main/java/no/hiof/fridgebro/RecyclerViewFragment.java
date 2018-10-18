@@ -142,6 +142,19 @@ public class RecyclerViewFragment extends Fragment {
         return adapter;
     }
 
+    public void updateItem(Integer position, String newImg, String newName) {
+        this.productImages.set(position, newImg);
+        this.productNames.set(position, newName);
+        System.out.println(this.productNames.get(position));
+        adapter.notifyItemChanged(position);
+    }
+
+    public void deleteItem(Integer position) {
+        this.productNames.remove(position);
+        this.productImages.remove(position);
+        adapter.notifyDataSetChanged();
+    }
+
     public void updateAdapter(ArrayList<String> productImages, ArrayList<String> productNames) {
         this.productNames.clear();
         this.productNames.addAll(productNames);
