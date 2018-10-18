@@ -113,5 +113,20 @@ public class RecyclerViewFragment extends Fragment {
         productNames.add("TEST 25");
     }
 
+    public ArrayList<String> getProductNames() {
+        return productNames;
+    }
+
+    public void setProductNames(ArrayList<String> productNames) {
+        this.productNames = productNames;
+    }
+
+    public ArrayList<String> getProductImages() {
+        return productImages;
+    }
+
+    public void setProductImages(ArrayList<String> productImages) {
+        this.productImages = productImages;
+    }
 
 }
