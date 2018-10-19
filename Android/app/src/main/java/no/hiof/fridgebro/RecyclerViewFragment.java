@@ -82,7 +82,7 @@ public class RecyclerViewFragment extends Fragment {
 
         productImages.add("https://i.redd.it/0pidjjktjcs11.jpg");
         productNames.add("TEST 5");
- /*
+
         productImages.add("https://i.redd.it/oir304dowbs11.jpg");
         productNames.add("TEST 6");
 
@@ -97,7 +97,7 @@ public class RecyclerViewFragment extends Fragment {
 
 
         productImages.add("https://i.redd.it/0pidjjktjcs11.jpg");
-        productNames.add("TEST 10");*/
+        productNames.add("TEST 10");
 
     }
 
