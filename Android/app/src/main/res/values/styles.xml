@@ -16,7 +16,7 @@
 
     <style name="custom_fab">
         <item name="android:background">@drawable/fab_label_background</item>
-        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:textColor">@color/colorAccent</item>
     </style>
 
 
