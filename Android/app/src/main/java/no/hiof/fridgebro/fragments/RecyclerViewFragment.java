@@ -15,16 +15,18 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import no.hiof.fridgebro.R;
 import no.hiof.fridgebro.adapters.RecyclerViewAdapter;
 import no.hiof.fridgebro.activities.AddActivity;
+import no.hiof.fridgebro.models.Item;
 
 
 public class RecyclerViewFragment extends Fragment {
 
-    private ArrayList<String> productNames = new ArrayList<>();
-    private ArrayList<String> productImages = new ArrayList<>();
+
+    private ArrayList<Item> productList = new ArrayList<>();
     private RecyclerView recyclerView;
     private RecyclerViewAdapter adapter;
 
@@ -37,13 +39,13 @@ public class RecyclerViewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        if (productNames.isEmpty() && productImages.isEmpty()) {
+        if (productList.isEmpty()) {
             getImageBitmaps();
         }
 
         View v =  inflater.inflate(R.layout.fragment_recycler_view, container, false);
         recyclerView = v.findViewById(R.id.recyclerView);
-        adapter = new RecyclerViewAdapter(productNames, productImages, getContext(), this);
+        adapter = new RecyclerViewAdapter(productList, getContext(), this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -54,10 +56,10 @@ public class RecyclerViewFragment extends Fragment {
                 mainFab.collapseImmediately();
                 Intent intent = new Intent(getContext(), AddActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("productName", productNames);
-                bundle.putSerializable("productImage", productImages);
+                bundle.putParcelableArrayList("productList", productList);
+                //bundle.putSerializable("productList", productList);
                 intent.putExtras(bundle);
-                ((Activity) getContext()).startActivityForResult(intent, 200);
+                ((Activity) Objects.requireNonNull(getContext())).startActivityForResult(intent, 200);
             }
         });
 
@@ -65,38 +67,14 @@ public class RecyclerViewFragment extends Fragment {
     }
 
     private void getImageBitmaps(){
-
-        productImages.add("https://i.redd.it/oir304dowbs11.jpg");
-        productNames.add("TEST 1");
-
-        productImages.add("https://i.redd.it/87uk9o66ges11.jpg");
-        productNames.add("TEST 2");
-
-        productImages.add("https://i.imgur.com/KQCevT6.jpg");
-        productNames.add("TEST 3");
-
-        productImages.add("https://i.redd.it/mz978u71ncs11.jpg");
-        productNames.add("TEST 4");
-
-        productImages.add("https://i.redd.it/0pidjjktjcs11.jpg");
-        productNames.add("TEST 5");
-
-        productImages.add("https://i.redd.it/oir304dowbs11.jpg");
-        productNames.add("TEST 6");
-
-        productImages.add("https://i.redd.it/87uk9o66ges11.jpg");
-        productNames.add("TEST 7");
-
-        productImages.add("https://i.imgur.com/KQCevT6.jpg");
-        productNames.add("TEST 8");
-
-        productImages.add("https://i.redd.it/mz978u71ncs11.jpg");
-        productNames.add("TEST 9");
-
-
-        productImages.add("https://i.redd.it/0pidjjktjcs11.jpg");
-        productNames.add("TEST 10");
-
+        productList.add(new Item("Test", "Test 1", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "03/03/2019"));
+        productList.add(new Item("Test", "Test 2", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "03/03/2019"));
+        productList.add(new Item("Test", "Test 3", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "03/03/2019"));
+        productList.add(new Item("Test", "Test 4", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "03/03/2019"));
+        productList.add(new Item("Test", "Test 5", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "03/03/2019"));
+        productList.add(new Item("Test", "Test 6", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "03/03/2019"));
+        productList.add(new Item("Test", "Test 7", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "03/03/2019"));
+        productList.add(new Item("Test", "Test 8", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "03/03/2019"));
     }
 
     public RecyclerViewAdapter getAdapter() {
@@ -105,34 +83,30 @@ public class RecyclerViewFragment extends Fragment {
 
     //TODO: Trenger muligens fix?
     public void updateItem(int position, String newImg, String newName) {
-        this.productImages.set(position, newImg);
-        this.productNames.set(position, newName);
-        System.out.println(this.productNames.get(position));
+        //this.productList.set(position, newImg);
+        //this.productNames.set(position, newName);
+        System.out.println(this.productList.get(position));
         adapter.notifyItemChanged(position);
     }
 
     //TODO: Trenger muligens fix?
     public void deleteItem(int position) {
-        this.productNames.remove(position);
-        this.productImages.remove(position);
+        this.productList.remove(position);
+        //this.productImages.remove(position);
         adapter.notifyItemRemoved(position);
     }
 
-    public void updateAdapter(ArrayList<String> productImages, ArrayList<String> productNames) {
-        this.productNames.clear();
-        this.productNames.addAll(productNames);
-        this.productImages.clear();
-        this.productImages.addAll(productImages);
+    public void updateAdapter(ArrayList<Item> productList) {
+        this.productList.clear();
+        this.productList.addAll(productList);
+
         adapter.notifyDataSetChanged();
     }
 
-    public ArrayList<String> getProductNames() {
-        return productNames;
+    public ArrayList<Item> getProductList() {
+        return productList;
     }
 
-    public ArrayList<String> getProductImages() {
-        return productImages;
-    }
 
 
 }
