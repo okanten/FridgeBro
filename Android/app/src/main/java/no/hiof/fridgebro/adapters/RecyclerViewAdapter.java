@@ -21,24 +21,25 @@ import java.util.ArrayList;
 import no.hiof.fridgebro.R;
 import no.hiof.fridgebro.activities.AddActivity;
 import no.hiof.fridgebro.fragments.RecyclerViewFragment;
+import no.hiof.fridgebro.models.Item;
 
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
-    private ArrayList<String> productName = new ArrayList<>();
-    private ArrayList<String> productImage = new ArrayList<>();
+    private ArrayList<Item> productList = new ArrayList<>();
+    private ArrayList<Item> shoppingListProducts = new ArrayList<>();
     private Context mContext;
     private RecyclerViewFragment rcFrag;
 
-    public RecyclerViewAdapter(ArrayList<String> productName, ArrayList<String> productImage, Context mContext) {
-        this.productName = productName;
-        this.productImage = productImage;
+    public RecyclerViewAdapter(ArrayList<Item> productList, Context mContext) {
+        this.productList = productList;
+        this.shoppingListProducts = shoppingListProducts;
         this.mContext = mContext;
     }
 
-    public RecyclerViewAdapter(ArrayList<String> productName, ArrayList<String> productImage, Context mContext, RecyclerViewFragment recyclerViewFragment) {
-        this.productName = productName;
-        this.productImage = productImage;
+    public RecyclerViewAdapter(ArrayList<Item> productList, Context mContext, RecyclerViewFragment recyclerViewFragment) {
+        this.productList = productList;
+        this.shoppingListProducts = shoppingListProducts;
         this.mContext = mContext;
         this.rcFrag = recyclerViewFragment;
     }
@@ -55,10 +56,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
         Glide.with(mContext)
                 .asBitmap()
-                .load(productImage.get(i))
+                .load(productList.get(i).getImageUrl())
                 .into(viewHolder.image);
 
-        viewHolder.text.setText(productName.get(i));
+        viewHolder.text.setText(productList.get(i).getItemName());
 
         ImageButton deleteButton = (ImageButton) viewHolder.parentLayout.getViewById(R.id.deleteButton);
         deleteButton.setOnClickListener(new View.OnClickListener() {
@@ -75,8 +76,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 //onClick listener for å gå videre til detaljvisningen til et produkt
                 Intent intent = new Intent(mContext, AddActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("productName", productName);
-                bundle.putSerializable("productImage", productImage);
+                bundle.putParcelableArrayList("productList", productList);
                 bundle.putInt("position", viewHolder.getAdapterPosition());
                 intent.putExtras(bundle);
                 ((Activity) mContext).startActivityForResult(intent, 100);
@@ -88,7 +88,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public int getItemCount() {
-        return productName.size();
+        return productList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
