@@ -42,8 +42,8 @@ public class NorgesGruppenAPI {
         if (obj == null) {
             obj = fixTheUglyJson(ISBN);
         }
-        String originalPrice = obj.get("pricePerUnitOriginal").getAsString();
-        String pricePerUnit = obj.get("pricePerUnit").getAsString();
+        String originalPrice = obj.get("pricePerUnitOriginal").getAsString().replace(".", ",");
+        String pricePerUnit = obj.get("pricePerUnit").getAsString().replace(".", ",");
         if (originalPrice != pricePerUnit) {
             System.out.println("Tilbud!!");
         }
@@ -119,6 +119,13 @@ public class NorgesGruppenAPI {
             obj = fixTheUglyJson(ISBN);
         }
         return obj.get("calcUnitType").getAsString();
+    }
+
+    public String getISBN(@Nullable String ISBN, @Nullable JsonObject obj) {
+        if (obj == null) {
+            obj = fixTheUglyJson(ISBN);
+        }
+        return obj.get("contentId").getAsString();
     }
 
     public JsonObject getJson(String ISBN) {
