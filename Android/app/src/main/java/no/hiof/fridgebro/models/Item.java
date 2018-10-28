@@ -1,0 +1,105 @@
+package no.hiof.fridgebro.models;
+
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.time.LocalDate;
+
+public class Item implements Parcelable {
+    private String itemName;
+    private String barcode;
+    private String expDate;
+    private String imageUrl;
+    private String itemPrice;
+
+    public Item(String categoryName, String itemName, String itemPrice, String barcode, String imageUrl) {
+        //super(categoryName);
+        this.itemName = itemName;
+        this.itemPrice = itemPrice;
+        this.barcode = barcode;
+        this.imageUrl = imageUrl;
+    }
+
+    public Item(String categoryName, String itemName, String itemPrice, String barcode, String imageUrl, String expDate) {
+        //super(categoryName);
+        this.itemName = itemName;
+        this.itemPrice = itemPrice;
+        this.barcode = barcode;
+        this.imageUrl = imageUrl;
+        this.expDate = expDate;
+    }
+
+    protected Item(Parcel in) {
+        itemName = in.readString();
+        itemPrice = in.readString();
+        barcode = in.readString();
+        expDate = in.readString();
+        imageUrl = in.readString();
+    }
+
+    public static final Creator<Item> CREATOR = new Creator<Item>() {
+        @Override
+        public Item createFromParcel(Parcel in) {
+            return new Item(in);
+        }
+
+        @Override
+        public Item[] newArray(int size) {
+            return new Item[size];
+        }
+    };
+
+    public String getItemName() {
+        return itemName;
+    }
+
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
+    }
+
+    public String getItemPrice() {
+        return itemPrice;
+    }
+
+    public void setItemPrice(String itemPrice) {
+        this.itemPrice = itemPrice;
+    }
+
+    public String getBarcode() {
+        return barcode;
+    }
+
+    public void setBarcode(String barcode) {
+        this.barcode = barcode;
+    }
+
+    public String getExpDate() {
+        return expDate;
+    }
+
+    public void setExpDate(String expDate) {
+        this.expDate = expDate;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(itemName);
+        dest.writeString(itemPrice);
+        dest.writeString(barcode);
+        dest.writeString(expDate);
+        dest.writeString(imageUrl);
+    }
+}
