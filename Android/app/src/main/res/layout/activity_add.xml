@@ -60,6 +60,22 @@
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@android:drawable/ic_menu_search" />
 
+    <ImageButton
+        android:id="@+id/btnPickDate"
+        android:layout_width="55dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:onClick="getPriceFromNg"
+        app:layout_constraintBottom_toBottomOf="@+id/expDate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.125"
+        app:layout_constraintStart_toEndOf="@+id/expDate"
+        app:layout_constraintTop_toTopOf="@+id/expDate"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@android:drawable/ic_menu_agenda" />
+
     <TextView
         android:id="@+id/lblISBN"
         android:layout_width="wrap_content"
@@ -94,13 +110,13 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:text="Ut.dato"
-        app:layout_constraintBottom_toBottomOf="@+id/editText3"
+        app:layout_constraintBottom_toBottomOf="@+id/expDate"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/editText3"
+        app:layout_constraintTop_toTopOf="@+id/expDate"
         app:layout_constraintVertical_bias="1.0" />
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/expDate"
         android:layout_width="270dp"
         android:layout_height="42dp"
         android:layout_marginStart="16dp"
@@ -133,7 +149,7 @@
         android:inputType="numberSigned"
         android:text="1"
         app:layout_constraintStart_toEndOf="@+id/lblAmount"
-        app:layout_constraintTop_toBottomOf="@+id/editText3" />
+        app:layout_constraintTop_toBottomOf="@+id/expDate" />
 
     <ImageView
         android:id="@+id/imgItem"
