@@ -16,11 +16,11 @@ import java.util.ArrayList;
 import no.hiof.fridgebro.R;
 import no.hiof.fridgebro.fragments.RecyclerViewFragment;
 import no.hiof.fridgebro.fragments.ShoppingListFragemnt;
+import no.hiof.fridgebro.models.Item;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 // denne må etter appcompat for at koden skal funke med fragments:  implements NavigationView.OnNavigationItemSelectedListener
-    private ArrayList<String> productNames = new ArrayList<>();
-    private ArrayList<String> productImages = new ArrayList<>();
+    private ArrayList<Item> productList = new ArrayList<>();
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
 
@@ -42,10 +42,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mToggle.syncState();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        //getImageBitmaps();
-        //setUpRecyclerView();
-
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -109,23 +105,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 200) {
             if (resultCode == RESULT_OK) {
-                productImages = (ArrayList<String>) data.getSerializableExtra("productImages");
-                productNames = (ArrayList<String>) data.getSerializableExtra("productNames");
-                ArrayList<String> test = recyclerViewFragment.getProductNames();
-                recyclerViewFragment.updateAdapter(productImages, productNames);
+                productList = data.getParcelableArrayListExtra("productList");
+                recyclerViewFragment.updateAdapter(productList);
             }
         }
         if (requestCode == 100) {
             if (resultCode == RESULT_OK) {
-                productImages = (ArrayList<String>) data.getSerializableExtra("productImages");
-                productNames = (ArrayList<String>) data.getSerializableExtra("productNames");
+                productList = data.getParcelableArrayListExtra("productList");
                 Integer position = data.getIntExtra("pos", 0);
                 // TODO: Gjøre dette ordentlig.
-                productImages.set(position, productImages.get(productImages.size() - 1));
-                productNames.set(position, productNames.get(productNames.size() - 1));
-                productImages.remove(productImages.size() - 1);
-                productNames.remove(productNames.size() - 1);
-                recyclerViewFragment.updateAdapter(productImages, productNames);
+                productList.set(position, productList.get(productList.size() - 1));
+                productList.remove(productList.size() - 1);
+                recyclerViewFragment.updateAdapter(productList);
             }
         }
     }
