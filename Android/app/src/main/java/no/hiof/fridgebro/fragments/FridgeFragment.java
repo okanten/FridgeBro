@@ -12,11 +12,12 @@ import java.util.ArrayList;
 
 import no.hiof.fridgebro.R;
 import no.hiof.fridgebro.adapters.RecyclerViewAdapter;
+import no.hiof.fridgebro.models.Item;
 
 public class FridgeFragment extends Fragment {
 
     private RecyclerView rvProduct;
-     ArrayList<String> productList = new ArrayList<>();
+    private ArrayList<Item> productList = new ArrayList<>();
     private RecyclerViewAdapter recyclerViewAdapter;
 
 
@@ -34,7 +35,7 @@ public class FridgeFragment extends Fragment {
         rvProduct.setHasFixedSize(true);
         LinearLayoutManager manager = new LinearLayoutManager(getActivity());
         rvProduct.setLayoutManager(manager);
-        recyclerViewAdapter = new RecyclerViewAdapter(productList, productList, getActivity());
+        recyclerViewAdapter = new RecyclerViewAdapter(productList, getActivity());
         rvProduct.setAdapter(recyclerViewAdapter);
 
         return view;
