@@ -63,7 +63,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         ImageButton deleteButton = (ImageButton) viewHolder.parentLayout.getViewById(R.id.deleteButton);
         deleteButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Integer pos = viewHolder.getAdapterPosition();
+                int pos = viewHolder.getAdapterPosition();
                 rcFrag.deleteItem(pos);
             }
         });

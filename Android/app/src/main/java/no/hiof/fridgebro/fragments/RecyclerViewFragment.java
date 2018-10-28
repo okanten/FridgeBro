@@ -104,7 +104,7 @@ public class RecyclerViewFragment extends Fragment {
     }
 
     //TODO: Trenger muligens fix?
-    public void updateItem(Integer position, String newImg, String newName) {
+    public void updateItem(int position, String newImg, String newName) {
         this.productImages.set(position, newImg);
         this.productNames.set(position, newName);
         System.out.println(this.productNames.get(position));
@@ -112,13 +112,9 @@ public class RecyclerViewFragment extends Fragment {
     }
 
     //TODO: Trenger muligens fix?
-    public void deleteItem(Integer position) {
+    public void deleteItem(int position) {
         this.productNames.remove(position);
         this.productImages.remove(position);
-        // TODO: Finne ut hvorfor i helvete dette ikke funker uten å slette siste element også :-))) - Virker som det spawnes et nytt (dupe) element etter det siste
-        this.productNames.remove(this.productNames.size() - 1);
-        this.productImages.remove(this.productImages.size() - 1);
-
         adapter.notifyItemRemoved(position);
     }
 
