@@ -1,4 +1,4 @@
-package no.hiof.fridgebro;
+package no.hiof.fridgebro.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+
+import no.hiof.fridgebro.R;
+import no.hiof.fridgebro.adapters.RecyclerViewAdapter;
 
 public class FridgeFragment extends Fragment {
 

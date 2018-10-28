@@ -1,4 +1,4 @@
-package no.hiof.fridgebro;
+package no.hiof.fridgebro.fragments;
 
 
 import android.app.Activity;
@@ -7,20 +7,18 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
-import static android.app.Activity.RESULT_OK;
+import no.hiof.fridgebro.R;
+import no.hiof.fridgebro.adapters.RecyclerViewAdapter;
+import no.hiof.fridgebro.activities.AddActivity;
 
 
 public class RecyclerViewFragment extends Fragment {

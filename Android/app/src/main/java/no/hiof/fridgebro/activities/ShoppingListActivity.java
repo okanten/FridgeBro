@@ -1,9 +1,11 @@
-package no.hiof.fridgebro;
+package no.hiof.fridgebro.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class ShoppingList extends AppCompatActivity {
+import no.hiof.fridgebro.R;
+
+public class ShoppingListActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

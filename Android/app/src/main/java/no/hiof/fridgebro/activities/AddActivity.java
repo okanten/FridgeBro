@@ -1,13 +1,10 @@
-package no.hiof.fridgebro;
+package no.hiof.fridgebro.activities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -21,6 +18,9 @@ import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 
+import no.hiof.fridgebro.R;
+import no.hiof.fridgebro.adapters.RecyclerViewAdapter;
+import no.hiof.fridgebro.fragments.RecyclerViewFragment;
 import no.hiof.olaka.*;
 
 
