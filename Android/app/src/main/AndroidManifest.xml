@@ -12,7 +12,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,12 +20,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SettingsActivity" />
-        <activity android:name=".ShoppingList" />
+        <activity android:name=".activities.SettingsActivity" />
+        <activity android:name=".activities.ShoppingListActivity" />
         <activity
-            android:name=".AddActivity"
+            android:name=".activities.AddActivity"
             android:label="@string/add_activity_title"
-            android:parentActivityName=".MainActivity"/>
+            android:parentActivityName=".activities.MainActivity"/>
     </application>
 
 </manifest>
