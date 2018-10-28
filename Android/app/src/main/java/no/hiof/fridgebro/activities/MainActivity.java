@@ -64,14 +64,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return true;
         }
         return super.onOptionsItemSelected(item);
-
-
-
     }
-
-
-
-
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem Item) {
