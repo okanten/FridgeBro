@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 import no.hiof.fridgebro.R;
 import no.hiof.fridgebro.fragments.RecyclerViewFragment;
-import no.hiof.fridgebro.fragments.ShoppingListFragemnt;
+import no.hiof.fridgebro.fragments.ShoppingListFragment;
 import no.hiof.fridgebro.models.Item;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_shoppinglist:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new ShoppingListFragemnt()).commit();
+                        new ShoppingListFragment()).commit();
                 break;
         }
 
