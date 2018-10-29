@@ -7,11 +7,31 @@ import java.time.LocalDate;
 
 public class Item implements Parcelable {
     private String itemName;
-    private String barcode;
-    private String expDate;
-    private String imageUrl;
     private String itemPrice;
+    private String barcode;
+    private String imageUrl;
+    private String itemBrand;
+    private String expDate;
 
+
+    public Item(String itemName, String itemPrice, String barcode, String imageUrl, String itemBrand) {
+        this.itemName = itemName;
+        this.itemPrice = itemPrice;
+        this.barcode = barcode;
+        this.imageUrl = imageUrl;
+        this.itemBrand = itemBrand;
+    }
+
+    public Item(String itemName, String itemPrice, String barcode, String imageUrl, String itemBrand, String expDate) {
+        this.itemName = itemName;
+        this.itemPrice = itemPrice;
+        this.barcode = barcode;
+        this.imageUrl = imageUrl;
+        this.itemBrand = itemBrand;
+        this.expDate = expDate;
+    }
+
+/*
     public Item(String categoryName, String itemName, String itemPrice, String barcode, String imageUrl) {
         //super(categoryName);
         this.itemName = itemName;
@@ -27,7 +47,7 @@ public class Item implements Parcelable {
         this.barcode = barcode;
         this.imageUrl = imageUrl;
         this.expDate = expDate;
-    }
+    }*/
 
     protected Item(Parcel in) {
         itemName = in.readString();
@@ -35,6 +55,7 @@ public class Item implements Parcelable {
         barcode = in.readString();
         expDate = in.readString();
         imageUrl = in.readString();
+        itemBrand = in.readString();
     }
 
     public static final Creator<Item> CREATOR = new Creator<Item>() {
@@ -89,6 +110,14 @@ public class Item implements Parcelable {
         this.imageUrl = imageUrl;
     }
 
+    public String getItemBrand() {
+        return itemBrand;
+    }
+
+    public void setItemBrand(String itemBrand) {
+        this.itemBrand = itemBrand;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -101,5 +130,6 @@ public class Item implements Parcelable {
         dest.writeString(barcode);
         dest.writeString(expDate);
         dest.writeString(imageUrl);
+        dest.writeString(itemBrand);
     }
 }
