@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import no.hiof.fridgebro.R;
 
-public class ShoppingListFragemnt extends Fragment {
+public class ShoppingListFragment extends Fragment {
 
     @Nullable
     @Override
