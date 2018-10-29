@@ -67,14 +67,14 @@ public class RecyclerViewFragment extends Fragment {
     }
 
     private void getImageBitmaps(){
-        productList.add(new Item("Test", "Test 1", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "03/03/2019"));
-        productList.add(new Item("Test", "Test 2", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "03/03/2019"));
-        productList.add(new Item("Test", "Test 3", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "03/03/2019"));
-        productList.add(new Item("Test", "Test 4", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "03/03/2019"));
-        productList.add(new Item("Test", "Test 5", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "03/03/2019"));
-        productList.add(new Item("Test", "Test 6", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "03/03/2019"));
-        productList.add(new Item("Test", "Test 7", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "03/03/2019"));
-        productList.add(new Item("Test", "Test 8", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "03/03/2019"));
+        productList.add(new Item("Test 1", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "TestBrand", "03/03/2019"));
+        productList.add(new Item("Test 2", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "TestBrand", "03/03/2019"));
+        productList.add(new Item("Test 3", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "TestBrand", "03/03/2019"));
+        productList.add(new Item("Test 4", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "TestBrand", "03/03/2019"));
+        productList.add(new Item("Test 5", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "TestBrand", "03/03/2019"));
+        productList.add(new Item("Test 6", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "TestBrand", "03/03/2019"));
+        productList.add(new Item("Test 7", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "TestBrand", "03/03/2019"));
+        productList.add(new Item("Test 8", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "TestBrand", "03/03/2019"));
     }
 
     public RecyclerViewAdapter getAdapter() {
