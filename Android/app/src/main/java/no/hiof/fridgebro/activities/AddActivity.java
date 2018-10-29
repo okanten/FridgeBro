@@ -2,14 +2,11 @@ package no.hiof.fridgebro.activities;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -66,7 +63,7 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
         // TODO: Fikse up-activity/parentactivity
 
         txtISBN = (EditText) findViewById(R.id.txtISBN);
-        txtPrice = (EditText) findViewById(R.id.contextPrice);
+        txtPrice = (EditText) findViewById(R.id.txtPrice);
         imgItem = (ImageView) findViewById(R.id.imgItem);
         lblProductName = (TextView) findViewById(R.id.lblProductName);
         expDate = findViewById(R.id.expDate);
