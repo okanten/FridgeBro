@@ -2,7 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="no.hiof.fridgebro">
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera"/>
+    <uses-feature android:name="android.hardware.camera.autofocus"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -25,7 +30,11 @@
         <activity
             android:name=".activities.AddActivity"
             android:label="@string/add_activity_title"
-            android:parentActivityName=".activities.MainActivity"/>
+            android:parentActivityName=".activities.MainActivity" />
+        <activity
+            android:name=".BarcodeScanner"
+            android:label="@string/title_activity_barcode_scanner"
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

@@ -33,5 +33,6 @@ dependencies {
     implementation 'net.dongliu:requests:4.18.1'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.getbase:floatingactionbutton:1.10.1'
+    implementation 'me.dm7.barcodescanner:zxing:1.9'
 
 }

@@ -17,6 +17,7 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import no.hiof.fridgebro.BarcodeScanner;
 import no.hiof.fridgebro.R;
 import no.hiof.fridgebro.adapters.RecyclerViewAdapter;
 import no.hiof.fridgebro.activities.AddActivity;
@@ -51,6 +52,7 @@ public class RecyclerViewFragment extends Fragment {
 
         final FloatingActionsMenu mainFab = v.findViewById(R.id.myFab);
         FloatingActionButton fabManual = v.findViewById(R.id.fabManual);
+        FloatingActionButton fabScanner = v.findViewById(R.id.fabScanner);
         fabManual.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 mainFab.collapseImmediately();
@@ -62,7 +64,16 @@ public class RecyclerViewFragment extends Fragment {
                 ((Activity) Objects.requireNonNull(getContext())).startActivityForResult(intent, 200);
             }
         });
+        fabScanner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainFab.collapseImmediately();
+                Intent intent = new Intent(getContext(), BarcodeScanner.class);
+                Bundle bundle = new Bundle();
+                RecyclerViewFragment.this.startActivity(intent, bundle);
 
+            }
+        });
         return v;
     }
 
