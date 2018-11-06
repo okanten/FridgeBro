@@ -8,15 +8,18 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.google.firebase.auth.FirebaseAuth;
+
+import com.firebase.ui.auth.AuthUI;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import no.hiof.fridgebro.R;
 import no.hiof.fridgebro.fragments.RecyclerViewFragment;
@@ -24,7 +27,6 @@ import no.hiof.fridgebro.fragments.ShoppingListFragment;
 import no.hiof.fridgebro.models.Item;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
-// denne må etter appcompat for at koden skal funke med fragments:  implements NavigationView.OnNavigationItemSelectedListener
     private ArrayList<Item> productList = new ArrayList<>();
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
@@ -32,10 +34,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Toolbar mToolbar;
     private RecyclerViewFragment recyclerViewFragment;
 
+
+    private static final int RC_SIGN_IN = 1;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth.AuthStateListener firebaseAuthStateListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //testing for firebase auth
+        firebaseAuth = FirebaseAuth.getInstance();
+        createAuthenticationListener();
+
+        //test for firebase realtime database
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("message");
+        myRef.setValue("Hello, World!");
+
+
 
         mToolbar = findViewById(R.id.nav_action);
         setSupportActionBar(mToolbar);
@@ -51,12 +68,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //Test for å skrive til database
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("message");
-
-        myRef.setValue("test");
-
 
         if (savedInstanceState == null) {
             if (recyclerViewFragment == null) {
@@ -69,7 +80,42 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    private void createAuthenticationListener() {
+        firebaseAuthStateListener = new FirebaseAuth.AuthStateListener() {
 
+            @Override
+            public void onAuthStateChanged(FirebaseAuth firebaseAuth) {
+                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                if (firebaseUser == null) {
+                    startActivityForResult(
+                            AuthUI.getInstance()
+                                    .createSignInIntentBuilder()
+                                    .setIsSmartLockEnabled(false)
+                                    .setAvailableProviders(
+                                            Arrays.asList(new AuthUI.IdpConfig.EmailBuilder().build(),
+                                                    new AuthUI.IdpConfig.GoogleBuilder().build()))
+                                    .build(),
+                            RC_SIGN_IN);
+                }
+            }
+        };
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (firebaseAuthStateListener != null)
+            firebaseAuth.addAuthStateListener(firebaseAuthStateListener);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (firebaseAuthStateListener != null)
+            firebaseAuth.removeAuthStateListener(firebaseAuthStateListener);
+    }
+    
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
