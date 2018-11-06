@@ -8,8 +8,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -46,6 +51,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //Test for å skrive til database
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("message");
+
+        myRef.setValue("test");
+
+
         if (savedInstanceState == null) {
             if (recyclerViewFragment == null) {
                 recyclerViewFragment = new RecyclerViewFragment();
@@ -54,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     recyclerViewFragment).commit();
             navigationView.setCheckedItem(R.id.nav_fridgelist);
         }
+
     }
 
 
