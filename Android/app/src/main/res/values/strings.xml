@@ -13,5 +13,6 @@
     <string name="pris">Pris</string>
     <string name="fridgebro">FridgeBro</string>
     <string name="title_activity_barcode_scanner">BarcodeScanner</string>
+    <string name="appicon">appicon</string>
 
 </resources>

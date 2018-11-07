@@ -43,15 +43,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         //testing for firebase auth
         firebaseAuth = FirebaseAuth.getInstance();
         createAuthenticationListener();
 
-        //test for firebase realtime database
+
+        //Test for firebase realtime database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("message");
         myRef.setValue("Hello, World!");
-
 
 
         mToolbar = findViewById(R.id.nav_action);
@@ -59,7 +60,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
         mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-
         mDrawerLayout.addDrawerListener(mToggle);
         mToggle.syncState();
 
@@ -82,7 +82,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void createAuthenticationListener() {
         firebaseAuthStateListener = new FirebaseAuth.AuthStateListener() {
-
             @Override
             public void onAuthStateChanged(FirebaseAuth firebaseAuth) {
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
@@ -115,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (firebaseAuthStateListener != null)
             firebaseAuth.removeAuthStateListener(firebaseAuthStateListener);
     }
-    
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
