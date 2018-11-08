@@ -16,6 +16,8 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Objects;
 
 import no.hiof.fridgebro.R;
@@ -92,6 +94,22 @@ public class ShoppingListFragment extends Fragment {
         this.productList.remove(position);
         //this.productImages.remove(position);
         adapter.notifyItemRemoved(position);
+    }
+
+    public void sortListByPrice() {
+        Collections.sort(productList);
+        adapter.notifyDataSetChanged();
+    }
+
+    public void sortListAlphabetically() {
+        Collections.sort(productList, new Comparator<Item>() {
+            @Override
+            public int compare(Item o1, Item o2) {
+                return o1.getItemName().compareTo(o2.getItemName());
+            }
+        });
+        adapter.notifyDataSetChanged();
+
     }
 
     public void updateAdapter(ArrayList<Item> productList) {
