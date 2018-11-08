@@ -32,7 +32,7 @@
             android:label="@string/add_activity_title"
             android:parentActivityName=".activities.MainActivity" />
         <activity
-            android:name=".BarcodeScanner"
+            android:name=".activities.BarcodeScanner"
             android:label="@string/title_activity_barcode_scanner"
             android:theme="@style/AppTheme" />
     </application>
