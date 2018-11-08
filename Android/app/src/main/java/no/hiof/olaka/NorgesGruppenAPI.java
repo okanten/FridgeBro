@@ -48,8 +48,8 @@ public class NorgesGruppenAPI {
         } else {
             obj = addContentData(obj);
         }
-        String originalPrice = obj.get("pricePerUnitOriginal").getAsString().replace(".", ",");
-        String pricePerUnit = obj.get("pricePerUnit").getAsString().replace(".", ",");
+        String originalPrice = obj.get("pricePerUnitOriginal").getAsString();
+        String pricePerUnit = obj.get("pricePerUnit").getAsString();
         if (originalPrice != pricePerUnit) {
             //System.out.println("Tilbud!!");
         }
