@@ -85,7 +85,7 @@ public class ContextMenuAdapter extends RecyclerView.Adapter<ContextMenuAdapter.
             super(itemView);
             image = itemView.findViewById(R.id.recyclerImageView);
             text = itemView.findViewById(R.id.recylerTextView);
-            txtPrice = itemView.findViewById(R.id.txtPrice);
+            txtPrice = itemView.findViewById(R.id.txtPriceAdd);
             txtBrand = itemView.findViewById(R.id.txtBrand);
 
             parentLayout = itemView.findViewById(R.id.parentLayoutList);
