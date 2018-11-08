@@ -2,10 +2,11 @@ package no.hiof.fridgebro.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import java.time.LocalDate;
 
-public class Item implements Parcelable {
+public class Item implements Parcelable, Comparable<Item> {
     private String itemName;
     private String itemPrice;
     private String barcode;
@@ -132,4 +133,12 @@ public class Item implements Parcelable {
         dest.writeString(imageUrl);
         dest.writeString(itemBrand);
     }
+
+    @Override
+    public int compareTo(@NonNull Item item) {
+        // TODO: Sorterer ikke på desimal - må fikses. Egen klasse?
+        int compareTo = (int) Double.parseDouble(item.getItemPrice());
+        return (int) (compareTo - Double.parseDouble(this.getItemPrice()));
+    }
+
 }
