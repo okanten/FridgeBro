@@ -15,9 +15,11 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Objects;
 
-import no.hiof.fridgebro.BarcodeScanner;
+import no.hiof.fridgebro.activities.BarcodeScanner;
 import no.hiof.fridgebro.R;
 import no.hiof.fridgebro.adapters.RecyclerViewAdapter;
 import no.hiof.fridgebro.activities.AddActivity;
@@ -58,7 +60,6 @@ public class RecyclerViewFragment extends Fragment {
                 Intent intent = new Intent(getContext(), AddActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putParcelableArrayList("productList", productList);
-                //bundle.putSerializable("productList", productList);
                 intent.putExtras(bundle);
                 ((Activity) Objects.requireNonNull(getContext())).startActivityForResult(intent, 200);
             }
@@ -69,8 +70,9 @@ public class RecyclerViewFragment extends Fragment {
                 mainFab.collapseImmediately();
                 Intent intent = new Intent(getContext(), BarcodeScanner.class);
                 Bundle bundle = new Bundle();
-                RecyclerViewFragment.this.startActivity(intent, bundle);
-
+                bundle.putParcelableArrayList("productList", productList);
+                intent.putExtras(bundle);
+                ((Activity) Objects.requireNonNull(getContext())).startActivityForResult(intent, 300);
             }
         });
         return v;
@@ -79,7 +81,7 @@ public class RecyclerViewFragment extends Fragment {
     private void getImageBitmaps(){
         productList.add(new Item("Test 1", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "TestBrand", "03/03/2019"));
         productList.add(new Item("Test 2", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "TestBrand", "03/03/2019"));
-        productList.add(new Item("Test 3", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "TestBrand", "03/03/2019"));
+        productList.add(new Item("Test 3", "242", "11111", "https://i.redd.it/oir304dowbs11.jpg", "TestBrand", "03/03/2019"));
         productList.add(new Item("Test 4", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "TestBrand", "03/03/2019"));
         productList.add(new Item("Test 5", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "TestBrand", "03/03/2019"));
         productList.add(new Item("Test 6", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "TestBrand", "03/03/2019"));
@@ -104,6 +106,22 @@ public class RecyclerViewFragment extends Fragment {
         this.productList.remove(position);
         //this.productImages.remove(position);
         adapter.notifyItemRemoved(position);
+    }
+
+    public void sortListByPrice() {
+        Collections.sort(productList);
+        adapter.notifyDataSetChanged();
+    }
+
+    public void sortListAlphabetically() {
+        Collections.sort(productList, new Comparator<Item>() {
+            @Override
+            public int compare(Item o1, Item o2) {
+                return o1.getItemName().compareTo(o2.getItemName());
+            }
+        });
+        adapter.notifyDataSetChanged();
+
     }
 
     public void updateAdapter(ArrayList<Item> productList) {
