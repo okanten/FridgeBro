@@ -9,7 +9,10 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -20,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 import no.hiof.fridgebro.R;
 import no.hiof.fridgebro.fragments.RecyclerViewFragment;
@@ -33,7 +37,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private Toolbar mToolbar;
     private RecyclerViewFragment recyclerViewFragment;
+    private ShoppingListFragment shoppingListFragment;
 
+    private boolean isOnShoppingList = false;
 
     private static final int RC_SIGN_IN = 1;
     private FirebaseAuth firebaseAuth;
@@ -70,8 +76,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         if (savedInstanceState == null) {
-            if (recyclerViewFragment == null) {
+            if (recyclerViewFragment == null && !isOnShoppingList) {
                 recyclerViewFragment = new RecyclerViewFragment();
+            } else if (shoppingListFragment == null && isOnShoppingList) {
+                shoppingListFragment = new ShoppingListFragment();
             }
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     recyclerViewFragment).commit();
@@ -115,9 +123,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             firebaseAuth.removeAuthStateListener(firebaseAuthStateListener);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_buttons, menu);
+        return true;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.sortPrice:
+                if (isOnShoppingList) {
+                    shoppingListFragment.sortListByPrice();
+                } else {
+                    recyclerViewFragment.sortListByPrice();
+                }
+                break;
+            case R.id.sortAlphabetical:
+                if (isOnShoppingList) {
+                    shoppingListFragment.sortListAlphabetically();
+                } else {
+                    recyclerViewFragment.sortListAlphabetically();
+                }
+                break;
+        }
+
         if(mToggle.onOptionsItemSelected(item)){
             return true;
         }
@@ -131,10 +162,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_fridgelist:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         recyclerViewFragment).commit();
+                isOnShoppingList = false;
                 break;
             case R.id.nav_shoppinglist:
+                if (shoppingListFragment == null)
+                    shoppingListFragment = new ShoppingListFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new ShoppingListFragment()).commit();
+                        shoppingListFragment).commit();
+                isOnShoppingList = true;
                 break;
         }
 
@@ -154,10 +189,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 300) {
+            if (resultCode == RESULT_OK) {
+                productList = data.getParcelableArrayListExtra("productList");
+                if (isOnShoppingList) {
+                    shoppingListFragment.updateAdapter(productList);
+                } else {
+                    recyclerViewFragment.updateAdapter(productList);
+                }
+            } else {
+
+            }
+        }
         if (requestCode == 200) {
             if (resultCode == RESULT_OK) {
                 productList = data.getParcelableArrayListExtra("productList");
-                recyclerViewFragment.updateAdapter(productList);
+                if (isOnShoppingList) {
+                    shoppingListFragment.updateAdapter(productList);
+                } else {
+                    recyclerViewFragment.updateAdapter(productList);
+                }
             }
         }
         if (requestCode == 100) {
@@ -167,8 +218,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 // TODO: Gjøre dette ordentlig.
                 productList.set(position, productList.get(productList.size() - 1));
                 productList.remove(productList.size() - 1);
-                recyclerViewFragment.updateAdapter(productList);
+                if (isOnShoppingList) {
+                    shoppingListFragment.updateAdapter(productList);
+                } else {
+                    recyclerViewFragment.updateAdapter(productList);
+                }
             }
         }
+
     }
 }
