@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -43,6 +44,7 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
     private TextView lblProductName;
     private EditText expDate;
     private ImageButton btnPickDate;
+    private Button btnSave;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     private JsonObject ngJson;
     private RecyclerViewFragment rcFrag;
@@ -53,6 +55,7 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
     private Integer position;
     private Item newItem;
     private String itemDate;
+    private Boolean fromScanner = false;
     private ContextMenuFragment contextMenuFragment;
 
 
@@ -68,8 +71,10 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
         lblProductName = (TextView) findViewById(R.id.lblProductName);
         expDate = findViewById(R.id.expDate);
         btnPickDate = findViewById(R.id.btnPickDate);
+        btnSave = findViewById(R.id.btnSave);
         productList = getIntent().getParcelableArrayListExtra("productList");
         position = getIntent().getIntExtra("position", -1);
+
         if (position > -1) {
             txtISBN.setText(productList.get(position).getBarcode());
             txtPrice.setText(productList.get(position).getItemPrice());
@@ -104,6 +109,25 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
             }
         };
 
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateListOfItems(v);
+            }
+        });
+
+        if (getIntent().getBooleanExtra("scanner", false)) {
+            fromScanner = true;
+            String isbn = getIntent().getStringExtra("scannerResult");
+            Toast.makeText(this, isbn, Toast.LENGTH_SHORT).show();
+            txtISBN.setText(isbn);
+            try {
+                new asyncLoadJson().execute(isbn);
+            } catch (Exception e) {
+                Log.d("AddActivity", e.toString());
+            }
+        }
+
      }
 
     public void getPriceFromNg(View view) {
@@ -133,8 +157,9 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
     }
 
     public void updateListOfItems(View view) {
-        if (newItem != null) {
-            productList.add(newItem);
+        if (newItem != null && fieldsChanged()) {
+            Item modifiedItem = new Item(String.valueOf(lblProductName.getText()), String.valueOf(txtPrice.getText()), String.valueOf(txtISBN.getText()), String.valueOf(newItem.getImageUrl()), String.valueOf(newItem.getItemBrand()), String.valueOf(expDate.getText()));
+            productList.add(modifiedItem);
             Intent resultIntent = new Intent();
             Bundle bundle = new Bundle();
             bundle.putInt("pos", position);
@@ -144,6 +169,16 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
         }
         finish();
 
+    }
+
+    private boolean fieldsChanged() {
+        if (lblProductName.getText().equals(R.string.default_product_name) && txtPrice.getText().equals(R.string.default_price) && txtISBN.equals(R.string.default_barcode)) // legge til antall
+            return false;
+        return true;
+    }
+
+    public Item getNewItem() {
+        return newItem;
     }
 
     @Override
@@ -161,8 +196,13 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
         protected ArrayList<JsonObject> doInBackground(String... strings) {
             try {
                 for (String isbn : strings) {
-                    rJson = ng.getFullJson(isbn);
-                    System.out.println(rJson.size());
+                    try {
+                        rJson = ng.getFullJson(isbn);
+                        System.out.println(rJson.size());
+                    } catch (Exception e) {
+                        Toast.makeText(AddActivity.this, "Noe galt skjedde under søk. Vennligst redefiner søkeord", Toast.LENGTH_SHORT).show();
+                        Log.d("NullPointerException", e.getMessage());
+                    }
                 }
                 System.out.println(rJson.size());
                 return rJson;
@@ -172,24 +212,33 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
         }
 
         protected void onPostExecute(ArrayList<JsonObject> rJson) {
-            System.out.println(ng.getImageURL(null, rJson.get(0)));
-            for (int i = 0; i < rJson.size(); i++) {
-                //productList.add(new Item("Test 1", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "TestBrand", "03/03/2019"));
-                try {
-                    queryResult.add(new Item(ng.getTitle(null, rJson.get(i)), ng.getPrice(null, rJson.get(i)), ng.getISBN(null, rJson.get(i)), ng.getImageURL(null, rJson.get(i)), ng.getBrand(null, rJson.get(i))));
-                } catch (NullPointerException npe) {
-                    Toast.makeText(AddActivity.this, "Noe galt skjedde under søk. Vennligst redefiner søkeord", Toast.LENGTH_SHORT).show();
-                    Log.d("NullPointerException", npe.getMessage());
+            if (rJson != null) {
+                for (int i = 0; i < rJson.size(); i++) {
+                    //productList.add(new Item("Test 1", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "TestBrand", "03/03/2019"));
+                    try {
+                        queryResult.add(new Item(ng.getTitle(null, rJson.get(i)), ng.getPrice(null, rJson.get(i)), ng.getISBN(null, rJson.get(i)), ng.getImageURL(null, rJson.get(i)), ng.getBrand(null, rJson.get(i))));
+                    } catch (Exception npe) {
+                        Toast.makeText(AddActivity.this, "Noe galt skjedde under søk. Vennligst redefiner søkeord", Toast.LENGTH_SHORT).show();
+                        Log.d("NullPointerException", npe.getMessage());
+                    }
                 }
-            }
-            if (queryResult != null && queryResult.size() == 1) {
-                setNewValues(queryResult, 0);
-            } else if (queryResult.size() > 1) {
-                openItemPickerDialog(queryResult);
+                if (queryResult != null && queryResult.size() == 1) {
+                    setNewValues(queryResult, 0);
+                } else if (queryResult.size() > 1) {
+                    openItemPickerDialog(queryResult);
+                } else {
+                    makeToast();
+                    if (fromScanner) {
+                        Intent failedIntent = new Intent();
+                        setResult(Activity.RESULT_CANCELED, failedIntent);
+                        finish();
+                    }
+                }
             } else {
-                makeToast();
+                Intent failedIntent = new Intent();
+                setResult(50, failedIntent);
+                finish();
             }
-
         }
     }
 }
