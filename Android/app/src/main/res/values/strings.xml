@@ -14,5 +14,10 @@
     <string name="fridgebro">FridgeBro</string>
     <string name="title_activity_barcode_scanner">BarcodeScanner</string>
     <string name="appicon">appicon</string>
+    <string name="currency">%1$s kr</string>
+
+    <string name="default_product_name">Produktnavn</string>
+    <string name="default_price">0</string>
+    <string name="default_barcode">5000112637397</string>
 
 </resources>
