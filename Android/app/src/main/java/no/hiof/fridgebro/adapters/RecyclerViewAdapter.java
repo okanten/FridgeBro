@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -69,7 +70,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 .into(viewHolder.image);
 
         viewHolder.text.setText(productList.get(i).getItemName());
-
+        viewHolder.expdate.setText(productList.get(i).getExpDate());
+        // henter ut string fra strings.xml med placeholders
+        viewHolder.price.setText(mContext.getResources().getString(R.string.currency, productList.get(i).getItemPrice()));
         ImageButton deleteButton = (ImageButton) viewHolder.parentLayout.getViewById(R.id.deleteButton);
         deleteButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -101,6 +104,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView image;
         TextView text;
+        TextView price;
+        TextView expdate;
         ConstraintLayout parentLayout;
 
         public ViewHolder(@NonNull View itemView) {
@@ -108,6 +113,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             image = itemView.findViewById(R.id.recyclerImageView);
             text = itemView.findViewById(R.id.recylerTextView);
+            price = itemView.findViewById(R.id.txtPriceAdd);
+            expdate = itemView.findViewById(R.id.txtExpDate);
+
             parentLayout = itemView.findViewById(R.id.parentLayoutList);
         }
     }
