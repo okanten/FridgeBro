@@ -27,7 +27,6 @@ import java.util.Collections;
 
 import no.hiof.fridgebro.R;
 import no.hiof.fridgebro.fragments.RecyclerViewFragment;
-import no.hiof.fridgebro.fragments.ShoppingListFragment;
 import no.hiof.fridgebro.models.Item;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
@@ -158,11 +157,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem Item) {
         switch (Item.getItemId()) {
-
             case R.id.nav_fridgelist:
+                isOnShoppingList = false;
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         recyclerViewFragment).commit();
-                isOnShoppingList = false;
                 break;
             case R.id.nav_shoppinglist:
                 isOnShoppingList = true;
