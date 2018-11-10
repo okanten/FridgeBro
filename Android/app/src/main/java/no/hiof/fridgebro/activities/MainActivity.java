@@ -77,9 +77,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (savedInstanceState == null) {
             if (recyclerViewFragment == null && !isOnShoppingList) {
-                recyclerViewFragment = new RecyclerViewFragment();
+                recyclerViewFragment = new RecyclerViewFragment().newInstance(isOnShoppingList);
             } else if (shoppingListFragment == null && isOnShoppingList) {
-                shoppingListFragment = new RecyclerViewFragment();
+                shoppingListFragment = new RecyclerViewFragment().newInstance(isOnShoppingList);
             }
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     recyclerViewFragment).commit();
@@ -165,11 +165,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 isOnShoppingList = false;
                 break;
             case R.id.nav_shoppinglist:
-                if (shoppingListFragment == null)
-                    shoppingListFragment = new RecyclerViewFragment();
+                isOnShoppingList = true;
+                if (shoppingListFragment == null) {
+                    shoppingListFragment = new RecyclerViewFragment().newInstance(isOnShoppingList);
+                }
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         shoppingListFragment).commit();
-                isOnShoppingList = true;
                 break;
         }
 

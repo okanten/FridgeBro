@@ -21,6 +21,7 @@ import java.util.Objects;
 
 import no.hiof.fridgebro.activities.BarcodeScanner;
 import no.hiof.fridgebro.R;
+import no.hiof.fridgebro.activities.MainActivity;
 import no.hiof.fridgebro.adapters.RecyclerViewAdapter;
 import no.hiof.fridgebro.activities.AddActivity;
 import no.hiof.fridgebro.models.Item;
@@ -32,11 +33,24 @@ public class RecyclerViewFragment extends Fragment {
     private ArrayList<Item> productList = new ArrayList<>();
     private RecyclerView recyclerView;
     private RecyclerViewAdapter adapter;
-
+    private boolean isOnShoppingList;
 
     public RecyclerViewFragment() {
         // Required empty public constructor
     }
+
+
+    public RecyclerViewFragment newInstance(boolean isOnShoppingList) {
+        RecyclerViewFragment rcvFrag = new RecyclerViewFragment();
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("shoppingList", isOnShoppingList);
+        rcvFrag.setArguments(bundle);
+        return rcvFrag;
+    }
+
+
+
+
 
 
     @Override
@@ -45,7 +59,14 @@ public class RecyclerViewFragment extends Fragment {
             getImageBitmaps();
         }
 
-        View v =  inflater.inflate(R.layout.fragment_recycler_view, container, false);
+        isOnShoppingList = getArguments().getBoolean("shoppingList", false);
+            View v;
+        if (isOnShoppingList) {
+            v = inflater.inflate(R.layout.fragment_shoppinglist, container, false);
+        } else {
+            v = inflater.inflate(R.layout.fragment_recycler_view, container, false);
+        }
+
         recyclerView = v.findViewById(R.id.recyclerView);
         adapter = new RecyclerViewAdapter(productList, getContext(), this);
         recyclerView.setAdapter(adapter);
