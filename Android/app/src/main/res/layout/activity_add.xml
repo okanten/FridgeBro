@@ -126,7 +126,7 @@
         app:layout_constraintStart_toEndOf="@+id/lblDate"
         app:layout_constraintTop_toBottomOf="@+id/txtPrice" />
 
-    <TextView
+    <!--TextView
         android:id="@+id/lblAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -137,9 +137,9 @@
         app:layout_constraintBottom_toBottomOf="@+id/editText5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/editText5"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="1.0" /-->
 
-    <EditText
+    <!--EditText
         android:id="@+id/editText5"
         android:layout_width="111dp"
         android:layout_height="41dp"
@@ -149,7 +149,7 @@
         android:inputType="numberSigned"
         android:text="1"
         app:layout_constraintStart_toEndOf="@+id/lblAmount"
-        app:layout_constraintTop_toBottomOf="@+id/expDate" />
+        app:layout_constraintTop_toBottomOf="@+id/expDate" /-->
 
     <ImageView
         android:id="@+id/imgItem"
