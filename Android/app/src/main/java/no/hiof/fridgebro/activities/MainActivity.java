@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private Toolbar mToolbar;
     private RecyclerViewFragment recyclerViewFragment;
-    private ShoppingListFragment shoppingListFragment;
+    private RecyclerViewFragment shoppingListFragment;
 
     private boolean isOnShoppingList = false;
 
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (recyclerViewFragment == null && !isOnShoppingList) {
                 recyclerViewFragment = new RecyclerViewFragment();
             } else if (shoppingListFragment == null && isOnShoppingList) {
-                shoppingListFragment = new ShoppingListFragment();
+                shoppingListFragment = new RecyclerViewFragment();
             }
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     recyclerViewFragment).commit();
@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_shoppinglist:
                 if (shoppingListFragment == null)
-                    shoppingListFragment = new ShoppingListFragment();
+                    shoppingListFragment = new RecyclerViewFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         shoppingListFragment).commit();
                 isOnShoppingList = true;
