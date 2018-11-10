@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import no.hiof.fridgebro.R;
 import no.hiof.fridgebro.activities.AddActivity;
 import no.hiof.fridgebro.fragments.RecyclerViewFragment;
-import no.hiof.fridgebro.fragments.ShoppingListFragment;
 import no.hiof.fridgebro.models.Item;
 
 
@@ -32,7 +31,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ArrayList<Item> shoppingListProducts = new ArrayList<>();
     private Context mContext;
     private RecyclerViewFragment rcFrag;
-    private ShoppingListFragment slFrag;
 
     public RecyclerViewAdapter(ArrayList<Item> productList, Context mContext) {
         this.productList = productList;
@@ -47,12 +45,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.rcFrag = recyclerViewFragment;
     }
 
-    public RecyclerViewAdapter(ArrayList<Item> productList, Context mContext, ShoppingListFragment shoppingListFragment) {
-        this.productList = productList;
-        this.shoppingListProducts = shoppingListProducts;
-        this.mContext = mContext;
-        this.slFrag = shoppingListFragment;
-    }
 
     @NonNull
     @Override
