@@ -34,6 +34,8 @@ public class RecyclerViewFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerViewAdapter adapter;
     private boolean isOnShoppingList;
+    private boolean priceSortedAsc = false;
+    private boolean alphaSortedAsc = false;
 
     public RecyclerViewFragment() {
         // Required empty public constructor
@@ -125,22 +127,38 @@ public class RecyclerViewFragment extends Fragment {
     //TODO: Trenger muligens fix?
     public void deleteItem(int position) {
         this.productList.remove(position);
-        //this.productImages.remove(position);
         adapter.notifyItemRemoved(position);
     }
 
     public void sortListByPrice() {
-        Collections.sort(productList);
+        if(!priceSortedAsc) {
+            Collections.sort(productList);
+            priceSortedAsc = true;
+        } else {
+            Collections.reverse(productList);
+            priceSortedAsc = false;
+        }
         adapter.notifyDataSetChanged();
     }
 
     public void sortListAlphabetically() {
-        Collections.sort(productList, new Comparator<Item>() {
-            @Override
-            public int compare(Item o1, Item o2) {
-                return o1.getItemName().compareTo(o2.getItemName());
-            }
-        });
+        if (!alphaSortedAsc) {
+            Collections.sort(productList, new Comparator<Item>() {
+                @Override
+                public int compare(Item o1, Item o2) {
+                    return o1.getItemName().compareTo(o2.getItemName());
+                }
+            });
+            alphaSortedAsc = true;
+        } else {
+            Collections.sort(productList, new Comparator<Item>() {
+                @Override
+                public int compare(Item o1, Item o2) {
+                    return o2.getItemName().compareTo(o1.getItemName());
+                }
+            });
+            alphaSortedAsc = false;
+        }
         adapter.notifyDataSetChanged();
 
     }
