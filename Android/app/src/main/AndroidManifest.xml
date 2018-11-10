@@ -18,7 +18,7 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".activities.MainActivity"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,12 +29,12 @@
         <activity android:name=".activities.ShoppingListActivity" />
         <activity
             android:name=".activities.AddActivity"
-            android:label="@string/add_activity_title"
+            android:label="@string/add_activity_title_new"
             android:parentActivityName=".activities.MainActivity" />
         <activity
             android:name=".activities.BarcodeScanner"
             android:label="@string/title_activity_barcode_scanner"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

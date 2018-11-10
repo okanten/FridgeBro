@@ -75,7 +75,9 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
         productList = getIntent().getParcelableArrayListExtra("productList");
         position = getIntent().getIntExtra("position", -1);
 
+
         if (position > -1) {
+            setTitle(R.string.add_activity_title_edit);
             txtISBN.setText(productList.get(position).getBarcode());
             txtPrice.setText(productList.get(position).getItemPrice());
             lblProductName.setText(productList.get(position).getItemName());
@@ -93,8 +95,7 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
                 int year = cal.get(Calendar.YEAR);
                 int month = cal.get(Calendar.MONTH);
                 int day = cal.get(Calendar.DAY_OF_MONTH);
-                DatePickerDialog dateDialog = new DatePickerDialog(AddActivity.this, R.style.AppTheme, mDateSetListener, year, month, day);
-                dateDialog.getWindow().setBackgroundDrawable(new ColorDrawable(R.style.AppTheme));
+                DatePickerDialog dateDialog = new DatePickerDialog(AddActivity.this, R.style.DialogTheme, mDateSetListener, year, month, day);
                 dateDialog.show();
             }
         });

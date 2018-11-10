@@ -7,7 +7,8 @@
     <string name="productimage">productimage</string>
     <string name="removeitem">removeitem</string>
     <string name="fridge">Fridge</string>
-    <string name="add_activity_title">Legg til ny vare</string>
+    <string name="add_activity_title_new">Legg til ny vare</string>
+    <string name="add_activity_title_edit">Endre vare</string>
     <string name="produkt">Produkt</string>
     <string name="utl_psdato">Utløpsdato</string>
     <string name="pris">Pris</string>
