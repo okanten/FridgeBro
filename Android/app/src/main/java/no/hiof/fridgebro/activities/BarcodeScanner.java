@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -50,7 +51,10 @@ public class BarcodeScanner extends AppCompatActivity implements ZXingScannerVie
             {
                 requestPermission();
             }
+        } else {
+            openScannerView();
         }
+
 
 
         // Bruk denne om du vil debugge på virtual device.
@@ -81,17 +85,26 @@ public class BarcodeScanner extends AppCompatActivity implements ZXingScannerVie
 
         int currentapiVersion = android.os.Build.VERSION.SDK_INT;
         if (currentapiVersion >= android.os.Build.VERSION_CODES.M) {
+            // Denne returnerer alltid false på lollipop / API 21.
             if (checkPermission()) {
-                if(scannerView == null) {
-                    scannerView = new ZXingScannerView(this);
-                    setContentView(scannerView);
-                }
-                scannerView.setResultHandler(this);
-                scannerView.startCamera();
+                openScannerView();
             } else {
-                requestPermission();
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+                    requestPermission();
+                } else {
+                    openScannerView();
+                }
             }
         }
+    }
+
+    public void openScannerView() {
+        if(scannerView == null) {
+            scannerView = new ZXingScannerView(this);
+            setContentView(scannerView);
+        }
+        scannerView.setResultHandler(this);
+        scannerView.startCamera();
     }
 
     @Override
@@ -114,6 +127,7 @@ public class BarcodeScanner extends AppCompatActivity implements ZXingScannerVie
                             if (shouldShowRequestPermissionRationale(CAMERA)) {
                                 showMessageOKCancel("You need to allow access to both the permissions",
                                         new DialogInterface.OnClickListener() {
+                                            @RequiresApi(api = Build.VERSION_CODES.M)
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                     requestPermissions(new String[]{CAMERA},
