@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -57,14 +56,13 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
     private String itemDate;
     private Boolean fromScanner = false;
     private ContextMenuFragment contextMenuFragment;
+    private Item itemBeforeEdit;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
-        // TODO: Fikse up-activity/parentactivity
-
         txtISBN = (EditText) findViewById(R.id.txtISBN);
         txtPrice = (EditText) findViewById(R.id.txtPrice);
         imgItem = (ImageView) findViewById(R.id.imgItem);
@@ -76,8 +74,15 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
         position = getIntent().getIntExtra("position", -1);
 
 
+        //     public Item(String itemName, String itemPrice, String barcode, String imageUrl, String itemBrand, String expDate) {
+
         if (position > -1) {
             setTitle(R.string.add_activity_title_edit);
+
+            itemBeforeEdit = new Item(productList.get(position).getItemName(), productList.get(position).getItemPrice(),
+                    productList.get(position).getBarcode(), productList.get(position).getImageUrl(),
+                    productList.get(position).getItemBrand(), productList.get(position).getExpDate());
+
             txtISBN.setText(productList.get(position).getBarcode());
             txtPrice.setText(productList.get(position).getItemPrice());
             lblProductName.setText(productList.get(position).getItemName());
@@ -158,8 +163,15 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
     }
 
     public void updateListOfItems(View view) {
-        if (newItem != null && fieldsChanged()) {
-            Item modifiedItem = new Item(String.valueOf(lblProductName.getText()), String.valueOf(txtPrice.getText()), String.valueOf(txtISBN.getText()), String.valueOf(newItem.getImageUrl()), String.valueOf(newItem.getItemBrand()), String.valueOf(expDate.getText()));
+        Item modifiedItem = null;
+        // Kjør denne om query har blitt brukt (se setNewValues)
+        if (newItem != null) {
+            modifiedItem = new Item(String.valueOf(lblProductName.getText()), String.valueOf(txtPrice.getText()), String.valueOf(txtISBN.getText()), String.valueOf(newItem.getImageUrl()), String.valueOf(newItem.getItemBrand()), String.valueOf(expDate.getText()));
+        // Kjør denne om det er gjort forandringer, men søk ikke har blitt brukt.
+        } else if (!fieldsNotChanged()) {
+            modifiedItem = new Item(String.valueOf(lblProductName.getText()), String.valueOf(txtPrice.getText()), String.valueOf(txtISBN.getText()), String.valueOf(itemBeforeEdit.getImageUrl()), String.valueOf(itemBeforeEdit.getItemBrand()), String.valueOf(expDate.getText()));
+        }
+        if (modifiedItem != null) {
             productList.add(modifiedItem);
             Intent resultIntent = new Intent();
             Bundle bundle = new Bundle();
@@ -169,13 +181,13 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
             setResult(Activity.RESULT_OK, resultIntent);
         }
         finish();
-
     }
 
-    private boolean fieldsChanged() {
-        if (lblProductName.getText().equals(R.string.default_product_name) && txtPrice.getText().equals(R.string.default_price) && txtISBN.equals(R.string.default_barcode)) // legge til antall
-            return false;
-        return true;
+    private boolean fieldsNotChanged() {
+        return lblProductName.getText().toString().equals(itemBeforeEdit.getItemName())
+                && txtPrice.getText().toString().equals(itemBeforeEdit.getItemPrice())
+                && txtISBN.getText().toString().equals(itemBeforeEdit.getBarcode())
+                && expDate.getText().toString().equals(itemBeforeEdit.getExpDate());
     }
 
     public Item getNewItem() {
