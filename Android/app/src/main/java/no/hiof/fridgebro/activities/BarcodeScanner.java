@@ -29,9 +29,6 @@ public class BarcodeScanner extends AppCompatActivity implements ZXingScannerVie
     private static final int REQUEST_CAMERA = 1;
     private ZXingScannerView scannerView;
     private ArrayList<Item> productList;
-    private AddActivity addActivity;
-    private MainActivity mainActivity;
-    //private static int camId = Camera.CameraInfo.CAMERA_FACING_BACK;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,8 +154,6 @@ public class BarcodeScanner extends AppCompatActivity implements ZXingScannerVie
     public void handleResult(Result result) {
         final String myResult = result.getText();
 
-        // Toast.makeText(this, myResult, Toast.LENGTH_SHORT).show();
-
         Intent intent = new Intent(this, AddActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList("productList", productList);
@@ -166,28 +161,6 @@ public class BarcodeScanner extends AppCompatActivity implements ZXingScannerVie
         bundle.putBoolean("scanner", true);
         intent.putExtras(bundle);
         ((Activity) Objects.requireNonNull(this)).startActivityForResult(intent, 300);
-        
-        /*Log.d("QRCodeScanner", result.getText());
-        Log.d("QRCodeScanner", result.getBarcodeFormat().toString());
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Scan Result");
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                scannerView.resumeCameraPreview(BarcodeScanner.this);
-            }
-        });
-        builder.setNeutralButton("Visit", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(myResult));
-                startActivity(browserIntent);
-            }
-        });
-        builder.setMessage(result.getText());
-        AlertDialog alert1 = builder.create();
-        alert1.show();*/
     }
 
 
