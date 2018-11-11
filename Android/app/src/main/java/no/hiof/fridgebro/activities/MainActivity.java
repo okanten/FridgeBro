@@ -188,19 +188,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 300) {
-            if (resultCode == RESULT_OK) {
-                productList = data.getParcelableArrayListExtra("productList");
-                if (isOnShoppingList) {
-                    shoppingListFragment.updateAdapter(productList);
-                } else {
-                    recyclerViewFragment.updateAdapter(productList);
-                }
-            } else {
-
-            }
-        }
-        if (requestCode == 200) {
+        if (requestCode == 200 || requestCode == 300) {
             if (resultCode == RESULT_OK) {
                 productList = data.getParcelableArrayListExtra("productList");
                 if (isOnShoppingList) {
