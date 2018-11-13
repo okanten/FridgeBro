@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -50,7 +51,6 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
     private ArrayList<Item> productList;
     private RecyclerViewAdapter mAdapter;
     private NorgesGruppenAPI ng = new NorgesGruppenAPI(1300);
-    private MainActivity mainActivity;
     private Integer position;
     private Item newItem;
     private String itemDate;
@@ -62,6 +62,7 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_add);
         txtISBN = (EditText) findViewById(R.id.txtISBN);
         txtPrice = (EditText) findViewById(R.id.txtPrice);
@@ -198,6 +199,22 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
     public void onDismiss(DialogInterface dialog) {
         /* Henter ut valgt element og setter nye verdier i viewet. */
         setNewValues(contextMenuFragment.getQueryResult(), contextMenuFragment.getContextMenuAdapter().getPos());
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch(id) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
 
