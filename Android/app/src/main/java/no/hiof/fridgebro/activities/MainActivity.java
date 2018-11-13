@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
 
         //testing for firebase auth
-        firebaseAuth = FirebaseAuth.getInstance();
+       /*firebaseAuth = FirebaseAuth.getInstance();
         createAuthenticationListener();
 
 
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("message");
         myRef.setValue("Hello, World!");
-
+*/
 
         mToolbar = findViewById(R.id.nav_action);
         setSupportActionBar(mToolbar);
@@ -80,11 +80,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             } else if (shoppingListFragment == null && isOnShoppingList) {
                 shoppingListFragment = new RecyclerViewFragment().newInstance(isOnShoppingList);
             }
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    recyclerViewFragment).commit();
-            navigationView.setCheckedItem(R.id.nav_fridgelist);
-        }
+            if (isOnShoppingList) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        shoppingListFragment).commit();
+                navigationView.setCheckedItem(R.id.nav_shoppinglist);
+            } else {
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        recyclerViewFragment).commit();
+                navigationView.setCheckedItem(R.id.nav_fridgelist);
+            }
 
+        }
     }
 
     private void createAuthenticationListener() {
@@ -159,6 +165,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (Item.getItemId()) {
             case R.id.nav_fridgelist:
                 isOnShoppingList = false;
+                // Må sjekke om rcv er null i tilfelle brukeren roterer telefonen og bytter fra shoppingList til fridge.
+                if (recyclerViewFragment == null) {
+                    recyclerViewFragment = new RecyclerViewFragment().newInstance(isOnShoppingList);
+                }
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         recyclerViewFragment).commit();
                 break;
@@ -175,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
+
 
     @Override
     public void onBackPressed() {
