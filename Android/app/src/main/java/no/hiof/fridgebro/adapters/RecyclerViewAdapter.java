@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 
@@ -79,6 +80,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
         Glide.with(mContext)
                 .asBitmap()
+                .apply(new RequestOptions().placeholder(R.drawable.ic_placeholder_image))
                 .load(productList.get(i).getImageUrl())
                 .into(viewHolder.image);
 
