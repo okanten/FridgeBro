@@ -1,48 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/shoppingListParentLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/parentLayoutList"
     android:background="@drawable/layout_border">
 
+    <ImageView
+        android:id="@+id/shoppingListImageView"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/productimage"
+        android:src="@mipmap/ic_launcher"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
-        android:id="@+id/recylerTextView"
+        android:id="@+id/shoppingListTextView"
         android:layout_width="191dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="164dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginEnd="116dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="@string/produkt"
         android:textColor="#000"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/shoppingListImageView"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
-        android:id="@+id/deleteButton"
-        android:layout_width="30dp"
-        android:layout_height="26dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="4dp"
+        android:id="@+id/shoppingListDeleteButton"
+        android:layout_width="37dp"
+        android:layout_height="36dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@null"
         android:contentDescription="@string/removeitem"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@android:drawable/ic_menu_delete" />
+        app:srcCompat="@mipmap/baseline_delete_black_36" />
+
 
     <CheckBox
-        android:id="@+id/checkBox"
-        android:layout_width="95dp"
+        android:id="@+id/shoppingListCheckBox"
+        android:layout_width="32dp"
         android:layout_height="35dp"
-        android:text="CheckBox"
-        tools:layout_editor_absoluteX="242dp"
-        tools:layout_editor_absoluteY="4dp" />
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/shoppingListDeleteButton"
+        app:layout_constraintStart_toEndOf="@+id/shoppingListTextView"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>
