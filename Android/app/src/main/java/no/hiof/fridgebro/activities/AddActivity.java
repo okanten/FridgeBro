@@ -43,7 +43,9 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
     private ImageView imgItem;
     private TextView lblProductName;
     private EditText expDate;
+    private ImageButton btnScan;
     private ImageButton btnPickDate;
+    private ImageButton btnSearch;
     private Button btnSave;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     private JsonObject ngJson;
@@ -69,6 +71,8 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
         imgItem = (ImageView) findViewById(R.id.imgItem);
         lblProductName = (TextView) findViewById(R.id.lblProductName);
         expDate = findViewById(R.id.expDate);
+        btnScan = findViewById(R.id.btnScan);
+        btnSearch = findViewById(R.id.btnSearch);
         btnPickDate = findViewById(R.id.btnPickDate);
         btnSave = findViewById(R.id.btnSave);
         productList = getIntent().getParcelableArrayListExtra("productList");
@@ -92,7 +96,39 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
                     .load(productList.get(position).getImageUrl())
                     .apply(new RequestOptions().transform(new FitCenter()))
                     .into(imgItem);
+        } else {
+            itemBeforeEdit = null;
         }
+
+        btnScan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //intent
+            }
+        });
+
+        btnScan.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                makeToast(btnScan.getContentDescription());
+                return true;
+            }
+        });
+
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getPriceFromNg();
+            }
+        });
+
+        btnSearch.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                makeToast(btnSearch.getContentDescription());
+                return true;
+            }
+        });
 
         btnPickDate.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -106,6 +142,29 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
             }
         });
 
+        btnPickDate.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                makeToast(btnPickDate.getContentDescription());
+                return true;
+            }
+        });
+
+
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateListOfItems(v);
+            }
+        });
+
+        btnSave.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                makeToast(btnSave.getContentDescription());
+                return true;
+            }
+        });
         mDateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -116,10 +175,12 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
             }
         };
 
-        btnSave.setOnClickListener(new View.OnClickListener() {
+        txtISBN.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onClick(View v) {
-                updateListOfItems(v);
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    lblProductName.setText(txtISBN.getText());
+                }
             }
         });
 
@@ -135,15 +196,15 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
             }
         }
 
-     }
+    }
 
-    public void getPriceFromNg(View view) {
+    public void getPriceFromNg() {
         String isbn = String.valueOf(txtISBN.getText());
         new asyncLoadJson().execute(isbn);
     }
 
-    public void makeToast() {
-        Toast.makeText(this, "Kunne ikke finne strekkode", Toast.LENGTH_SHORT).show();
+    public void makeToast(CharSequence msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
     public void openItemPickerDialog(ArrayList<Item> queryResult) {
@@ -168,9 +229,11 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
         // Kjør denne om query har blitt brukt (se setNewValues)
         if (newItem != null) {
             modifiedItem = new Item(String.valueOf(lblProductName.getText()), String.valueOf(txtPrice.getText()), String.valueOf(txtISBN.getText()), String.valueOf(newItem.getImageUrl()), String.valueOf(newItem.getItemBrand()), String.valueOf(expDate.getText()));
-        // Kjør denne om det er gjort forandringer, men søk ikke har blitt brukt.
-        } else if (!fieldsNotChanged()) {
+            // Kjør denne om det er gjort forandringer, men søk ikke har blitt brukt.
+        } else if (itemBeforeEdit != null && !fieldsNotChanged()) {
             modifiedItem = new Item(String.valueOf(lblProductName.getText()), String.valueOf(txtPrice.getText()), String.valueOf(txtISBN.getText()), String.valueOf(itemBeforeEdit.getImageUrl()), String.valueOf(itemBeforeEdit.getItemBrand()), String.valueOf(expDate.getText()));
+        } else if (itemBeforeEdit == null && !fieldsNotEmpty()) {
+            modifiedItem = new Item(String.valueOf(lblProductName.getText()), String.valueOf(txtPrice.getText()), String.valueOf(txtISBN.getText()), null, null, String.valueOf(expDate.getText()));
         }
         if (modifiedItem != null) {
             productList.add(modifiedItem);
@@ -182,6 +245,13 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
             setResult(Activity.RESULT_OK, resultIntent);
         }
         finish();
+    }
+
+    private boolean fieldsNotEmpty() {
+        return lblProductName.getText().toString().isEmpty()
+                && txtPrice.getText().toString().isEmpty()
+                && txtISBN.getText().toString().isEmpty()
+                && expDate.getText().toString().isEmpty();
     }
 
     private boolean fieldsNotChanged() {
@@ -257,7 +327,7 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
                 } else if (queryResult.size() > 1) {
                     openItemPickerDialog(queryResult);
                 } else {
-                    makeToast();
+                    makeToast("Kunne ikke finne strekkode");
                     if (fromScanner) {
                         Intent failedIntent = new Intent();
                         setResult(Activity.RESULT_CANCELED, failedIntent);
