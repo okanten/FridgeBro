@@ -49,12 +49,7 @@ public class RecyclerViewFragment extends Fragment {
         rcvFrag.setArguments(bundle);
         return rcvFrag;
     }
-
-
-
-
-
-
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (productList.isEmpty()) {

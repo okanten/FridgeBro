@@ -21,4 +21,13 @@
     <string name="default_price">0</string>
     <string name="default_barcode">5000112637397</string>
 
+    <!-- AddActivity string -->
+
+    <string name="add_default_product_name">Produktnavn / strekkode</string>
+    <string name="add_default_price">Pris</string>
+    <string name="add_default_expdate">Utløpsdato</string>
+    <string name="add_contentDesc_camera">Scan strekkode med kamera</string>
+    <string name="add_contentDesc_search">Søk etter pris og produktinformasjon</string>
+    <string name="add_contentDesc_date">Velg utløpsdato</string>
+
 </resources>
