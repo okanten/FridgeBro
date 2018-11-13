@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.Filter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -28,28 +29,48 @@ import no.hiof.fridgebro.models.Item;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     private ArrayList<Item> productList = new ArrayList<>();
-    private ArrayList<Item> shoppingListProducts = new ArrayList<>();
     private Context mContext;
     private RecyclerViewFragment rcFrag;
+    private boolean isOnShoppingList;
+    private ImageButton deleteButton;
+    private View view;
+    private int layoutID;
 
     public RecyclerViewAdapter(ArrayList<Item> productList, Context mContext) {
         this.productList = productList;
-        this.shoppingListProducts = shoppingListProducts;
         this.mContext = mContext;
     }
 
-    public RecyclerViewAdapter(ArrayList<Item> productList, Context mContext, RecyclerViewFragment recyclerViewFragment) {
+    public RecyclerViewAdapter(ArrayList<Item> productList, Context mContext, RecyclerViewFragment recyclerViewFragment, boolean isOnShoppingList) {
         this.productList = productList;
-        this.shoppingListProducts = shoppingListProducts;
+        this.mContext = mContext;
+        this.rcFrag = recyclerViewFragment;
+        this.isOnShoppingList = isOnShoppingList;
+    }
+
+
+    // Ubrukt constructor. Kan være nyttig senere.
+    public RecyclerViewAdapter(ArrayList<Item> productList, Context mContext, RecyclerViewFragment recyclerViewFragment, int itemLayout) {
+        this.layoutID = itemLayout;
+        if (layoutID == R.layout.layout_listitem) {
+            isOnShoppingList = false;
+        } else {
+            isOnShoppingList = true;
+        }
+        this.productList = productList;
         this.mContext = mContext;
         this.rcFrag = recyclerViewFragment;
     }
 
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_listitem,viewGroup,false);
+        if (isOnShoppingList) {
+            view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_slistitem, viewGroup,false);
+        } else {
+            view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_listitem, viewGroup,false);
+        }
+        //view = LayoutInflater.from(viewGroup.getContext()).inflate(layoutID, viewGroup,false);
         ViewHolder holder = new ViewHolder(view);
         return holder;
     }
@@ -61,18 +82,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 .load(productList.get(i).getImageUrl())
                 .into(viewHolder.image);
 
+        if (!isOnShoppingList) {
+            viewHolder.expdate.setText(productList.get(i).getExpDate());
+            viewHolder.price.setText(mContext.getResources().getString(R.string.currency, productList.get(i).getItemPrice()));
+        }
         viewHolder.text.setText(productList.get(i).getItemName());
-        viewHolder.expdate.setText(productList.get(i).getExpDate());
         // henter ut string fra strings.xml med placeholders
-        viewHolder.price.setText(mContext.getResources().getString(R.string.currency, productList.get(i).getItemPrice()));
-        ImageButton deleteButton = (ImageButton) viewHolder.parentLayout.getViewById(R.id.deleteButton);
+
+
         deleteButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 int pos = viewHolder.getAdapterPosition();
                 rcFrag.deleteItem(pos);
             }
         });
-
 
         viewHolder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,17 +121,25 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         TextView text;
         TextView price;
         TextView expdate;
+        CheckBox checkBox;
         ConstraintLayout parentLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
-            image = itemView.findViewById(R.id.recyclerImageView);
-            text = itemView.findViewById(R.id.recylerTextView);
-            price = itemView.findViewById(R.id.txtPriceAdd);
-            expdate = itemView.findViewById(R.id.txtExpDate);
-
-            parentLayout = itemView.findViewById(R.id.parentLayoutList);
+            if (isOnShoppingList) {
+                image = itemView.findViewById(R.id.shoppingListImageView);
+                text = itemView.findViewById(R.id.shoppingListTextView);
+                checkBox = itemView.findViewById(R.id.shoppingListCheckBox);
+                deleteButton = itemView.findViewById(R.id.shoppingListDeleteButton);
+                parentLayout = itemView.findViewById(R.id.shoppingListParentLayout);
+            } else {
+                image = itemView.findViewById(R.id.recyclerImageView);
+                text = itemView.findViewById(R.id.recylerTextView);
+                price = itemView.findViewById(R.id.txtPriceAdd);
+                expdate = itemView.findViewById(R.id.txtExpDate);
+                deleteButton = itemView.findViewById(R.id.deleteButton);
+                parentLayout = itemView.findViewById(R.id.parentLayoutList);
+            }
         }
     }
 }

@@ -62,7 +62,7 @@ public class RecyclerViewFragment extends Fragment {
         }
 
         isOnShoppingList = getArguments().getBoolean("shoppingList", false);
-            View v;
+        View v;
         if (isOnShoppingList) {
             v = inflater.inflate(R.layout.fragment_shoppinglist, container, false);
         } else {
@@ -70,7 +70,8 @@ public class RecyclerViewFragment extends Fragment {
         }
 
         recyclerView = v.findViewById(R.id.recyclerView);
-        adapter = new RecyclerViewAdapter(productList, getContext(), this);
+        adapter = new RecyclerViewAdapter(productList, getContext(), this, isOnShoppingList);
+
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
