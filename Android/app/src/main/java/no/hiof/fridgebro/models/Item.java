@@ -3,6 +3,7 @@ package no.hiof.fridgebro.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.time.LocalDate;
 
@@ -14,7 +15,7 @@ public class Item implements Parcelable, Comparable<Item> {
     private String itemBrand;
     private String expDate;
 
-
+    
     public Item(String itemName, String itemPrice, String barcode, String imageUrl, String itemBrand) {
         this.itemName = itemName;
         this.itemPrice = itemPrice;
@@ -23,7 +24,7 @@ public class Item implements Parcelable, Comparable<Item> {
         this.itemBrand = itemBrand;
     }
 
-    public Item(String itemName, String itemPrice, String barcode, String imageUrl, String itemBrand, String expDate) {
+    public Item(String itemName, String itemPrice, String barcode, @Nullable String imageUrl, @Nullable String itemBrand, String expDate) {
         this.itemName = itemName;
         this.itemPrice = itemPrice;
         this.barcode = barcode;
