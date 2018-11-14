@@ -18,8 +18,6 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -117,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onPause(){
         super.onPause();
         if (firebaseAuthStateListener != null){
-            firebaseAuth.addAuthStateListener(firebaseAuthStateListener);
+            firebaseAuth.removeAuthStateListener(firebaseAuthStateListener);
         }
     }
 
@@ -223,6 +221,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Toast.makeText(this,"Logget inn som " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
             } else if(resultCode == RESULT_CANCELED){
                 Toast.makeText(this, "Innlogging avbrutt", Toast.LENGTH_SHORT).show();
+                finish();
             }
         }
 
