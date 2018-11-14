@@ -54,6 +54,8 @@ public class RecyclerViewFragment extends Fragment {
     private List<String> productListKeys = new ArrayList<>();
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference dataReference;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth.AuthStateListener firebaseAuthStateListener;
 
 
 
@@ -91,6 +93,7 @@ public class RecyclerViewFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
         dataReference = firebaseDatabase.getReference("Users");
 
@@ -118,6 +121,12 @@ public class RecyclerViewFragment extends Fragment {
                 ((Activity) Objects.requireNonNull(getContext())).startActivityForResult(intent, 300);
             }
         });
+
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        if (firebaseUser != null){
+            dataReference.child(firebaseUser.getUid() + "/Productlist").addChildEventListener(childEventListener);
+        }
+
         return v;
     }
 
@@ -127,7 +136,7 @@ public class RecyclerViewFragment extends Fragment {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 Item item = dataSnapshot.getValue(Item.class);
                 String itemKey = dataSnapshot.getKey();
-                item.setItemName(itemKey);
+                item.setUid(itemKey);
 
                 if (!productList.contains(item)){
                     productList.add(item);
