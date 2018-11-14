@@ -49,17 +49,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //testing for firebase auth
-       /*firebaseAuth = FirebaseAuth.getInstance();
-        createAuthenticationListener();
-
-
-        //Test for firebase realtime database
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("message");
-        myRef.setValue("Hello, World!");
-*/
-
         mToolbar = findViewById(R.id.nav_action);
         setSupportActionBar(mToolbar);
 
@@ -72,6 +61,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        createAuthenticationListener();
 
 
         if (savedInstanceState == null) {
@@ -93,40 +85,42 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private void createAuthenticationListener() {
+    private void createAuthenticationListener(){
         firebaseAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
-            public void onAuthStateChanged(FirebaseAuth firebaseAuth) {
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-                if (firebaseUser == null) {
+                if (firebaseUser == null){
                     startActivityForResult(
                             AuthUI.getInstance()
-                                    .createSignInIntentBuilder()
-                                    .setIsSmartLockEnabled(false)
-                                    .setAvailableProviders(
-                                            Arrays.asList(new AuthUI.IdpConfig.EmailBuilder().build(),
-                                                    new AuthUI.IdpConfig.GoogleBuilder().build()))
-                                    .build(),
-                            RC_SIGN_IN);
+                            .createSignInIntentBuilder()
+                            .setIsSmartLockEnabled(false)
+                            .setAvailableProviders(
+                                    Arrays.asList(new AuthUI.IdpConfig.EmailBuilder().build(),
+                                            new AuthUI.IdpConfig.GoogleBuilder().build()))
+                    .build(),
+                    RC_SIGN_IN);
                 }
             }
         };
     }
 
     @Override
-    protected void onResume() {
+    protected void onResume(){
         super.onResume();
-        if (firebaseAuthStateListener != null)
+        if (firebaseAuthStateListener != null){
             firebaseAuth.addAuthStateListener(firebaseAuthStateListener);
+        }
     }
 
     @Override
-    protected void onPause() {
+    protected void onPause(){
         super.onPause();
-
-        if (firebaseAuthStateListener != null)
-            firebaseAuth.removeAuthStateListener(firebaseAuthStateListener);
+        if (firebaseAuthStateListener != null){
+            firebaseAuth.addAuthStateListener(firebaseAuthStateListener);
+        }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -221,6 +215,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 } else {
                     recyclerViewFragment.updateAdapter(productList);
                 }
+            }
+        }
+        if (requestCode == RC_SIGN_IN){
+            if (resultCode == RESULT_OK){
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                Toast.makeText(this,"Logget inn som " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
+            } else if(resultCode == RESULT_CANCELED){
+                Toast.makeText(this, "Innlogging avbrutt", Toast.LENGTH_SHORT).show();
             }
         }
 
