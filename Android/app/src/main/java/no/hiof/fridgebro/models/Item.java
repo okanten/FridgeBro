@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import java.time.LocalDate;
 
 public class Item implements Parcelable, Comparable<Item> {
+    private String Uid;
     private String itemName;
     private String itemPrice;
     private String barcode;
@@ -15,13 +16,25 @@ public class Item implements Parcelable, Comparable<Item> {
     private String itemBrand;
     private String expDate;
 
-    
+
+    public Item() {
+
+    }
+
     public Item(String itemName, String itemPrice, String barcode, String imageUrl, String itemBrand) {
         this.itemName = itemName;
         this.itemPrice = itemPrice;
         this.barcode = barcode;
         this.imageUrl = imageUrl;
         this.itemBrand = itemBrand;
+    }
+
+    public String getUid() {
+        return Uid;
+    }
+
+    public void setUid(String uid) {
+        Uid = uid;
     }
 
     public Item(String itemName, String itemPrice, String barcode, @Nullable String imageUrl, @Nullable String itemBrand, String expDate) {
@@ -31,6 +44,7 @@ public class Item implements Parcelable, Comparable<Item> {
         this.imageUrl = imageUrl;
         this.itemBrand = itemBrand;
         this.expDate = expDate;
+
     }
 
 /*
