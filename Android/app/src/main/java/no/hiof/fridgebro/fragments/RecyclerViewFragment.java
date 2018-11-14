@@ -4,6 +4,8 @@ package no.hiof.fridgebro.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,12 +13,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.firebase.ui.auth.data.model.User;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 
 import no.hiof.fridgebro.activities.BarcodeScanner;
@@ -31,11 +43,19 @@ public class RecyclerViewFragment extends Fragment {
 
 
     private ArrayList<Item> productList = new ArrayList<>();
+
     private RecyclerView recyclerView;
     private RecyclerViewAdapter adapter;
     private boolean isOnShoppingList;
     private boolean priceSortedAsc = false;
     private boolean alphaSortedAsc = false;
+
+    private ChildEventListener childEventListener;
+    private List<String> productListKeys = new ArrayList<>();
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference dataReference;
+
+
 
     public RecyclerViewFragment() {
         // Required empty public constructor
@@ -53,7 +73,8 @@ public class RecyclerViewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (productList.isEmpty()) {
-            getImageBitmaps();
+            createDatabaseReadListener();
+            //getImageBitmaps();
         }
 
         isOnShoppingList = getArguments().getBoolean("shoppingList", false);
@@ -69,6 +90,9 @@ public class RecyclerViewFragment extends Fragment {
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        dataReference = firebaseDatabase.getReference("Users");
 
         final FloatingActionsMenu mainFab = v.findViewById(R.id.myFab);
         FloatingActionButton fabManual = v.findViewById(R.id.fabManual);
@@ -95,6 +119,56 @@ public class RecyclerViewFragment extends Fragment {
             }
         });
         return v;
+    }
+
+    private void createDatabaseReadListener(){
+        childEventListener = new ChildEventListener(){
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Item item = dataSnapshot.getValue(Item.class);
+                String itemKey = dataSnapshot.getKey();
+                item.setItemName(itemKey);
+
+                if (!productList.contains(item)){
+                    productList.add(item);
+                    productListKeys.add(itemKey);
+                    adapter.notifyItemInserted(productList.size()-1);
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Item item = dataSnapshot.getValue(Item.class);
+                String itemKey = dataSnapshot.getKey();
+                item.setItemName(itemKey);
+
+                int postition = productList.indexOf(itemKey);
+
+                productList.set(postition,item);
+                adapter.notifyItemChanged(postition);
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                Item removedItem = dataSnapshot.getValue(Item.class);
+                String itemkey = dataSnapshot.getKey();
+                removedItem.setItemName(itemkey);
+                int position = productListKeys.indexOf(itemkey);
+                productList.remove(removedItem);
+                productListKeys.remove(position);
+                adapter.notifyItemRemoved(position);
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
     }
 
     private void getImageBitmaps(){
