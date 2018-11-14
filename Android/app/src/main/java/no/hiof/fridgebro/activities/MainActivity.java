@@ -172,6 +172,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         shoppingListFragment).commit();
                 break;
+            case R.id.nav_signout:
+                mDrawerLayout.closeDrawers();
+                AuthUI.getInstance().signOut(this);
+                return true;
         }
 
         mDrawerLayout.closeDrawer(GravityCompat.START);
