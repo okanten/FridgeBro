@@ -23,6 +23,11 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.request.RequestOptions;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.FirebaseAuth;
+
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
@@ -60,6 +65,10 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
     private ContextMenuFragment contextMenuFragment;
     private Item itemBeforeEdit;
 
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference dataReference;
+    private FirebaseAuth firebaseAuth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +87,10 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
         productList = getIntent().getParcelableArrayListExtra("productList");
         position = getIntent().getIntExtra("position", -1);
 
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        dataReference = firebaseDatabase.getReference("Users").child(firebaseAuth.getCurrentUser().getUid()).child("Productlist");
+
 
         //     public Item(String itemName, String itemPrice, String barcode, String imageUrl, String itemBrand, String expDate) {
 
@@ -87,6 +100,7 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
             itemBeforeEdit = new Item(productList.get(position).getItemName(), productList.get(position).getItemPrice(),
                     productList.get(position).getBarcode(), productList.get(position).getImageUrl(),
                     productList.get(position).getItemBrand(), productList.get(position).getExpDate());
+            itemBeforeEdit = productList.get(position);
 
             txtISBN.setText(productList.get(position).getBarcode());
             txtPrice.setText(productList.get(position).getItemPrice());
@@ -231,11 +245,24 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
             modifiedItem = new Item(String.valueOf(lblProductName.getText()), String.valueOf(txtPrice.getText()), String.valueOf(txtISBN.getText()), String.valueOf(newItem.getImageUrl()), String.valueOf(newItem.getItemBrand()), String.valueOf(expDate.getText()));
             // Kjør denne om det er gjort forandringer, men søk ikke har blitt brukt.
         } else if (itemBeforeEdit != null && !fieldsNotChanged()) {
-            modifiedItem = new Item(String.valueOf(lblProductName.getText()), String.valueOf(txtPrice.getText()), String.valueOf(txtISBN.getText()), String.valueOf(itemBeforeEdit.getImageUrl()), String.valueOf(itemBeforeEdit.getItemBrand()), String.valueOf(expDate.getText()));
+            modifiedItem = new Item(String.valueOf(lblProductName.getText()), String.valueOf(txtPrice.getText()), String.valueOf(txtISBN.getText()), String.valueOf(itemBeforeEdit.getImageUrl()), String.valueOf(itemBeforeEdit.getItemBrand()), String.valueOf(expDate.getText()),itemBeforeEdit.getUid());
         } else if (itemBeforeEdit == null && !fieldsNotEmpty()) {
-            modifiedItem = new Item(String.valueOf(lblProductName.getText()), String.valueOf(txtPrice.getText()), String.valueOf(txtISBN.getText()), null, null, String.valueOf(expDate.getText()));
+            modifiedItem = new Item(String.valueOf(lblProductName.getText()), String.valueOf(txtPrice.getText()), String.valueOf(txtISBN.getText()), null, null, String.valueOf(expDate.getText()),itemBeforeEdit.getUid());
         }
         if (modifiedItem != null) {
+            DatabaseReference newRef;
+            // If new
+            if (modifiedItem.getUid() == null) {
+                newRef = dataReference.push();
+                modifiedItem.setUid(newRef.getKey());
+            }
+            else {
+                newRef = dataReference.child(modifiedItem.getUid());
+            }
+
+
+            newRef.setValue(modifiedItem);
+
             productList.add(modifiedItem);
             Intent resultIntent = new Intent();
             Bundle bundle = new Bundle();

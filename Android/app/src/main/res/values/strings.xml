@@ -29,6 +29,7 @@
     <string name="add_contentDesc_camera">Scan strekkode med kamera</string>
     <string name="add_contentDesc_search">Søk etter pris og produktinformasjon</string>
     <string name="add_contentDesc_date">Velg utløpsdato</string>
+    <string name="logout">Logg ut</string>
 
     <!-- menu_buttons strings -->
 
