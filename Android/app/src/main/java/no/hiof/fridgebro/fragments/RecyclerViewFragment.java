@@ -64,6 +64,7 @@ public class RecyclerViewFragment extends Fragment {
     }
 
 
+
     public RecyclerViewFragment newInstance(boolean isOnShoppingList) {
         RecyclerViewFragment rcvFrag = new RecyclerViewFragment();
         Bundle bundle = new Bundle();
@@ -123,8 +124,12 @@ public class RecyclerViewFragment extends Fragment {
         });
 
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-        if (firebaseUser != null){
-            dataReference.child(firebaseUser.getUid() + "/Productlist").addChildEventListener(childEventListener);
+        if (firebaseUser != null && productList.size() <= 0) {
+            if (isOnShoppingList) {
+                dataReference.child(firebaseUser.getUid() + "/Shoppinglist").addChildEventListener(childEventListener);
+            } else {
+                dataReference.child(firebaseUser.getUid() + "/Productlist").addChildEventListener(childEventListener);
+            }
         }
 
         return v;
@@ -137,7 +142,6 @@ public class RecyclerViewFragment extends Fragment {
                 Item item = dataSnapshot.getValue(Item.class);
                 String itemKey = dataSnapshot.getKey();
                 item.setUid(itemKey);
-
                 if (!productList.contains(item)){
                     productList.add(item);
                     productListKeys.add(itemKey);
@@ -150,11 +154,6 @@ public class RecyclerViewFragment extends Fragment {
                 Item item = dataSnapshot.getValue(Item.class);
                 String itemKey = dataSnapshot.getKey();
                 item.setItemName(itemKey);
-
-                int postition = productList.indexOf(itemKey);
-
-                productList.set(postition,item);
-                adapter.notifyItemChanged(postition);
             }
 
             @Override
@@ -180,17 +179,6 @@ public class RecyclerViewFragment extends Fragment {
         };
     }
 
-    private void getImageBitmaps(){
-        productList.add(new Item("Test 1", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "TestBrand", "03/03/2019"));
-        productList.add(new Item("Test 2", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "TestBrand", "03/03/2019"));
-        productList.add(new Item("Test 3", "242", "11111", "https://i.redd.it/oir304dowbs11.jpg", "TestBrand", "03/03/2019"));
-        productList.add(new Item("Test 4", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "TestBrand", "03/03/2019"));
-        productList.add(new Item("Test 5", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "TestBrand", "03/03/2019"));
-        productList.add(new Item("Test 6", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "TestBrand", "03/03/2019"));
-        productList.add(new Item("Test 7", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "TestBrand", "03/03/2019"));
-        productList.add(new Item("Test 8", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "TestBrand", "03/03/2019"));
-    }
-
     public RecyclerViewAdapter getAdapter() {
         return adapter;
     }
@@ -206,7 +194,12 @@ public class RecyclerViewFragment extends Fragment {
     //TODO: Trenger muligens fix?
     public void deleteItem(int position) {
         Item deleteItem = productList.get(position);
-        DatabaseReference deleteReference = dataReference.child(firebaseAuth.getCurrentUser().getUid()).child("Productlist").child(deleteItem.getUid());
+        DatabaseReference deleteReference;
+        if (isOnShoppingList) {
+            deleteReference = dataReference.child(firebaseAuth.getCurrentUser().getUid()).child("Shoppinglist").child(deleteItem.getUid());
+        } else {
+            deleteReference = dataReference.child(firebaseAuth.getCurrentUser().getUid()).child("Productlist").child(deleteItem.getUid());
+        }
         deleteReference.removeValue();
 
         this.productList.remove(position);
