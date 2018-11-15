@@ -41,7 +41,7 @@ public class Item implements Parcelable, Comparable<Item> {
 
     }
 
-    public Item(String itemName, String itemPrice, String barcode, String imageUrl, String itemBrand, String expDate, String uid) {
+    public Item(String itemName, String itemPrice, String barcode, @Nullable String imageUrl, @Nullable String itemBrand, String expDate, @Nullable String uid) {
         Uid = uid;
         this.itemName = itemName;
         this.itemPrice = itemPrice;

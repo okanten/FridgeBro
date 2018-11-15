@@ -247,7 +247,7 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
         } else if (itemBeforeEdit != null && !fieldsNotChanged()) {
             modifiedItem = new Item(String.valueOf(lblProductName.getText()), String.valueOf(txtPrice.getText()), String.valueOf(txtISBN.getText()), String.valueOf(itemBeforeEdit.getImageUrl()), String.valueOf(itemBeforeEdit.getItemBrand()), String.valueOf(expDate.getText()),itemBeforeEdit.getUid());
         } else if (itemBeforeEdit == null && !fieldsNotEmpty()) {
-            modifiedItem = new Item(String.valueOf(lblProductName.getText()), String.valueOf(txtPrice.getText()), String.valueOf(txtISBN.getText()), null, null, String.valueOf(expDate.getText()),itemBeforeEdit.getUid());
+            modifiedItem = new Item(String.valueOf(lblProductName.getText()), String.valueOf(txtPrice.getText()), String.valueOf(txtISBN.getText()), null, null, String.valueOf(expDate.getText()), null);
         }
         if (modifiedItem != null) {
             DatabaseReference newRef;
