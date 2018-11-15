@@ -9,9 +9,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.data.model.User;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -145,7 +147,7 @@ public class RecyclerViewFragment extends Fragment {
                 if (!productList.contains(item)){
                     productList.add(item);
                     productListKeys.add(itemKey);
-                    adapter.notifyItemInserted(productList.size()-1);
+                    adapter.notifyItemInserted(productList.size() -1 );
                 }
             }
 
@@ -193,18 +195,21 @@ public class RecyclerViewFragment extends Fragment {
 
     //TODO: Trenger muligens fix?
     public void deleteItem(int position) {
-        Item deleteItem = productList.get(position);
-        DatabaseReference deleteReference;
-        if (isOnShoppingList) {
-            deleteReference = dataReference.child(firebaseAuth.getCurrentUser().getUid()).child("Shoppinglist").child(deleteItem.getUid());
-        } else {
-            deleteReference = dataReference.child(firebaseAuth.getCurrentUser().getUid()).child("Productlist").child(deleteItem.getUid());
+        try {
+            Item deleteItem = productList.get(position);
+            DatabaseReference deleteReference;
+            if (isOnShoppingList) {
+                deleteReference = dataReference.child(firebaseAuth.getCurrentUser().getUid()).child("Shoppinglist").child(deleteItem.getUid());
+            } else {
+                deleteReference = dataReference.child(firebaseAuth.getCurrentUser().getUid()).child("Productlist").child(deleteItem.getUid());
+            }
+            deleteReference.removeValue();
+
+            this.productList.remove(position);
+            adapter.notifyItemRemoved(position);
+        } catch (ArrayIndexOutOfBoundsException OoB) {
+            Log.d("RCVF - Delete Item", OoB.getLocalizedMessage());
         }
-        deleteReference.removeValue();
-
-        this.productList.remove(position);
-        adapter.notifyItemRemoved(position);
-
 
     }
 
