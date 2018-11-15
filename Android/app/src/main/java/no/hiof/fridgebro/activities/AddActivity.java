@@ -8,6 +8,8 @@ import android.os.AsyncTask;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -187,6 +189,25 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
                 if (!hasFocus) {
                     lblProductName.setText(txtISBN.getText());
                 }
+            }
+        });
+
+        txtISBN.addTextChangedListener(new TextWatcher() {
+
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                lblProductName.setText(txtISBN.getText());
             }
         });
 
