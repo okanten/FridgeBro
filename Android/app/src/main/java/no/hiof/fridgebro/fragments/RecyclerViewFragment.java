@@ -205,8 +205,14 @@ public class RecyclerViewFragment extends Fragment {
 
     //TODO: Trenger muligens fix?
     public void deleteItem(int position) {
+        Item deleteItem = productList.get(position);
+        DatabaseReference deleteReference = dataReference.child(firebaseAuth.getCurrentUser().getUid()).child("Productlist").child(deleteItem.getUid());
+        deleteReference.removeValue();
+
         this.productList.remove(position);
         adapter.notifyItemRemoved(position);
+
+
     }
 
     public void sortListByPrice() {

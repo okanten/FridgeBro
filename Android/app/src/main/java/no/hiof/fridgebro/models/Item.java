@@ -29,13 +29,7 @@ public class Item implements Parcelable, Comparable<Item> {
         this.itemBrand = itemBrand;
     }
 
-    public String getUid() {
-        return Uid;
-    }
 
-    public void setUid(String uid) {
-        Uid = uid;
-    }
 
     public Item(String itemName, String itemPrice, String barcode, @Nullable String imageUrl, @Nullable String itemBrand, String expDate) {
         this.itemName = itemName;
@@ -47,7 +41,17 @@ public class Item implements Parcelable, Comparable<Item> {
 
     }
 
-/*
+    public Item(String itemName, String itemPrice, String barcode, String imageUrl, String itemBrand, String expDate, String uid) {
+        Uid = uid;
+        this.itemName = itemName;
+        this.itemPrice = itemPrice;
+        this.barcode = barcode;
+        this.imageUrl = imageUrl;
+        this.itemBrand = itemBrand;
+        this.expDate = expDate;
+    }
+
+    /*
     public Item(String categoryName, String itemName, String itemPrice, String barcode, String imageUrl) {
         //super(categoryName);
         this.itemName = itemName;
@@ -72,6 +76,7 @@ public class Item implements Parcelable, Comparable<Item> {
         expDate = in.readString();
         imageUrl = in.readString();
         itemBrand = in.readString();
+        Uid = in.readString();
     }
 
     public static final Creator<Item> CREATOR = new Creator<Item>() {
@@ -134,6 +139,14 @@ public class Item implements Parcelable, Comparable<Item> {
         this.itemBrand = itemBrand;
     }
 
+    public String getUid() {
+        return Uid;
+    }
+
+    public void setUid(String uid) {
+        Uid = uid;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -147,6 +160,7 @@ public class Item implements Parcelable, Comparable<Item> {
         dest.writeString(expDate);
         dest.writeString(imageUrl);
         dest.writeString(itemBrand);
+        dest.writeString(Uid);
     }
 
     @Override
