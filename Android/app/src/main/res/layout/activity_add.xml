@@ -16,6 +16,8 @@
         android:hint="@string/add_default_price"
         android:inputType="number"
         android:textAlignment="center"
+        android:singleLine="true"
+        android:imeOptions="actionDone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtISBN" />
 
@@ -28,6 +30,8 @@
         android:ems="10"
         android:hint="@string/add_default_product_name"
         android:inputType="textPersonName"
+        android:maxLines="1"
+        android:imeOptions="actionDone"
         android:textAlignment="center"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -56,7 +60,6 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="4dp"
         android:contentDescription="@string/add_contentDesc_search"
-        android:onClick="getPriceFromNg"
         app:layout_constraintBottom_toBottomOf="@+id/txtPrice"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.333"
@@ -73,7 +76,6 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="4dp"
         android:contentDescription="@string/add_contentDesc_date"
-        android:onClick="getPriceFromNg"
         app:layout_constraintBottom_toBottomOf="@+id/expDate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.333"
@@ -161,6 +163,7 @@
         android:gravity="center"
         android:textSize="18sp"
         android:textStyle="bold"
+        android:text="Produktnavn"
         app:layout_constraintBottom_toTopOf="@+id/txtISBN"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
