@@ -30,4 +30,10 @@
     <string name="add_contentDesc_search">Søk etter pris og produktinformasjon</string>
     <string name="add_contentDesc_date">Velg utløpsdato</string>
 
+    <!-- menu_buttons strings -->
+
+    <string name="menu_button_search">Søk</string>
+    <string name="menu_button_sortDate">Sorter etter utløpsdato</string>
+    <string name="menu_button_sortPrice">Sorter etter pris</string>
+
 </resources>
