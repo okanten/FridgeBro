@@ -65,10 +65,6 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
     private ContextMenuFragment contextMenuFragment;
     private Item itemBeforeEdit;
 
-    private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference dataReference;
-    private FirebaseAuth firebaseAuth;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,10 +82,6 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
         btnSave = findViewById(R.id.btnSave);
         productList = getIntent().getParcelableArrayListExtra("productList");
         position = getIntent().getIntExtra("position", -1);
-
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        dataReference = firebaseDatabase.getReference("Users").child(firebaseAuth.getCurrentUser().getUid()).child("Productlist");
 
 
         //     public Item(String itemName, String itemPrice, String barcode, String imageUrl, String itemBrand, String expDate) {

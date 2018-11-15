@@ -12,17 +12,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
+
 
 import com.google.firebase.auth.FirebaseAuth;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
 import no.hiof.fridgebro.R;
 import no.hiof.fridgebro.fragments.RecyclerViewFragment;
@@ -43,6 +44,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthStateListener;
 
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference dataReference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+
         createAuthenticationListener();
 
 
@@ -71,13 +77,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             } else if (shoppingListFragment == null && isOnShoppingList) {
                 shoppingListFragment = new RecyclerViewFragment().newInstance(isOnShoppingList);
             }
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    getRecyclerView()).commit();
             if (isOnShoppingList) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        shoppingListFragment).commit();
                 navigationView.setCheckedItem(R.id.nav_shoppinglist);
             } else {
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        recyclerViewFragment).commit();
                 navigationView.setCheckedItem(R.id.nav_fridgelist);
             }
 
@@ -136,18 +140,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.sortPrice:
-                if (isOnShoppingList) {
-                    shoppingListFragment.sortListByPrice();
-                } else {
-                    recyclerViewFragment.sortListByPrice();
-                }
+                getRecyclerView().sortListByPrice();
                 break;
             case R.id.sortAlphabetical:
-                if (isOnShoppingList) {
-                    shoppingListFragment.sortListAlphabetically();
-                } else {
-                    recyclerViewFragment.sortListAlphabetically();
-                }
+                getRecyclerView().sortListAlphabetically();
                 break;
         }
 
@@ -166,22 +162,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (recyclerViewFragment == null) {
                     recyclerViewFragment = new RecyclerViewFragment().newInstance(isOnShoppingList);
                 }
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        recyclerViewFragment).commit();
                 break;
             case R.id.nav_shoppinglist:
                 isOnShoppingList = true;
                 if (shoppingListFragment == null) {
                     shoppingListFragment = new RecyclerViewFragment().newInstance(isOnShoppingList);
                 }
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        shoppingListFragment).commit();
                 break;
             case R.id.nav_signout:
                 mDrawerLayout.closeDrawers();
                 AuthUI.getInstance().signOut(this);
                 return true;
         }
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                getRecyclerView()).commit();
 
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
@@ -202,11 +197,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (requestCode == 200 || requestCode == 300) {
             if (resultCode == RESULT_OK) {
                 productList = data.getParcelableArrayListExtra("productList");
-                if (isOnShoppingList) {
-                    shoppingListFragment.updateAdapter(productList);
-                } else {
-                    recyclerViewFragment.updateAdapter(productList);
+                Item recentlyAddedItem = productList.get(productList.size() - 1);
+                firebaseAuth = FirebaseAuth.getInstance();
+                firebaseDatabase = FirebaseDatabase.getInstance();
+
+                dataReference = getDataReference();
+
+                DatabaseReference newRef;
+                // If new
+                if (recentlyAddedItem.getUid() == null) {
+                    newRef = dataReference.push();
+                    recentlyAddedItem.setUid(newRef.getKey());
                 }
+                else {
+                    newRef = dataReference.child(recentlyAddedItem.getUid());
+                }
+                // Vi trenger ikke oppdatere adapteren her lenger siden firebase-implementasjonen (onChildAdded i fragment) legger til den nye varen i den lokale listen
+                newRef.setValue(recentlyAddedItem);
             }
         }
         if (requestCode == 100) {
@@ -216,22 +223,49 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 // TODO: Se på en annen løsning
                 productList.set(position, productList.get(productList.size() - 1));
                 productList.remove(productList.size() - 1);
-                if (isOnShoppingList) {
-                    shoppingListFragment.updateAdapter(productList);
-                } else {
-                    recyclerViewFragment.updateAdapter(productList);
-                }
+                Item editItem = productList.get(position);
+                DatabaseReference itemRef = getDataReference().child(editItem.getUid());
+                itemRef.setValue(editItem);
+                getRecyclerView().updateAdapter(productList);
             }
         }
         if (requestCode == RC_SIGN_IN){
-            if (resultCode == RESULT_OK){
+            if (resultCode == RESULT_OK) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 Toast.makeText(this,"Logget inn som " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
-            } else if(resultCode == RESULT_CANCELED){
+                getDataReference();
+            } else if(resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, "Innlogging avbrutt", Toast.LENGTH_SHORT).show();
                 finish();
             }
         }
 
+    }
+
+    /***
+     * Denne returnerer riktig fragment ut i fra verdien til isOnShoppingList.
+     * Vi slipper haugevis med if tester i koden om vi bruker denne
+     * @return RecyclerViewFragment
+     */
+    private RecyclerViewFragment getRecyclerView() {
+        if (isOnShoppingList) {
+            return shoppingListFragment;
+        } else {
+            return recyclerViewFragment;
+        }
+    }
+
+
+    /***
+     * Denne returnerer riktig referanse til lista i Firebase ut i fra verdien til isOnShoppingList
+     * Vi slipper if tester i koden om vi bruker denne
+     * @return DatabaseReference
+     */
+    private DatabaseReference getDataReference() {
+        if (isOnShoppingList) {
+            return firebaseDatabase.getReference("Users").child(firebaseAuth.getCurrentUser().getUid()).child("Shoppinglist");
+        } else {
+            return firebaseDatabase.getReference("Users").child(firebaseAuth.getCurrentUser().getUid()).child("Productlist");
+        }
     }
 }
