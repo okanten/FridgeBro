@@ -100,6 +100,7 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
             itemBeforeEdit = new Item(productList.get(position).getItemName(), productList.get(position).getItemPrice(),
                     productList.get(position).getBarcode(), productList.get(position).getImageUrl(),
                     productList.get(position).getItemBrand(), productList.get(position).getExpDate());
+            itemBeforeEdit = productList.get(position);
 
             txtISBN.setText(productList.get(position).getBarcode());
             txtPrice.setText(productList.get(position).getItemPrice());
@@ -244,11 +245,24 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
             modifiedItem = new Item(String.valueOf(lblProductName.getText()), String.valueOf(txtPrice.getText()), String.valueOf(txtISBN.getText()), String.valueOf(newItem.getImageUrl()), String.valueOf(newItem.getItemBrand()), String.valueOf(expDate.getText()));
             // Kjør denne om det er gjort forandringer, men søk ikke har blitt brukt.
         } else if (itemBeforeEdit != null && !fieldsNotChanged()) {
-            modifiedItem = new Item(String.valueOf(lblProductName.getText()), String.valueOf(txtPrice.getText()), String.valueOf(txtISBN.getText()), String.valueOf(itemBeforeEdit.getImageUrl()), String.valueOf(itemBeforeEdit.getItemBrand()), String.valueOf(expDate.getText()));
+            modifiedItem = new Item(String.valueOf(lblProductName.getText()), String.valueOf(txtPrice.getText()), String.valueOf(txtISBN.getText()), String.valueOf(itemBeforeEdit.getImageUrl()), String.valueOf(itemBeforeEdit.getItemBrand()), String.valueOf(expDate.getText()),itemBeforeEdit.getUid());
         } else if (itemBeforeEdit == null && !fieldsNotEmpty()) {
-            modifiedItem = new Item(String.valueOf(lblProductName.getText()), String.valueOf(txtPrice.getText()), String.valueOf(txtISBN.getText()), null, null, String.valueOf(expDate.getText()));
+            modifiedItem = new Item(String.valueOf(lblProductName.getText()), String.valueOf(txtPrice.getText()), String.valueOf(txtISBN.getText()), null, null, String.valueOf(expDate.getText()),itemBeforeEdit.getUid());
         }
         if (modifiedItem != null) {
+            DatabaseReference newRef;
+            // If new
+            if (modifiedItem.getUid() == null) {
+                newRef = dataReference.push();
+                modifiedItem.setUid(newRef.getKey());
+            }
+            else {
+                newRef = dataReference.child(modifiedItem.getUid());
+            }
+
+
+            newRef.setValue(modifiedItem);
+
             productList.add(modifiedItem);
             Intent resultIntent = new Intent();
             Bundle bundle = new Bundle();
@@ -256,7 +270,6 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
             bundle.putParcelableArrayList("productList", productList);
             resultIntent.putExtras(bundle);
             setResult(Activity.RESULT_OK, resultIntent);
-            dataReference.push().setValue(modifiedItem);
         }
         finish();
     }
