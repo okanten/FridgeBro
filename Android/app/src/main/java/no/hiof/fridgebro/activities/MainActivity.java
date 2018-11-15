@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -132,6 +133,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_buttons, menu);
+        if (isOnShoppingList) {
+            menu.getItem(1).setVisible(false);
+            menu.findItem(R.id.sortPrice).setVisible(false);
+        }
         return true;
     }
 
@@ -186,7 +191,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-
     @Override
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -213,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (resultCode == RESULT_OK) {
                 productList = data.getParcelableArrayListExtra("productList");
                 Integer position = data.getIntExtra("pos", 0);
-                // TODO: Gjøre dette ordentlig.
+                // TODO: Se på en annen løsning
                 productList.set(position, productList.get(productList.size() - 1));
                 productList.remove(productList.size() - 1);
                 if (isOnShoppingList) {
