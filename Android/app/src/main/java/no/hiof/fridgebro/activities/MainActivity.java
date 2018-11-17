@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void moveToFridge() {
         for (Item item: shoppingListFragment.getAdapter().getCurrentSelectedItems()) {
-            recyclerViewFragment.getProductList().add(item);
+            pushToFirebase(item, getDataReferenceProductlist());
         }
     }
 
@@ -204,20 +204,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Item recentlyAddedItem = productList.get(productList.size() - 1);
                 firebaseAuth = FirebaseAuth.getInstance();
                 firebaseDatabase = FirebaseDatabase.getInstance();
+                pushToFirebase(recentlyAddedItem, getDataReference());
 
-                dataReference = getDataReference();
-
-                DatabaseReference newRef;
-                // If new
-                if (recentlyAddedItem.getUid() == null) {
-                    newRef = dataReference.push();
-                    recentlyAddedItem.setUid(newRef.getKey());
-                }
-                else {
-                    newRef = dataReference.child(recentlyAddedItem.getUid());
-                }
-                // Vi trenger ikke oppdatere adapteren her lenger siden firebase-implementasjonen (onChildAdded i fragment) legger til den nye varen i den lokale listen
-                newRef.setValue(recentlyAddedItem);
             }
         }
         if (requestCode == 100) {
@@ -228,8 +216,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 productList.set(position, productList.get(productList.size() - 1));
                 productList.remove(productList.size() - 1);
                 Item editItem = productList.get(position);
-                DatabaseReference itemRef = getDataReference().child(editItem.getUid());
-                itemRef.setValue(editItem);
+                pushToFirebase(editItem, getDataReference());
                 getRecyclerView().updateAdapter(productList);
             }
         }
@@ -244,6 +231,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
 
+    }
+
+    private void pushToFirebase(Item item, DatabaseReference dataReference) {
+        DatabaseReference newRef;
+        // If new
+        if (item.getUid() == null) {
+            newRef = dataReference.push();
+            item.setUid(newRef.getKey());
+        }
+        else {
+            newRef = dataReference.child(item.getUid());
+        }
+        // Vi trenger ikke oppdatere adapteren her lenger siden firebase-implementasjonen (onChildAdded i fragment) legger til den nye varen i den lokale listen
+        newRef.setValue(item);
     }
 
     /***
@@ -272,4 +273,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return firebaseDatabase.getReference("Users").child(firebaseAuth.getCurrentUser().getUid()).child("Productlist");
         }
     }
+
+    private DatabaseReference getDataReferenceShoppinglist() {
+        return firebaseDatabase.getReference("Users").child(firebaseAuth.getCurrentUser().getUid()).child("Shoppinglist");
+    }
+
+    private DatabaseReference getDataReferenceProductlist() {
+        return firebaseDatabase.getReference("Users").child(firebaseAuth.getCurrentUser().getUid()).child("Productlist");
+    }
+
 }
