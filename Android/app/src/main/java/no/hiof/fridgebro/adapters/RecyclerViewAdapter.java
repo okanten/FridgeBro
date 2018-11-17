@@ -127,7 +127,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         currentSelectedItems.add(productList.get(pos));
                         System.out.println(currentSelectedItems.size());
                     }
-                    else if(!isChecked){
+                    else if(!isChecked && currentSelectedItems.contains(productList.get(pos))){
                         currentSelectedItems.remove(productList.get(pos));
                     }
                     Log.i("yolo", currentSelectedItems.toString());
