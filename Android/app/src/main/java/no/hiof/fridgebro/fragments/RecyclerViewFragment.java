@@ -171,7 +171,7 @@ public class RecyclerViewFragment extends Fragment {
                 String itemkey = dataSnapshot.getKey();
                 removedItem.setItemName(itemkey);
                 int position = productListKeys.indexOf(itemkey);
-                productList.remove(removedItem);
+                productList.remove(position);
                 productListKeys.remove(position);
                 adapter.notifyItemRemoved(position);
             }
@@ -220,9 +220,6 @@ public class RecyclerViewFragment extends Fragment {
                 deleteReference = dataReference.child(firebaseAuth.getCurrentUser().getUid()).child("Productlist").child(deleteItem.getUid());
             }
             deleteReference.removeValue();
-
-            this.productList.remove(position);
-            adapter.notifyItemRemoved(position);
         } catch (ArrayIndexOutOfBoundsException OoB) {
             Log.d("RCVF - Delete Item", OoB.getLocalizedMessage());
         }
