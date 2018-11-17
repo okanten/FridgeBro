@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -45,6 +46,7 @@ public class RecyclerViewFragment extends Fragment {
 
 
     private ArrayList<Item> productList = new ArrayList<>();
+
 
     private RecyclerView recyclerView;
     private RecyclerViewAdapter adapter;
@@ -82,6 +84,8 @@ public class RecyclerViewFragment extends Fragment {
             //getImageBitmaps();
         }
 
+        setHasOptionsMenu(true);
+
         isOnShoppingList = getArguments().getBoolean("shoppingList", false);
         View v;
         if (isOnShoppingList) {
@@ -99,6 +103,7 @@ public class RecyclerViewFragment extends Fragment {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
         dataReference = firebaseDatabase.getReference("Users");
+
 
         final FloatingActionsMenu mainFab = v.findViewById(R.id.myFab);
         FloatingActionButton fabManual = v.findViewById(R.id.fabManual);
@@ -136,6 +141,8 @@ public class RecyclerViewFragment extends Fragment {
 
         return v;
     }
+
+
 
     private void createDatabaseReadListener(){
         childEventListener = new ChildEventListener(){
@@ -179,6 +186,15 @@ public class RecyclerViewFragment extends Fragment {
 
             }
         };
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        if (isOnShoppingList) {
+            menu.findItem(R.id.sortPrice).setVisible(false);
+        } else {
+            menu.findItem(R.id.moveToFridge).setVisible(false);
+        }
     }
 
     public RecyclerViewAdapter getAdapter() {

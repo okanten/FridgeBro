@@ -7,19 +7,24 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Filter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import no.hiof.fridgebro.R;
 import no.hiof.fridgebro.activities.AddActivity;
@@ -30,12 +35,16 @@ import no.hiof.fridgebro.models.Item;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     private ArrayList<Item> productList = new ArrayList<>();
+    private List<Item> currentSelectedItems = new ArrayList<>();
     private Context mContext;
     private RecyclerViewFragment rcFrag;
     private boolean isOnShoppingList;
     private ImageButton deleteButton;
     private View view;
     private int layoutID;
+    private CheckBox checkBox;
+
+
 
     public RecyclerViewAdapter(ArrayList<Item> productList, Context mContext) {
         this.productList = productList;
@@ -63,21 +72,25 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.rcFrag = recyclerViewFragment;
     }
 
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         if (isOnShoppingList) {
-            view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_slistitem, viewGroup,false);
+            view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_slistitem, viewGroup, false);
         } else {
-            view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_listitem, viewGroup,false);
+            view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_listitem, viewGroup, false);
         }
         //view = LayoutInflater.from(viewGroup.getContext()).inflate(layoutID, viewGroup,false);
         ViewHolder holder = new ViewHolder(view);
         return holder;
     }
 
+
+
+
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int i) {
         Glide.with(mContext)
                 .asBitmap()
                 .apply(new RequestOptions().placeholder(R.drawable.ic_placeholder_image))
@@ -101,6 +114,33 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             }
         });
 
+
+        if (checkBox != null) {
+            Log.i("yolo", checkBox.toString());
+
+
+            viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    int pos = viewHolder.getAdapterPosition();
+                    if (checkBox.isChecked()){
+                        currentSelectedItems.add(productList.get(pos));
+                    }
+                }
+            });
+        }
+
+        /*public void onCheckboxClicked(View view){
+            boolean checked = ((CheckBox).view).isChecked();
+
+            switch(view.getId()){
+                case R.id.shoppingListCheckBox:
+                    if(checked)
+                        currentSelectedItems.add(item);
+
+            }
+        }*/
+
         viewHolder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -119,14 +159,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public int getItemCount() {
         return productList.size();
     }
-
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    
+    public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView image;
         TextView text;
         TextView price;
         TextView expdate;
-        CheckBox checkBox;
         ConstraintLayout parentLayout;
+        CheckBox checkBox;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -146,4 +187,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             }
         }
     }
+
 }
+
