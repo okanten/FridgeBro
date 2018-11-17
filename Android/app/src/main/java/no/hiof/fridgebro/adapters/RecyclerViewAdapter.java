@@ -35,7 +35,7 @@ import no.hiof.fridgebro.models.Item;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     private ArrayList<Item> productList = new ArrayList<>();
-    private List<Item> currentSelectedItems = new ArrayList<>();
+    private ArrayList<Item> currentSelectedItems = new ArrayList<>();
     private Context mContext;
     private RecyclerViewFragment rcFrag;
     private boolean isOnShoppingList;
@@ -97,6 +97,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 .load(productList.get(i).getImageUrl())
                 .into(viewHolder.image);
 
+        checkBox = viewHolder.checkBox;
+
         if (!isOnShoppingList) {
             viewHolder.expdate.setText(productList.get(i).getExpDate());
             viewHolder.price.setText(mContext.getResources().getString(R.string.currency, productList.get(i).getItemPrice()));
@@ -115,7 +117,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         });
 
 
-        if (checkBox != null) {
+        if (viewHolder.checkBox != null) {
             Log.i("yolo", checkBox.toString());
 
 
@@ -159,7 +161,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public int getItemCount() {
         return productList.size();
     }
-    
+
+    public ArrayList<Item> getCurrentSelectedItems() {
+        return currentSelectedItems;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView image;
         TextView text;
