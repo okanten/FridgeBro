@@ -46,6 +46,7 @@ public class RecyclerViewFragment extends Fragment {
 
     private ArrayList<Item> productList = new ArrayList<>();
 
+
     private RecyclerView recyclerView;
     private RecyclerViewAdapter adapter;
     private boolean isOnShoppingList;
@@ -100,6 +101,7 @@ public class RecyclerViewFragment extends Fragment {
         firebaseDatabase = FirebaseDatabase.getInstance();
         dataReference = firebaseDatabase.getReference("Users");
 
+
         final FloatingActionsMenu mainFab = v.findViewById(R.id.myFab);
         FloatingActionButton fabManual = v.findViewById(R.id.fabManual);
         FloatingActionButton fabScanner = v.findViewById(R.id.fabScanner);
@@ -136,6 +138,8 @@ public class RecyclerViewFragment extends Fragment {
 
         return v;
     }
+
+
 
     private void createDatabaseReadListener(){
         childEventListener = new ChildEventListener(){
