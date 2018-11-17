@@ -132,16 +132,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             });
         }
 
-        /*public void onCheckboxClicked(View view){
-            boolean checked = ((CheckBox).view).isChecked();
-
-            switch(view.getId()){
-                case R.id.shoppingListCheckBox:
-                    if(checked)
-                        currentSelectedItems.add(item);
-
-            }
-        }*/
+     
 
         viewHolder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
