@@ -120,13 +120,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         if (viewHolder.checkBox != null) {
             Log.i("yolo", checkBox.toString());
 
-
             viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     int pos = viewHolder.getAdapterPosition();
-                    if (checkBox.isChecked()){
+                    if (checkBox.isChecked() && !currentSelectedItems.contains(productList.get(pos))){
                         currentSelectedItems.add(productList.get(pos));
+                        System.out.println(currentSelectedItems.size());
                     }
                 }
             });
