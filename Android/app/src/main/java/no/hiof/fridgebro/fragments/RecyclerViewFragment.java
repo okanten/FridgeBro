@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -82,6 +83,8 @@ public class RecyclerViewFragment extends Fragment {
             createDatabaseReadListener();
             //getImageBitmaps();
         }
+
+        setHasOptionsMenu(true);
 
         isOnShoppingList = getArguments().getBoolean("shoppingList", false);
         View v;
@@ -183,6 +186,15 @@ public class RecyclerViewFragment extends Fragment {
 
             }
         };
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        if (isOnShoppingList) {
+            menu.findItem(R.id.sortPrice).setVisible(false);
+        } else {
+            menu.findItem(R.id.moveToFridge).setVisible(false);
+        }
     }
 
     public RecyclerViewAdapter getAdapter() {

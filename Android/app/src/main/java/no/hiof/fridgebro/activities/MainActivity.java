@@ -129,10 +129,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_buttons, menu);
-        if (isOnShoppingList) {
-            menu.getItem(1).setVisible(false);
-            menu.findItem(R.id.sortPrice).setVisible(false);
-        }
         return true;
     }
 

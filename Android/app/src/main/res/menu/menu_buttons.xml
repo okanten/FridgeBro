@@ -15,6 +15,12 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/moveToFridge"
+        android:icon="@android:drawable/arrow_up_float"
+        android:title="Flytt markert til kjøleskap"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/searchList"
         android:icon="@android:drawable/ic_menu_search"
 
