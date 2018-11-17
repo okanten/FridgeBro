@@ -132,7 +132,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             });
         }
 
-     
+
 
         viewHolder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
