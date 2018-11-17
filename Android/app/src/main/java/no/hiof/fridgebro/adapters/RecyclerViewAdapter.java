@@ -9,6 +9,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -17,6 +18,7 @@ import android.widget.Filter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -112,20 +114,22 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             }
         });
 
-        Log.i("yolo", checkBox.toString());
+
+        if (checkBox != null) {
+            Log.i("yolo", checkBox.toString());
 
 
-        viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                int pos = viewHolder.getAdapterPosition();
-                checkBox.setChecked(true);
-                if (checkBox.isChecked()){
-                    currentSelectedItems.add(productList.get(pos));
+            viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    int pos = viewHolder.getAdapterPosition();
+                    if (checkBox.isChecked()){
+                        currentSelectedItems.add(productList.get(pos));
+                    }
                 }
+            });
+        }
 
-            }
-        });
         /*public void onCheckboxClicked(View view){
             boolean checked = ((CheckBox).view).isChecked();
 
