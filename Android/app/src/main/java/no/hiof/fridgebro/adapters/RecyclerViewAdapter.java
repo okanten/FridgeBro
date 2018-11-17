@@ -115,31 +115,22 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         });
 
 
-        if (checkBox != null) {
-            Log.i("yolo", checkBox.toString());
-
+        if (viewHolder.checkBox != null) {
 
             viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     int pos = viewHolder.getAdapterPosition();
-                    if (checkBox.isChecked()){
+                    if (isChecked){
                         currentSelectedItems.add(productList.get(pos));
+
                     }
+                    Log.i("yolo", currentSelectedItems.toString());
+
                 }
             });
         }
-
-        /*public void onCheckboxClicked(View view){
-            boolean checked = ((CheckBox).view).isChecked();
-
-            switch(view.getId()){
-                case R.id.shoppingListCheckBox:
-                    if(checked)
-                        currentSelectedItems.add(item);
-
-            }
-        }*/
+        
 
         viewHolder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
