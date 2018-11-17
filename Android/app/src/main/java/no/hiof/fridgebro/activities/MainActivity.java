@@ -141,12 +141,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.sortAlphabetical:
                 getRecyclerView().sortListAlphabetically();
                 break;
+            case R.id.moveToFridge:
+                moveToFridge();
         }
 
         if(mToggle.onOptionsItemSelected(item)){
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void moveToFridge() {
+        for (Item item: shoppingListFragment.getAdapter().getCurrentSelectedItems()) {
+            recyclerViewFragment.getProductList().add(item);
+        }
     }
 
     @Override
