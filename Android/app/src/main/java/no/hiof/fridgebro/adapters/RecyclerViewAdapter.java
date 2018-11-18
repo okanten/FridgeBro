@@ -47,9 +47,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
 
 
+
     public RecyclerViewAdapter(ArrayList<Item> productList, Context mContext) {
         this.productList = productList;
         this.mContext = mContext;
+        setHasStableIds(true);
     }
 
     public RecyclerViewAdapter(ArrayList<Item> productList, Context mContext, RecyclerViewFragment recyclerViewFragment, boolean isOnShoppingList) {
@@ -57,6 +59,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.mContext = mContext;
         this.rcFrag = recyclerViewFragment;
         this.isOnShoppingList = isOnShoppingList;
+        setHasStableIds(true);
     }
 
 
@@ -71,6 +74,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.productList = productList;
         this.mContext = mContext;
         this.rcFrag = recyclerViewFragment;
+        setHasStableIds(true);
     }
 
 
@@ -159,6 +163,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public ArrayList<Item> getCurrentSelectedItems() {
         return currentSelectedItems;
     }
+
+    @Override
+    public long getItemId(int position) {
+        return super.getItemId(position);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return super.getItemViewType(position);
+    }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView image;
