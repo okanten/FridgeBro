@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.sortPrice:
+            case R.id.sortDate:
                 getRecyclerView().sortListByPrice();
                 break;
             case R.id.sortAlphabetical:
@@ -209,6 +209,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Item recentlyAddedItem = productList.get(productList.size() - 1);
                 firebaseAuth = FirebaseAuth.getInstance();
                 firebaseDatabase = FirebaseDatabase.getInstance();
+                Log.i("dateAsDate", String.valueOf(recentlyAddedItem.getExpDateAsDate()));
                 pushToFirebase(recentlyAddedItem, getDataReference());
 
             }
@@ -241,12 +242,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void pushToFirebase(Item item, DatabaseReference dataReference) {
         DatabaseReference newRef;
         // If new
-        if (item.getUid() == null) {
+        if (item.getItemUid() == null) {
             newRef = dataReference.push();
-            item.setUid(newRef.getKey());
+            item.setItemUid(newRef.getKey());
         }
         else {
-            newRef = dataReference.child(item.getUid());
+            newRef = dataReference.child(item.getItemUid());
         }
         // Vi trenger ikke oppdatere adapteren her lenger siden firebase-implementasjonen (onChildAdded i fragment) legger til den nye varen i den lokale listen
         newRef.setValue(item);

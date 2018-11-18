@@ -5,19 +5,19 @@
     <item
         android:id="@+id/sortAlphabetical"
         android:icon="@android:drawable/ic_menu_sort_alphabetically"
-        android:title="@string/menu_button_sortDate"
+        android:title="@string/menu_button_sortAlph"
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/sortPrice"
+        android:id="@+id/sortDate"
         android:icon="@android:drawable/ic_menu_sort_by_size"
-        android:title="@string/menu_button_sortPrice"
+        android:title="@string/menu_button_sortDate"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/moveToFridge"
         android:icon="@android:drawable/arrow_up_float"
-        android:title="Flytt markert til kjøleskap"
+        android:title="@string/menu_button_moveToFridge"
         app:showAsAction="ifRoom" />
 
     <item

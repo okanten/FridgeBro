@@ -34,7 +34,11 @@
     <!-- menu_buttons strings -->
 
     <string name="menu_button_search">Søk</string>
-    <string name="menu_button_sortDate">Sorter etter utløpsdato</string>
-    <string name="menu_button_sortPrice">Sorter etter pris</string>
+    <string name="menu_button_sortAlph">Sorter etter utløpsdato</string>
+    <string name="menu_button_sortDate">Sorter etter pris</string>
+    <string name="menu_button_moveToFridge">Flytt markert til kjøleskap</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

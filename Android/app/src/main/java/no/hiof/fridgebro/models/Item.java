@@ -5,16 +5,19 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import java.time.LocalDate;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class Item implements Parcelable, Comparable<Item> {
-    private String Uid;
     private String itemName;
     private String itemPrice;
     private String barcode;
     private String imageUrl;
     private String itemBrand;
     private String expDate;
+    private String itemUid;
 
 
     public Item() {
@@ -41,14 +44,14 @@ public class Item implements Parcelable, Comparable<Item> {
 
     }
 
-    public Item(String itemName, String itemPrice, String barcode, @Nullable String imageUrl, @Nullable String itemBrand, String expDate, @Nullable String uid) {
-        Uid = uid;
+    public Item(String itemName, String itemPrice, String barcode, @Nullable String imageUrl, @Nullable String itemBrand, String expDate, @Nullable String itemUid) {
         this.itemName = itemName;
         this.itemPrice = itemPrice;
         this.barcode = barcode;
         this.imageUrl = imageUrl;
         this.itemBrand = itemBrand;
         this.expDate = expDate;
+        this.itemUid = itemUid;
     }
 
     /*
@@ -76,7 +79,7 @@ public class Item implements Parcelable, Comparable<Item> {
         expDate = in.readString();
         imageUrl = in.readString();
         itemBrand = in.readString();
-        Uid = in.readString();
+        itemUid = in.readString();
     }
 
     public static final Creator<Item> CREATOR = new Creator<Item>() {
@@ -123,6 +126,16 @@ public class Item implements Parcelable, Comparable<Item> {
         this.expDate = expDate;
     }
 
+    public Date getExpDateAsDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.UK);
+        try {
+            return sdf.parse(getExpDate());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public String getImageUrl() {
         return imageUrl;
     }
@@ -139,12 +152,12 @@ public class Item implements Parcelable, Comparable<Item> {
         this.itemBrand = itemBrand;
     }
 
-    public String getUid() {
-        return Uid;
+    public String getItemUid() {
+        return itemUid;
     }
 
-    public void setUid(String uid) {
-        Uid = uid;
+    public void setItemUid(String itemUid) {
+        this.itemUid = itemUid;
     }
 
     @Override
@@ -160,14 +173,20 @@ public class Item implements Parcelable, Comparable<Item> {
         dest.writeString(expDate);
         dest.writeString(imageUrl);
         dest.writeString(itemBrand);
-        dest.writeString(Uid);
+        dest.writeString(itemUid);
     }
 
     @Override
     public int compareTo(@NonNull Item item) {
         // TODO: Sorterer ikke på desimal - må fikses. Egen klasse?
-        int compareTo = (int) Double.parseDouble(item.getItemPrice());
-        return (int) (compareTo - Double.parseDouble(this.getItemPrice()));
+//        int compareTo = (int) Double.parseDouble(item.getItemPrice());
+        if (item.getExpDateAsDate().after(this.getExpDateAsDate())) {
+            return -1;
+        } else if (item.getExpDateAsDate().before(this.getExpDateAsDate())){
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
 }

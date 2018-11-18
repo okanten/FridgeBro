@@ -26,14 +26,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.request.RequestOptions;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.auth.FirebaseAuth;
-
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 import no.hiof.fridgebro.R;
 import no.hiof.fridgebro.adapters.RecyclerViewAdapter;
@@ -177,8 +174,7 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 month++;
-                itemDate = new String();
-                itemDate = dayOfMonth + "/" + month + "/" + year;
+                itemDate = String.format(Locale.getDefault(), "%02d/%02d/%02d", dayOfMonth, month, year);
                 expDate.setText(itemDate);
             }
         };
@@ -258,7 +254,7 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
             modifiedItem = new Item(String.valueOf(lblProductName.getText()), String.valueOf(txtPrice.getText()), String.valueOf(txtISBN.getText()), String.valueOf(newItem.getImageUrl()), String.valueOf(newItem.getItemBrand()), String.valueOf(expDate.getText()));
             // Kjør denne om det er gjort forandringer, men søk ikke har blitt brukt.
         } else if (itemBeforeEdit != null && !fieldsNotChanged()) {
-            modifiedItem = new Item(String.valueOf(lblProductName.getText()), String.valueOf(txtPrice.getText()), String.valueOf(txtISBN.getText()), String.valueOf(itemBeforeEdit.getImageUrl()), String.valueOf(itemBeforeEdit.getItemBrand()), String.valueOf(expDate.getText()), itemBeforeEdit.getUid());
+            modifiedItem = new Item(String.valueOf(lblProductName.getText()), String.valueOf(txtPrice.getText()), String.valueOf(txtISBN.getText()), String.valueOf(itemBeforeEdit.getImageUrl()), String.valueOf(itemBeforeEdit.getItemBrand()), String.valueOf(expDate.getText()), itemBeforeEdit.getItemUid());
         } else if (itemBeforeEdit == null && !fieldsNotEmpty()) {
             modifiedItem = new Item(String.valueOf(lblProductName.getText()), String.valueOf(txtPrice.getText()), String.valueOf(txtISBN.getText()), null, null, String.valueOf(expDate.getText()), null);
         }
