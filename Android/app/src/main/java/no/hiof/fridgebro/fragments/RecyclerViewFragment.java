@@ -2,11 +2,15 @@ package no.hiof.fridgebro.fragments;
 
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,9 +18,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.firebase.ui.auth.data.model.User;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
@@ -131,6 +133,8 @@ public class RecyclerViewFragment extends Fragment {
             }
         });
 
+
+
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser != null && productList.size() <= 0) {
             if (isOnShoppingList) {
@@ -151,11 +155,12 @@ public class RecyclerViewFragment extends Fragment {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 Item item = dataSnapshot.getValue(Item.class);
                 String itemKey = dataSnapshot.getKey();
-                item.setUid(itemKey);
+                item.setItemUid(itemKey);
                 if (!productList.contains(item)){
                     productList.add(item);
                     productListKeys.add(itemKey);
-                    adapter.notifyItemInserted(productList.size() -1 );
+                    //adapter.notifyItemInserted(productList.size() -1 );
+                    adapter.notifyDataSetChanged();
                 }
             }
 
@@ -192,7 +197,7 @@ public class RecyclerViewFragment extends Fragment {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         if (isOnShoppingList) {
-            menu.findItem(R.id.sortPrice).setVisible(false);
+            menu.findItem(R.id.sortDate).setVisible(false);
         } else {
             menu.findItem(R.id.moveToFridge).setVisible(false);
         }
@@ -219,9 +224,9 @@ public class RecyclerViewFragment extends Fragment {
             Item deleteItem = productList.get(position);
             DatabaseReference deleteReference;
             if (isOnShoppingList) {
-                deleteReference = dataReference.child(firebaseAuth.getCurrentUser().getUid()).child("Shoppinglist").child(deleteItem.getUid());
+                deleteReference = dataReference.child(firebaseAuth.getCurrentUser().getUid()).child("Shoppinglist").child(deleteItem.getItemUid());
             } else {
-                deleteReference = dataReference.child(firebaseAuth.getCurrentUser().getUid()).child("Productlist").child(deleteItem.getUid());
+                deleteReference = dataReference.child(firebaseAuth.getCurrentUser().getUid()).child("Productlist").child(deleteItem.getItemUid());
             }
             deleteReference.removeValue();
         } catch (ArrayIndexOutOfBoundsException OoB) {
@@ -236,9 +241,9 @@ public class RecyclerViewFragment extends Fragment {
             itemBasedDeletion = true;
             DatabaseReference deleteReference;
             if (isOnShoppingList) {
-                deleteReference = dataReference.child(firebaseAuth.getCurrentUser().getUid()).child("Shoppinglist").child(item.getUid());
+                deleteReference = dataReference.child(firebaseAuth.getCurrentUser().getUid()).child("Shoppinglist").child(item.getItemUid());
             } else {
-                deleteReference = dataReference.child(firebaseAuth.getCurrentUser().getUid()).child("Productlist").child(item.getUid());
+                deleteReference = dataReference.child(firebaseAuth.getCurrentUser().getUid()).child("Productlist").child(item.getItemUid());
             }
             deleteReference.removeValue();
         } catch (ArrayIndexOutOfBoundsException OoB) {
