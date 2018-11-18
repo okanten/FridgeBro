@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -154,6 +155,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void moveToFridge() {
         for (Item item: shoppingListFragment.getAdapter().getCurrentSelectedItems()) {
             pushToFirebase(item, getDataReferenceProductlist());
+            if (shoppingListFragment.getProductList().contains(item)) {
+                shoppingListFragment.deleteItem(item);
+                Log.i("movefridge", String.valueOf(shoppingListFragment.getProductList().size()));
+            }
         }
     }
 

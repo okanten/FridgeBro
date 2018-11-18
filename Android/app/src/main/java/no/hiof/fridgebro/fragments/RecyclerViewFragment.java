@@ -60,6 +60,7 @@ public class RecyclerViewFragment extends Fragment {
     private DatabaseReference dataReference;
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthStateListener;
+    private boolean itemBasedDeletion = false;
 
 
 
@@ -209,9 +210,12 @@ public class RecyclerViewFragment extends Fragment {
         adapter.notifyItemChanged(position);
     }
 
+
+
     //TODO: Trenger muligens fix?
     public void deleteItem(int position) {
         try {
+            itemBasedDeletion = false;
             Item deleteItem = productList.get(position);
             DatabaseReference deleteReference;
             if (isOnShoppingList) {
@@ -221,10 +225,27 @@ public class RecyclerViewFragment extends Fragment {
             }
             deleteReference.removeValue();
         } catch (ArrayIndexOutOfBoundsException OoB) {
-            Log.d("RCVF - Delete Item", OoB.getLocalizedMessage());
+            Log.d("RCVF - Delete Item (p)", OoB.getLocalizedMessage());
         }
 
     }
+
+
+    public void deleteItem(Item item) {
+        try {
+            itemBasedDeletion = true;
+            DatabaseReference deleteReference;
+            if (isOnShoppingList) {
+                deleteReference = dataReference.child(firebaseAuth.getCurrentUser().getUid()).child("Shoppinglist").child(item.getUid());
+            } else {
+                deleteReference = dataReference.child(firebaseAuth.getCurrentUser().getUid()).child("Productlist").child(item.getUid());
+            }
+            deleteReference.removeValue();
+        } catch (ArrayIndexOutOfBoundsException OoB) {
+            Log.d("RCVF - Delete Item (i)", OoB.getLocalizedMessage());
+        }
+    }
+
 
     public void sortListByPrice() {
         if(!priceSortedAsc) {
