@@ -2,6 +2,7 @@ package no.hiof.fridgebro.activities;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -18,6 +19,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,7 +65,7 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
     private Boolean fromScanner = false;
     private ContextMenuFragment contextMenuFragment;
     private Item itemBeforeEdit;
-
+    private ProgressBar loadingJsonProgressbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +83,7 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
         btnSave = findViewById(R.id.btnSave);
         productList = getIntent().getParcelableArrayListExtra("productList");
         position = getIntent().getIntExtra("position", -1);
+        loadingJsonProgressbar = findViewById(R.id.loadingJsonProgressbar);
 
 
         //     public Item(String itemName, String itemPrice, String barcode, String imageUrl, String itemBrand, String expDate) {
@@ -324,6 +327,13 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
         private ArrayList<JsonObject> rJson = new ArrayList<>();
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loadingJsonProgressbar.setVisibility(View.VISIBLE);
+            btnSearch.setEnabled(false);
+        }
+
+        @Override
         protected ArrayList<JsonObject> doInBackground(String... strings) {
             try {
                 for (String isbn : strings) {
@@ -343,13 +353,14 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
         }
 
         protected void onPostExecute(ArrayList<JsonObject> rJson) {
+            loadingJsonProgressbar.setVisibility(View.GONE);
+            btnSearch.setEnabled(true);
             if (rJson != null) {
                 for (int i = 0; i < rJson.size(); i++) {
                     //productList.add(new Item("Test 1", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "TestBrand", "03/03/2019"));
                     try {
                         queryResult.add(new Item(ng.getTitle(null, rJson.get(i)), ng.getPrice(null, rJson.get(i)), ng.getISBN(null, rJson.get(i)), ng.getImageURL(null, rJson.get(i)), ng.getBrand(null, rJson.get(i))));
                     } catch (Exception npe) {
-                        Toast.makeText(AddActivity.this, "Noe galt skjedde under søk. Vennligst redefiner søkeord", Toast.LENGTH_SHORT).show();
                         Log.d("NullPointerException", npe.getMessage());
                     }
                 }
@@ -358,7 +369,7 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
                 } else if (queryResult.size() > 1) {
                     openItemPickerDialog(queryResult);
                 } else {
-                    makeToast("Kunne ikke finne strekkode");
+                    makeToast("Kunne ikke finne produkt/strekkode");
                     if (fromScanner) {
                         Intent failedIntent = new Intent();
                         setResult(Activity.RESULT_CANCELED, failedIntent);
