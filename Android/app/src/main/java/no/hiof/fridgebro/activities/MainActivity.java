@@ -184,9 +184,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (!queuedItems.isEmpty()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("123");
-            builder.setMessage("Noen av varen(e) du vil flytte til kjøleskap mangler dato. Vil du Fortsette?");
+            builder.setMessage("Noen av varen(e) du vil flytte til kjøleskap mangler dato. Vil du fortsette?");
 
             builder.setPositiveButton("Fortsett", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    for (Item item: queuedItems) {
+                        pushToFirebase(item, getDataReferenceProductlist());
+                        shoppingListFragment.deleteItem(item);
+                    }
+                }
+            });
+
+            builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     /*
@@ -201,17 +211,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         queuedItems.remove(item);
                         shoppingListFragment.deleteItem(item);
                     }*/
-
-                }
-            });
-
-            builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    for (Item item: queuedItems) {
-                        pushToFirebase(item, getDataReferenceProductlist());
-                        shoppingListFragment.deleteItem(item);
-                    }
                 }
             });
 
