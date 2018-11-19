@@ -1,5 +1,6 @@
 package no.hiof.fridgebro.activities;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -50,8 +51,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference dataReference;
 
-    private boolean isStop;
+    private boolean queueItem;
     private boolean isNextLoop;
+    private boolean paused = true;
+    private ArrayList<Item> queuedItems = new ArrayList<>();
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,47 +169,59 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void moveToFridge() {
-
+        queuedItems.clear();
         for (Item item: shoppingListFragment.getAdapter().getCurrentSelectedItems()) {
-            pushToFirebase(item, getDataReferenceProductlist());
 
             if(item.getExpDate().equals("99/99/9999")){
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("123");
-                builder.setMessage("Varen du vil flytte til kjøleskap mangler dato. Vil du fortsette?");
-
-                builder.setPositiveButton("continue", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        isNextLoop = true;
-
-                    }
-                });
-                builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        isStop = true;
-                    }
-                });
-
-                AlertDialog dialog = builder.create();
-                dialog.show();
-
-                if(isNextLoop){
-                    continue;
-                }
-
-                if(isStop){
-                    break;
-                }
-
-            }
-            else if (shoppingListFragment.getProductList().contains(item) && !item.getExpDate().equals("99/99/9999") ){
+                queuedItems.add(item);
+            } else {
+                pushToFirebase(item, getDataReferenceProductlist());
                 shoppingListFragment.deleteItem(item);
-                Log.i("movefridge", String.valueOf(shoppingListFragment.getProductList().size()));
-
             }
+            Log.i("movefridge", String.valueOf(shoppingListFragment.getProductList().size()));
         }
+
+        if (!queuedItems.isEmpty()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("123");
+            builder.setMessage("Noen av varen(e) du vil flytte til kjøleskap mangler dato. Vil du avbryte?");
+
+            builder.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    /*
+                    for (Item item: queuedItems) {
+                        Intent intent = new Intent(getApplicationContext(), AddActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelableArrayList("productList", queuedItems);
+                        bundle.putInt("position", queuedItems.indexOf(item));
+                        bundle.putInt("requestCode", 120);
+                        intent.putExtras(bundle);
+                        startActivityForResult(intent, 120);
+                        queuedItems.remove(item);
+                        shoppingListFragment.deleteItem(item);
+                    }*/
+
+                }
+            });
+
+            builder.setNegativeButton("Nei", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    for (Item item: queuedItems) {
+                        pushToFirebase(item, getDataReferenceProductlist());
+                        shoppingListFragment.deleteItem(item);
+                    }
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+        }
+        shoppingListFragment.getAdapter().getCurrentSelectedItems().clear();
+        shoppingListFragment.getAdapter().notifyDataSetChanged();
+
 
     }
 
@@ -289,6 +306,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 pushToFirebase(editItem, getDataReference());
                 getRecyclerView().updateAdapter(productList);
+            }
+        }
+        if (requestCode == 120) {
+            if (resultCode == RESULT_OK) {
+                ArrayList<Item> queuedItems = data.getParcelableArrayListExtra("productList");
+                Integer position = data.getIntExtra("pos", 0);
+                Item hasBeenEdited = queuedItems.get(position);
+                pushToFirebase(hasBeenEdited, getDataReferenceProductlist());
             }
         }
         if (requestCode == RC_SIGN_IN){

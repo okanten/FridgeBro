@@ -2,7 +2,6 @@ package no.hiof.fridgebro.activities;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -65,6 +64,7 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
     private ContextMenuFragment contextMenuFragment;
     private Item itemBeforeEdit;
     private ProgressBar loadingJsonProgressbar;
+    private int requestCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +84,11 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
         loadingJsonProgressbar = findViewById(R.id.loadingJsonProgressbar);
 
 
-        //     public Item(String itemName, String itemPrice, String barcode, String imageUrl, String itemBrand, String expDate) {
+        try {
+            requestCode = getIntent().getIntExtra("requestCode", 0);
+        } catch (Exception e){
+            Log.d("RQE", e.getMessage());
+        }
 
         if (position > -1) {
             setTitle(R.string.add_activity_title_edit);
