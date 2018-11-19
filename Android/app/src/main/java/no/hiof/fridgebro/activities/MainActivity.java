@@ -162,6 +162,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    private void removeFromFirebase(Item item, DatabaseReference dataReference) {
+        DatabaseReference newRef;
+
+        if (item.getItemUid() != null) {
+            newRef = dataReference.child(item.getItemUid());
+            newRef.removeValue();
+            getRecyclerView().getAdapter().notifyDataSetChanged();
+        }
+
+    }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem Item) {
         switch (Item.getItemId()) {
