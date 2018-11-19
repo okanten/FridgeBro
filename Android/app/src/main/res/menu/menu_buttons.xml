@@ -19,11 +19,4 @@
         android:icon="@android:drawable/arrow_up_float"
         android:title="@string/menu_button_moveToFridge"
         app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/searchList"
-        android:icon="@android:drawable/ic_menu_search"
-
-        android:title="@string/menu_button_search"
-        app:showAsAction="ifRoom" />
 </menu>
