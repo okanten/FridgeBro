@@ -91,6 +91,7 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
         }
 
         if (position > -1) {
+            Item getSentItem = productList.get(position);
             setTitle(R.string.add_activity_title_edit);
 
             itemBeforeEdit = new Item(productList.get(position).getItemName(), productList.get(position).getItemPrice(),
@@ -101,7 +102,9 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
             txtISBN.setText(productList.get(position).getBarcode());
             txtPrice.setText(productList.get(position).getItemPrice());
             lblProductName.setText(productList.get(position).getItemName());
-            expDate.setText(productList.get(position).getExpDate());
+            if (!getSentItem.getExpDate().equals("99/99/9999")) {
+                expDate.setText(productList.get(position).getExpDate());
+            }
             Glide.with(getApplicationContext())
                     .load(productList.get(position).getImageUrl())
                     .apply(new RequestOptions().transform(new FitCenter()))
