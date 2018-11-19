@@ -105,8 +105,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         checkBox = viewHolder.checkBox;
 
         if (!isOnShoppingList) {
-            viewHolder.expdate.setText(productList.get(i).getExpDate());
-            viewHolder.price.setText(mContext.getResources().getString(R.string.currency, productList.get(i).getItemPrice()));
+            if(productList.get(i).getExpDate().equals("99/99/9999")) {
+                viewHolder.expdate.setText("");
+            } else {
+                viewHolder.expdate.setText(productList.get(i).getExpDate());
+            }
+            if(!productList.get(i).getItemPrice().equals(""))
+                viewHolder.price.setText(mContext.getResources().getString(R.string.currency, productList.get(i).getItemPrice()));
         }
         viewHolder.text.setText(productList.get(i).getItemName());
         // henter ut string fra strings.xml med placeholders

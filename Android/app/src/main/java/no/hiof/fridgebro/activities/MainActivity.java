@@ -226,6 +226,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Item recentlyAddedItem = productList.get(productList.size() - 1);
                 firebaseAuth = FirebaseAuth.getInstance();
                 firebaseDatabase = FirebaseDatabase.getInstance();
+                // Vi trenger en placeholder verdi for at sortering skal funke. Derfor setter vi alle items som ikke har expDate til å være 99/99/9999
+                if (recentlyAddedItem.getExpDate().equals("")) {
+                    recentlyAddedItem.setExpDate("99/99/9999");
+                }
                 Log.i("dateAsDate", String.valueOf(recentlyAddedItem.getExpDateAsDate()));
                 pushToFirebase(recentlyAddedItem, getDataReference());
 
@@ -239,6 +243,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 productList.set(position, productList.get(productList.size() - 1));
                 productList.remove(productList.size() - 1);
                 Item editItem = productList.get(position);
+                // Vi trenger en placeholder verdi for at sortering skal funke. Derfor setter vi alle items som ikke har expDate til å være 99/99/9999
+                if (editItem.getExpDate().equals("")) {
+                    editItem.setExpDate("99/99/9999");
+                }
                 pushToFirebase(editItem, getDataReference());
                 getRecyclerView().updateAdapter(productList);
             }
