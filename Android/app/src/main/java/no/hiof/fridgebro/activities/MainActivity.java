@@ -1,5 +1,7 @@
 package no.hiof.fridgebro.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -47,6 +49,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference dataReference;
+
+    private boolean isStop;
+    private boolean isNextLoop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,13 +164,48 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void moveToFridge() {
+
         for (Item item: shoppingListFragment.getAdapter().getCurrentSelectedItems()) {
             pushToFirebase(item, getDataReferenceProductlist());
-            if (shoppingListFragment.getProductList().contains(item)) {
+
+            if(item.getExpDate().equals("99/99/9999")){
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("123");
+                builder.setMessage("Varen du vil flytte til kjøleskap mangler dato. Vil du fortsette?");
+
+                builder.setPositiveButton("continue", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        isNextLoop = true;
+
+                    }
+                });
+                builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        isStop = true;
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+                if(isNextLoop){
+                    continue;
+                }
+
+                if(isStop){
+                    break;
+                }
+
+            }
+            else if (shoppingListFragment.getProductList().contains(item) && !item.getExpDate().equals("99/99/9999") ){
                 shoppingListFragment.deleteItem(item);
                 Log.i("movefridge", String.valueOf(shoppingListFragment.getProductList().size()));
+
             }
         }
+
     }
 
     private void removeFromFirebase(Item item, DatabaseReference dataReference) {
