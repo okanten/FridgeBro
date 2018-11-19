@@ -142,6 +142,9 @@ public class RecyclerViewFragment extends Fragment {
 
 
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        /***
+         * Dette er "the culprit" - tror childEventListener blir dupet ellernoe.
+         */
         if (firebaseUser != null && productList.size() == 0 && firstRun) {
             firstRun = false;
             if (isOnShoppingList) {
