@@ -63,7 +63,7 @@ public class RecyclerViewFragment extends Fragment {
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthStateListener;
     private boolean itemBasedDeletion = false;
-
+    private boolean firstRun = true;
 
 
     public RecyclerViewFragment() {
@@ -79,12 +79,16 @@ public class RecyclerViewFragment extends Fragment {
         rcvFrag.setArguments(bundle);
         return rcvFrag;
     }
-    
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (productList.isEmpty()) {
             createDatabaseReadListener();
-            //getImageBitmaps();
         }
 
         setHasOptionsMenu(true);
@@ -98,7 +102,9 @@ public class RecyclerViewFragment extends Fragment {
         }
 
         recyclerView = v.findViewById(R.id.recyclerView);
-        adapter = new RecyclerViewAdapter(productList, getContext(), this, isOnShoppingList);
+        if (adapter == null) {
+            adapter = new RecyclerViewAdapter(productList, getContext(), this, isOnShoppingList);
+        }
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -136,7 +142,8 @@ public class RecyclerViewFragment extends Fragment {
 
 
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-        if (firebaseUser != null && productList.size() <= 0) {
+        if (firebaseUser != null && productList.size() == 0 && firstRun) {
+            firstRun = false;
             if (isOnShoppingList) {
                 dataReference.child(firebaseUser.getUid() + "/Shoppinglist").addChildEventListener(childEventListener);
             } else {
@@ -150,48 +157,54 @@ public class RecyclerViewFragment extends Fragment {
 
 
     private void createDatabaseReadListener(){
-        childEventListener = new ChildEventListener(){
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Item item = dataSnapshot.getValue(Item.class);
-                String itemKey = dataSnapshot.getKey();
-                item.setItemUid(itemKey);
-                if (!productList.contains(item)){
-                    productList.add(item);
-                    productListKeys.add(itemKey);
-                    //adapter.notifyItemInserted(productList.size() -1 );
-                    adapter.notifyDataSetChanged();
+        if (childEventListener == null) {
+            childEventListener = new ChildEventListener(){
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                    Log.i("Triggered", "onChildAdded triggered");
+                    Item item = dataSnapshot.getValue(Item.class);
+                    String itemKey = dataSnapshot.getKey();
+                    item.setItemUid(itemKey);
+                    if (!productList.contains(item)){
+                        productList.add(item);
+                        productListKeys.add(itemKey);
+                        //adapter.notifyItemInserted(productList.size() -1 );
+                        adapter.notifyDataSetChanged();
+                    }
                 }
-            }
 
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Item item = dataSnapshot.getValue(Item.class);
-                String itemKey = dataSnapshot.getKey();
-                item.setItemName(itemKey);
-            }
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                    Log.i("Triggered", "onChildChanged triggered");
 
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-                Item removedItem = dataSnapshot.getValue(Item.class);
-                String itemkey = dataSnapshot.getKey();
-                removedItem.setItemName(itemkey);
-                int position = productListKeys.indexOf(itemkey);
-                productList.remove(position);
-                productListKeys.remove(position);
-                adapter.notifyItemRemoved(position);
-            }
+                    Item item = dataSnapshot.getValue(Item.class);
+                    String itemKey = dataSnapshot.getKey();
+                    item.setItemName(itemKey);
+                }
 
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                    Log.i("Triggered", "onChildRemoved triggered");
+                    Item removedItem = dataSnapshot.getValue(Item.class);
+                    String itemkey = dataSnapshot.getKey();
+                    removedItem.setItemName(itemkey);
+                    int position = productListKeys.indexOf(itemkey);
+                    productList.remove(position);
+                    productListKeys.remove(position);
+                    adapter.notifyItemRemoved(position);
+                }
 
-            }
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
 
-            }
-        };
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            };
+        }
     }
 
     @Override
