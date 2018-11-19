@@ -252,6 +252,9 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
         // Kjør denne om query har blitt brukt (se setNewValues)
         if (newItem != null) {
             modifiedItem = new Item(String.valueOf(lblProductName.getText()), String.valueOf(txtPrice.getText()), String.valueOf(txtISBN.getText()), String.valueOf(newItem.getImageUrl()), String.valueOf(newItem.getItemBrand()), String.valueOf(expDate.getText()));
+            if (itemBeforeEdit.getItemUid() != null) {
+                modifiedItem.setItemUid(itemBeforeEdit.getItemUid());
+            }
             // Kjør denne om det er gjort forandringer, men søk ikke har blitt brukt.
         } else if (itemBeforeEdit != null && !fieldsNotChanged()) {
             modifiedItem = new Item(String.valueOf(lblProductName.getText()), String.valueOf(txtPrice.getText()), String.valueOf(txtISBN.getText()), String.valueOf(itemBeforeEdit.getImageUrl()), String.valueOf(itemBeforeEdit.getItemBrand()), String.valueOf(expDate.getText()), itemBeforeEdit.getItemUid());
@@ -263,6 +266,7 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
             Intent resultIntent = new Intent();
             Bundle bundle = new Bundle();
             bundle.putInt("pos", position);
+            bundle.putParcelable("modifiedItem", modifiedItem);
             bundle.putParcelableArrayList("productList", productList);
             resultIntent.putExtras(bundle);
             setResult(Activity.RESULT_OK, resultIntent);
