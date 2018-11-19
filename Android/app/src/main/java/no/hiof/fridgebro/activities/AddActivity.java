@@ -76,7 +76,6 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
         imgItem = (ImageView) findViewById(R.id.imgItem);
         lblProductName = (TextView) findViewById(R.id.lblProductName);
         expDate = findViewById(R.id.expDate);
-        btnScan = findViewById(R.id.btnScan);
         btnSearch = findViewById(R.id.btnSearch);
         btnPickDate = findViewById(R.id.btnPickDate);
         btnSave = findViewById(R.id.btnSave);
