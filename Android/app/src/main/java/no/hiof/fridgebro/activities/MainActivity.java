@@ -184,9 +184,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (!queuedItems.isEmpty()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("123");
-            builder.setMessage("Noen av varen(e) du vil flytte til kjøleskap mangler dato. Vil du avbryte?");
+            builder.setMessage("Noen av varen(e) du vil flytte til kjøleskap mangler dato. Vil du Fortsette?");
 
-            builder.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+            builder.setPositiveButton("Fortsett", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     /*
@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             });
 
-            builder.setNegativeButton("Nei", new DialogInterface.OnClickListener() {
+            builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     for (Item item: queuedItems) {
