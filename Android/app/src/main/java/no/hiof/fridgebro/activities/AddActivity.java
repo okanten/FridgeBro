@@ -49,7 +49,6 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
     private ImageView imgItem;
     private TextView lblProductName;
     private EditText expDate;
-    private ImageButton btnScan;
     private ImageButton btnPickDate;
     private ImageButton btnSearch;
     private Button btnSave;
@@ -108,20 +107,7 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
             itemBeforeEdit = null;
         }
 
-        btnScan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //intent
-            }
-        });
 
-        btnScan.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                makeToast(btnScan.getContentDescription());
-                return true;
-            }
-        });
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
