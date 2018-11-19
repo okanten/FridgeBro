@@ -51,6 +51,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Log.i("Triggered", "onCreate triggered");
+
+
         setContentView(R.layout.activity_main);
 
         mToolbar = findViewById(R.id.nav_action);
@@ -65,12 +69,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseDatabase = FirebaseDatabase.getInstance();
-
-        createAuthenticationListener();
-
 
         if (savedInstanceState == null) {
             if (recyclerViewFragment == null && !isOnShoppingList) {
@@ -87,6 +85,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
         }
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+
+        createAuthenticationListener();
+
+
     }
 
     private void createAuthenticationListener(){
@@ -114,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onResume();
         if (firebaseAuthStateListener != null){
             firebaseAuth.addAuthStateListener(firebaseAuthStateListener);
+            Log.i("Triggered", "" + getRecyclerView().toString());
         }
     }
 
@@ -240,8 +246,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (requestCode == RC_SIGN_IN){
             if (resultCode == RESULT_OK) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
+                Intent refresh = new Intent(this, MainActivity.class);
+                startActivity(refresh);
+                this.finish();
                 Toast.makeText(this,"Logget inn som " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
-                getDataReference();
             } else if(resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, "Innlogging avbrutt", Toast.LENGTH_SHORT).show();
                 finish();
