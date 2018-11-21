@@ -253,7 +253,28 @@ public class NorgesGruppenAPI {
      * @return a ArrayList<JsonObject> consisting of the full search query.
      */
     public ArrayList<JsonObject> getFullJson(String ISBN) {
-        String responseFromNG = getResponseFromNG(ISBN);
+
+        Session requestsSession = Requests.session();
+
+        requestsSession.get("https://meny.no/").send();
+
+        Map<String, Object> headers = new HashMap<>();
+        headers.put("x-csrf-token", requestsSession.currentCookies().get(0).getValue());
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("types", "products,articles");
+        params.put("search", ISBN);
+        params.put("page_size", "10");
+        params.put("suggest", "false");
+        params.put("full_response", "false");
+
+
+        String responseFromNG =
+                requestsSession.get("https://platform-rest-prod.ngdata.no/api/episearch/" + this.storeID + "/all")
+                        .headers(headers)
+                        .params(params)
+                        .send().readToText();
+        System.out.println(responseFromNG);
 
         JsonParser parser = new JsonParser();
         JsonArray jsonArray = parser.parse(responseFromNG).getAsJsonObject()
@@ -276,7 +297,28 @@ public class NorgesGruppenAPI {
      * @return A single item in the form of a JsonObject
      */
     private JsonObject getSingleItem(@Nullable String ISBN) {
-        String responseFromNG = getResponseFromNG(ISBN);
+        Session requestsSession = Requests.session();
+
+        requestsSession.get("https://meny.no/").send();
+
+        Map<String, Object> headers = new HashMap<>();
+        headers.put("x-csrf-token", requestsSession.currentCookies().get(0).getValue());
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("types", "products,articles");
+        params.put("search", ISBN);
+        params.put("page_size", "10");
+        params.put("suggest", "false");
+        params.put("full_response", "false");
+
+
+        String responseFromNG =
+                requestsSession.get("https://platform-rest-prod.ngdata.no/api/episearch/" + this.storeID + "/all")
+                        .headers(headers)
+                        .params(params)
+                        .send().readToText();
+        System.out.println(responseFromNG);
+
         Log.d("lolipop", "getSingleItem: ");
         JsonParser parser = new JsonParser();
         JsonObject jsonObj = parser.parse(responseFromNG).getAsJsonObject()
@@ -297,7 +339,7 @@ public class NorgesGruppenAPI {
      */
     private String getResponseFromNG(String ISBN) {
         Session requestsSession = Requests.session();
-        switch (this.storeID) {
+        /*switch (this.storeID) {
             case 1210:
                 requestsSession.get("https://spar.no/").send();
                 break;
@@ -310,7 +352,10 @@ public class NorgesGruppenAPI {
             default:
                 requestsSession.get("https://meny.no/").send();
                 break;
-        }
+        }*/
+
+        requestsSession.get("https://meny.no/").send();
+
         Map<String, Object> headers = new HashMap<>();
         headers.put("x-csrf-token", requestsSession.currentCookies().get(0).getValue());
 
