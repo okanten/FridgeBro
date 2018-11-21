@@ -21,6 +21,7 @@
     <string name="default_price">0</string>
     <string name="default_barcode">5000112637397</string>
 
+    <string name="logout">Logg ut</string>
     <!-- AddActivity string -->
 
     <string name="add_default_product_name">Produktnavn / strekkode</string>
@@ -29,7 +30,7 @@
     <string name="add_contentDesc_camera">Scan strekkode med kamera</string>
     <string name="add_contentDesc_search">Søk etter pris og produktinformasjon</string>
     <string name="add_contentDesc_date">Velg utløpsdato</string>
-    <string name="logout">Logg ut</string>
+    <string name="add_contentDesc_info">Vis informasjon og hjelp</string>
 
     <!-- menu_buttons strings -->
 
@@ -38,7 +39,12 @@
     <string name="menu_button_sortDate">Sorter etter pris</string>
     <string name="menu_button_moveToFridge">Flytt markert til kjøleskap</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="info_text">
+        I denne aktiviteten kan du legge til eller endre varer i lista ved å skrive inn varenavn, pris (valgfritt) og velge utløpsdato.\n
+        \nKnappen til høyre for tekstfeltet til varenavn er en søkeknapp som gjør det mulig å hente ut varer fra butikker i Norge.\n
+        \nVelg dato ved å trykke på knappen vedsiden av datofeltet.
+    </string>
+
+    <string name="info_attribution">Innhold hentet med søk tilhører NorgesGruppen</string>
 
 </resources>

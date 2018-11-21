@@ -171,4 +171,20 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.831" />
 
+    <ImageButton
+        android:id="@+id/btnShowInfo"
+        android:layout_width="55dp"
+        android:layout_height="42dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="4dp"
+        android:contentDescription="@string/add_contentDesc_info"
+        app:layout_constraintBottom_toBottomOf="@+id/txtPrice"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.33"
+        app:layout_constraintStart_toEndOf="@+id/txtPrice"
+        app:layout_constraintTop_toTopOf="@+id/txtPrice"
+        app:layout_constraintVertical_bias="0.32"
+        app:srcCompat="@android:drawable/ic_menu_info_details" />
+
 </android.support.constraint.ConstraintLayout>

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.icu.text.IDNA;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -36,6 +37,7 @@ import java.util.Locale;
 import no.hiof.fridgebro.R;
 import no.hiof.fridgebro.adapters.RecyclerViewAdapter;
 import no.hiof.fridgebro.fragments.ContextMenuFragment;
+import no.hiof.fridgebro.fragments.InfoFragment;
 import no.hiof.fridgebro.fragments.RecyclerViewFragment;
 import no.hiof.fridgebro.models.Item;
 import no.hiof.olaka.*;
@@ -45,11 +47,12 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
 
     private EditText txtISBN;
     private EditText txtPrice;
-    private ImageView imgItem;
+    private ImageView imageViewForItem;
     private TextView lblProductName;
     private EditText expDate;
     private ImageButton btnPickDate;
     private ImageButton btnSearch;
+    private ImageButton btnShowInfo;
     private Button btnSave;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     private JsonObject ngJson;
@@ -62,6 +65,7 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
     private String itemDate;
     private Boolean fromScanner = false;
     private ContextMenuFragment contextMenuFragment;
+    private InfoFragment infoFragment;
     private Item itemBeforeEdit;
     private ProgressBar loadingJsonProgressbar;
     private int requestCode;
@@ -73,11 +77,12 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
         setContentView(R.layout.activity_add);
         txtISBN = (EditText) findViewById(R.id.txtISBN);
         txtPrice = (EditText) findViewById(R.id.txtPrice);
-        imgItem = (ImageView) findViewById(R.id.imgItem);
+        imageViewForItem = (ImageView) findViewById(R.id.imgItem);
         lblProductName = (TextView) findViewById(R.id.lblProductName);
         expDate = findViewById(R.id.expDate);
         btnSearch = findViewById(R.id.btnSearch);
         btnPickDate = findViewById(R.id.btnPickDate);
+        btnShowInfo = findViewById(R.id.btnShowInfo);
         btnSave = findViewById(R.id.btnSave);
         productList = getIntent().getParcelableArrayListExtra("productList");
         position = getIntent().getIntExtra("position", -1);
@@ -86,7 +91,7 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
 
         try {
             requestCode = getIntent().getIntExtra("requestCode", 0);
-        } catch (Exception e){
+        } catch (Exception e) {
             Log.d("RQE", e.getMessage());
         }
 
@@ -108,7 +113,7 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
             Glide.with(getApplicationContext())
                     .load(productList.get(position).getImageUrl())
                     .apply(new RequestOptions().transform(new FitCenter()))
-                    .into(imgItem);
+                    .into(imageViewForItem);
         } else {
             itemBeforeEdit = null;
         }
@@ -165,6 +170,24 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
                 return true;
             }
         });
+
+        btnShowInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = getSupportFragmentManager();
+                infoFragment = InfoFragment.newInstance(R.layout.fragment_info);
+                infoFragment.show(fm, "info_fragment");
+            }
+        });
+
+        btnShowInfo.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                makeToast(btnShowInfo.getContentDescription());
+                return true;
+            }
+        });
+
         mDateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -233,13 +256,14 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
 
     public void setNewValues(ArrayList<Item> queryResult, int pos) {
         newItem = queryResult.get(pos);
-        lblProductName.setText(queryResult.get(pos).getItemName());
-        txtPrice.setText(queryResult.get(pos).getItemPrice());
-        String imgUrl = queryResult.get(pos).getImageUrl();
+        txtISBN.setText(newItem.getBarcode());
+        lblProductName.setText(newItem.getItemName());
+        txtPrice.setText(newItem.getItemPrice());
+        String imgUrl = newItem.getImageUrl();
         Glide.with(getApplicationContext())
                 .load(imgUrl)
                 .apply(new RequestOptions().transform(new FitCenter()))
-                .into(imgItem);
+                .into(imageViewForItem);
     }
 
     public void updateListOfItems(View view) {
@@ -257,7 +281,7 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
             // Kjør denne om det er gjort forandringer, men søk ikke har blitt brukt.
         } else if (itemBeforeEdit != null && !fieldsNotChanged()) {
             modifiedItem = new Item(String.valueOf(lblProductName.getText()), String.valueOf(txtPrice.getText()), String.valueOf(txtISBN.getText()), String.valueOf(itemBeforeEdit.getImageUrl()), String.valueOf(itemBeforeEdit.getItemBrand()), String.valueOf(expDate.getText()), itemBeforeEdit.getItemUid());
-        } else if (itemBeforeEdit == null && !fieldsNotEmpty()) {
+        } else if (itemBeforeEdit == null && !fieldsEmpty()) {
             modifiedItem = new Item(String.valueOf(lblProductName.getText()), String.valueOf(txtPrice.getText()), String.valueOf(txtISBN.getText()), null, null, String.valueOf(expDate.getText()), null);
         }
         if (modifiedItem != null) {
@@ -273,7 +297,7 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
         finish();
     }
 
-    private boolean fieldsNotEmpty() {
+    private boolean fieldsEmpty() {
         return lblProductName.getText().toString().isEmpty()
                 && txtPrice.getText().toString().isEmpty()
                 && txtISBN.getText().toString().isEmpty()
