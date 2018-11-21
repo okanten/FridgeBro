@@ -46,5 +46,7 @@
     </string>
 
     <string name="info_attribution">Innhold hentet med søk tilhører NorgesGruppen</string>
+    <string name="annet">Annet</string>
+    <string name="lister">Lister</string>
 
 </resources>
