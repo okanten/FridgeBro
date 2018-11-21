@@ -3,8 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
+    <item android:title="@string/lister">
+    <menu>
     <group android:id="@+id/grp1" android:checkableBehavior="single">
-
         <item
             android:id="@+id/nav_fridgelist"
             android:icon="@drawable/ic_shoppinglist"
@@ -14,12 +15,18 @@
             android:icon="@drawable/ic_shoppinglist"
             android:title="@string/shopping_list" />
     </group>
+    </menu>
+    </item>
 
+    <item android:title="@string/annet">
+    <menu>
     <group android:id="@+id/grp2">
         <item
             android:id="@+id/nav_signout"
             android:icon="@android:drawable/ic_lock_power_off"
             android:title="@string/logout" />
     </group>
+    </menu>
+    </item>
 
 </menu>
