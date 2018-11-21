@@ -13,7 +13,7 @@ import net.dongliu.requests.Session;
 import java.util.*;
 
 /***
- * For non-commercial use only.
+ * For non-commercial use and education purposes only.
  * @author Ola Kanten
  * @description An API-wrapper for NorgesGruppens API.
  */
@@ -225,7 +225,7 @@ public class NorgesGruppenAPI {
     }
 
     /***
-     * This is useful if you want the query returned as JsonObject.
+     * This is useful if you want the query returned as a JsonObject.
      * @param ISBN
      * @return JsonObject
      */
@@ -274,7 +274,6 @@ public class NorgesGruppenAPI {
                         .headers(headers)
                         .params(params)
                         .send().readToText();
-        System.out.println(responseFromNG);
 
         JsonParser parser = new JsonParser();
         JsonArray jsonArray = parser.parse(responseFromNG).getAsJsonObject()
@@ -317,7 +316,6 @@ public class NorgesGruppenAPI {
                         .headers(headers)
                         .params(params)
                         .send().readToText();
-        System.out.println(responseFromNG);
 
         Log.d("lolipop", "getSingleItem: ");
         JsonParser parser = new JsonParser();
@@ -334,25 +332,13 @@ public class NorgesGruppenAPI {
     /***
      * This method makes a request to NorgesGruppens API.
      * Should only be used exclusively in this class.
+     * (Android: Vi bruker ikke denne fordi det virker som API 21 bruker for lang tid på å prosessere requests..)
      * @param ISBN
      * @return the query result in the form of a String
      */
     private String getResponseFromNG(String ISBN) {
         Session requestsSession = Requests.session();
-        /*switch (this.storeID) {
-            case 1210:
-                requestsSession.get("https://spar.no/").send();
-                break;
-            case 1220:
-                requestsSession.get("https://joker.no/nettbutikk/varer").send();
-                break;
-            case 1300:
-                requestsSession.get("https://meny.no/").send();
-                break;
-            default:
-                requestsSession.get("https://meny.no/").send();
-                break;
-        }*/
+
 
         requestsSession.get("https://meny.no/").send();
 
