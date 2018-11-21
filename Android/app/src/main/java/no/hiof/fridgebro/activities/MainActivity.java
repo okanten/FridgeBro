@@ -281,57 +281,60 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 200 || requestCode == 300) {
-            if (resultCode == RESULT_OK) {
-                productList = data.getParcelableArrayListExtra("productList");
-                Item recentlyAddedItem = productList.get(productList.size() - 1);
-                firebaseAuth = FirebaseAuth.getInstance();
-                firebaseDatabase = FirebaseDatabase.getInstance();
-                // Vi trenger en placeholder verdi for at sortering skal funke. Derfor setter vi alle items som ikke har expDate til å være 99/99/9999
-                if (recentlyAddedItem.getExpDate().equals("")) {
-                    recentlyAddedItem.setExpDate("99/99/9999");
-                }
-                Log.i("dateAsDate", String.valueOf(recentlyAddedItem.getExpDateAsDate()));
-                pushToFirebase(recentlyAddedItem, getDataReference());
+        if (resultCode == RESULT_OK) {
 
-            }
-        }
-        if (requestCode == 100) {
-            if (resultCode == RESULT_OK) {
-                productList = data.getParcelableArrayListExtra("productList");
-                Integer position = data.getIntExtra("pos", 0);
-                // TODO: Se på en annen løsning
-                productList.set(position, productList.get(productList.size() - 1));
-                productList.remove(productList.size() - 1);
-                Item editItem = productList.get(position);
-                // Vi trenger en placeholder verdi for at sortering skal funke. Derfor setter vi alle items som ikke har expDate til å være 99/99/9999
-                if (editItem.getExpDate().equals("")) {
-                    editItem.setExpDate("99/99/9999");
-                }
-                pushToFirebase(editItem, getDataReference());
-                getRecyclerView().updateAdapter(productList);
-            }
-        }
-        if (requestCode == 120) {
-            if (resultCode == RESULT_OK) {
-                Item hasDateSet = data.getParcelableExtra("modifiedItem");
-                pushToFirebase(hasDateSet, getDataReferenceProductlist());
-                setDateForItemsBeforeSending();
-            }
-        }
-        if (requestCode == RC_SIGN_IN){
-            if (resultCode == RESULT_OK) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                Intent refresh = new Intent(this, MainActivity.class);
-                startActivity(refresh);
-                this.finish();
-                Toast.makeText(this,"Logget inn som " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
-            } else if(resultCode == RESULT_CANCELED) {
-                Toast.makeText(this, "Innlogging avbrutt", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        }
+            switch (requestCode) {
+                case 100:
+                    productList = data.getParcelableArrayListExtra("productList");
+                    Integer position = data.getIntExtra("pos", 0);
+                    // TODO: Se på en annen løsning
+                    productList.set(position, productList.get(productList.size() - 1));
+                    productList.remove(productList.size() - 1);
+                    Item editItem = productList.get(position);
+                    // Vi trenger en placeholder verdi for at sortering skal funke. Derfor setter vi alle items som ikke har expDate til å være 99/99/9999
+                    if (editItem.getExpDate().equals("")) {
+                        editItem.setExpDate("99/99/9999");
+                    }
+                    pushToFirebase(editItem, getDataReference());
+                    getRecyclerView().updateAdapter(productList);
+                    break;
 
+                case 120:
+                    Item hasDateSet = data.getParcelableExtra("modifiedItem");
+                    pushToFirebase(hasDateSet, getDataReferenceProductlist());
+                    setDateForItemsBeforeSending();
+                    break;
+
+                case RC_SIGN_IN:
+                    FirebaseUser user = firebaseAuth.getCurrentUser();
+                    Intent refresh = new Intent(this, MainActivity.class);
+                    startActivity(refresh);
+                    this.finish();
+                    Toast.makeText(this, "Logget inn som " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
+                    break;
+
+                case 300:
+                case 200:
+                    productList = data.getParcelableArrayListExtra("productList");
+                    Item recentlyAddedItem = productList.get(productList.size() - 1);
+                    firebaseAuth = FirebaseAuth.getInstance();
+                    firebaseDatabase = FirebaseDatabase.getInstance();
+                    // Vi trenger en placeholder verdi for at sortering skal funke. Derfor setter vi alle items som ikke har expDate til å være 99/99/9999
+                    if (recentlyAddedItem.getExpDate().equals("")) {
+                            recentlyAddedItem.setExpDate("99/99/9999");
+                    }
+                    Log.i("dateAsDate", String.valueOf(recentlyAddedItem.getExpDateAsDate()));
+                    pushToFirebase(recentlyAddedItem, getDataReference());
+                    break;
+            }
+        } else {
+            switch (requestCode) {
+                case RC_SIGN_IN:
+                    Toast.makeText(this, "Innlogging avbrutt", Toast.LENGTH_SHORT).show();
+                    finish();
+                    break;
+            }
+        }
     }
 
     private void pushToFirebase(Item item, DatabaseReference dataReference) {
