@@ -246,9 +246,9 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
     public void getPriceFromNg() {
         Log.d("lolipop", "getPriceFromNg called");
         String isbn = String.valueOf(txtISBN.getText());
+        Log.d("lolipop", isbn);
         new asyncLoadJson().execute(isbn);
         Log.d("lolipop", "asyncLoadJson executed");
-
     }
 
     public void makeToast(CharSequence msg) {
@@ -365,10 +365,6 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
             try {
                 for (String isbn : strings) {
                     Log.d("lolipop", "loop gjennom streng");
-                    Session r = Requests.session();
-                    r.get("https://meny.no/").send();
-                    Log.d("lolipop", "cookies" + r.currentCookies().get(0).toString());
-                    Log.d("lolipop", "response" + r.toString());
 
                     try {
                         Log.d("lolipop", "Try hente ut json");
