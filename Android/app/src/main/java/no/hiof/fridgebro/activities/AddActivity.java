@@ -30,6 +30,9 @@ import com.bumptech.glide.request.RequestOptions;
 
 import com.google.gson.JsonObject;
 
+import net.dongliu.requests.Requests;
+import net.dongliu.requests.Session;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
@@ -88,6 +91,7 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
         position = getIntent().getIntExtra("position", -1);
         loadingJsonProgressbar = findViewById(R.id.loadingJsonProgressbar);
 
+        Log.d("lolipop", "onCreate: started");
 
         try {
             requestCode = getIntent().getIntExtra("requestCode", 0);
@@ -240,8 +244,11 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
     }
 
     public void getPriceFromNg() {
+        Log.d("lolipop", "getPriceFromNg called");
         String isbn = String.valueOf(txtISBN.getText());
         new asyncLoadJson().execute(isbn);
+        Log.d("lolipop", "asyncLoadJson executed");
+
     }
 
     public void makeToast(CharSequence msg) {
@@ -347,13 +354,25 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
             super.onPreExecute();
             loadingJsonProgressbar.setVisibility(View.VISIBLE);
             btnSearch.setEnabled(false);
+            Log.d("lolipop", "progressbar enabled");
+
         }
 
         @Override
         protected ArrayList<JsonObject> doInBackground(String... strings) {
+            Log.d("lolipop", "doInBackground");
+
             try {
                 for (String isbn : strings) {
+                    Log.d("lolipop", "loop gjennom streng");
+                    Session r = Requests.session();
+                    r.get("https://meny.no/").send();
+                    Log.d("lolipop", "cookies" + r.currentCookies().get(0).toString());
+                    Log.d("lolipop", "response" + r.toString());
+
                     try {
+                        Log.d("lolipop", "Try hente ut json");
+
                         rJson = ng.getFullJson(isbn);
                         System.out.println(rJson.size());
                     } catch (Exception e) {
@@ -362,6 +381,8 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
                     }
                 }
                 System.out.println(rJson.size());
+                Log.d("lolipop", "return rJson");
+
                 return rJson;
             } catch (RuntimeException re) {
                 return null;
@@ -369,30 +390,42 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
         }
 
         protected void onPostExecute(ArrayList<JsonObject> rJson) {
+            Log.d("lolipop", "onPostExecute");
+
             loadingJsonProgressbar.setVisibility(View.GONE);
             btnSearch.setEnabled(true);
             if (rJson != null) {
                 for (int i = 0; i < rJson.size(); i++) {
+                    Log.d("lolipop", "for loop for rJson.size");
+
                     //productList.add(new Item("Test 1", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "TestBrand", "03/03/2019"));
                     try {
+                        Log.d("lolipop", "Prøver å legge til item");
                         queryResult.add(new Item(ng.getTitle(null, rJson.get(i)), ng.getPrice(null, rJson.get(i)), ng.getISBN(null, rJson.get(i)), ng.getImageURL(null, rJson.get(i)), ng.getBrand(null, rJson.get(i))));
+                        Log.d("lolipop", "Legger til item");
+
                     } catch (Exception npe) {
                         Log.d("NullPointerException", npe.getMessage());
                     }
                 }
                 if (queryResult != null && queryResult.size() == 1) {
+                    Log.d("lolipop", "Kun ett item");
                     setNewValues(queryResult, 0);
+
                 } else if (queryResult.size() > 1) {
+                    Log.d("lolipop", "Prøver å åpne ny dialog");
                     openItemPickerDialog(queryResult);
                 } else {
                     makeToast("Kunne ikke finne produkt/strekkode");
                     if (fromScanner) {
+                        Log.d("lolipop", "fromScanner = true");
                         Intent failedIntent = new Intent();
                         setResult(Activity.RESULT_CANCELED, failedIntent);
                         finish();
                     }
                 }
             } else {
+                Log.d("lolipop", "rJson var tom");
                 Intent failedIntent = new Intent();
                 setResult(50, failedIntent);
                 finish();

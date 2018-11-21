@@ -1,6 +1,7 @@
 package no.hiof.olaka;
 
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -276,7 +277,7 @@ public class NorgesGruppenAPI {
      */
     private JsonObject getSingleItem(@Nullable String ISBN) {
         String responseFromNG = getResponseFromNG(ISBN);
-
+        Log.d("lolipop", "getSingleItem: ");
         JsonParser parser = new JsonParser();
         JsonObject jsonObj = parser.parse(responseFromNG).getAsJsonObject()
                 .get("products").getAsJsonObject()
@@ -326,6 +327,7 @@ public class NorgesGruppenAPI {
                         .headers(headers)
                         .params(params)
                         .send().readToText();
+        System.out.println(responseFromNG);
         return responseFromNG;
     }
 
