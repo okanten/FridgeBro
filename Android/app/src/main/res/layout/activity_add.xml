@@ -6,20 +6,37 @@
     android:layout_height="match_parent"
     tools:context="no.hiof.fridgebro.activities.AddActivity">
 
-    <EditText
-        android:id="@+id/txtPrice"
-        android:layout_width="217dp"
-        android:layout_height="42dp"
-        android:layout_marginStart="84dp"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:hint="@string/add_default_price"
-        android:inputType="number"
-        android:textAlignment="center"
-        android:singleLine="true"
-        android:imeOptions="actionDone"
+    <TextView
+        android:id="@+id/lblProductName"
+        android:layout_width="363dp"
+        android:layout_height="31dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:text="Produktnavn"
+        app:layout_constraintBottom_toTopOf="@+id/txtISBN"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtISBN" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.046" />
+
+
+    <ImageView
+        android:id="@+id/imgItem"
+        android:layout_width="294dp"
+        android:layout_height="163dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lblProductName"
+        app:srcCompat="@android:drawable/ic_menu_gallery" />
 
     <EditText
         android:id="@+id/txtISBN"
@@ -35,6 +52,7 @@
         android:textAlignment="center"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
     <ImageButton
         android:id="@+id/btnSearch"
@@ -52,6 +70,51 @@
         app:layout_constraintVertical_bias="0.32"
         app:srcCompat="@android:drawable/ic_menu_search" />
 
+    <EditText
+        android:id="@+id/txtPrice"
+        android:layout_width="217dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="84dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="@string/add_default_price"
+        android:inputType="number"
+        android:textAlignment="center"
+        android:singleLine="true"
+        android:imeOptions="actionDone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtISBN" />
+
+    <ImageButton
+        android:id="@+id/btnShowInfo"
+        android:layout_width="55dp"
+        android:layout_height="42dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="4dp"
+        android:contentDescription="@string/add_contentDesc_info"
+        app:layout_constraintBottom_toBottomOf="@+id/txtPrice"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.33"
+        app:layout_constraintStart_toEndOf="@+id/txtPrice"
+        app:layout_constraintTop_toTopOf="@+id/txtPrice"
+        app:layout_constraintVertical_bias="0.32"
+        app:srcCompat="@android:drawable/ic_menu_info_details" />
+
+    <EditText
+        android:id="@+id/expDate"
+        android:layout_width="217dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="84dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+
+        android:hint="@string/add_default_expdate"
+        android:inputType="date"
+        android:textAlignment="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtPrice" />
+
     <ImageButton
         android:id="@+id/btnPickDate"
         android:layout_width="55dp"
@@ -68,19 +131,6 @@
         app:layout_constraintVertical_bias="0.32"
         app:srcCompat="@android:drawable/ic_menu_agenda" />
 
-    <EditText
-        android:id="@+id/expDate"
-        android:layout_width="217dp"
-        android:layout_height="42dp"
-        android:layout_marginStart="84dp"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-
-        android:hint="@string/add_default_expdate"
-        android:inputType="date"
-        android:textAlignment="center"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtPrice" />
 
     <!--TextView
         android:id="@+id/lblAmount"
@@ -107,52 +157,10 @@
         app:layout_constraintStart_toEndOf="@+id/lblAmount"
         app:layout_constraintTop_toBottomOf="@+id/expDate" /-->
 
-    <ImageView
-        android:id="@+id/imgItem"
-        android:layout_width="294dp"
-        android:layout_height="163dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lblProductName"
-        app:srcCompat="@android:drawable/ic_menu_gallery" />
 
-    <Button
-        android:id="@+id/btnSave"
-        android:layout_width="337dp"
-        android:layout_height="53dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Lagre"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.612"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgItem"
-        app:layout_constraintVertical_bias="0.923" />
 
-    <TextView
-        android:id="@+id/lblProductName"
-        android:layout_width="363dp"
-        android:layout_height="31dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:gravity="center"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:text="Produktnavn"
-        app:layout_constraintBottom_toTopOf="@+id/txtISBN"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.046" />
+
+
 
     <ProgressBar
         android:id="@+id/loadingJsonProgressbar"
@@ -171,20 +179,22 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.831" />
 
-    <ImageButton
-        android:id="@+id/btnShowInfo"
-        android:layout_width="55dp"
-        android:layout_height="42dp"
+
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="337dp"
+        android:layout_height="53dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="4dp"
-        android:contentDescription="@string/add_contentDesc_info"
-        app:layout_constraintBottom_toBottomOf="@+id/txtPrice"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Lagre"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.33"
-        app:layout_constraintStart_toEndOf="@+id/txtPrice"
-        app:layout_constraintTop_toTopOf="@+id/txtPrice"
-        app:layout_constraintVertical_bias="0.32"
-        app:srcCompat="@android:drawable/ic_menu_info_details" />
+        app:layout_constraintHorizontal_bias="0.612"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgItem"
+        app:layout_constraintVertical_bias="0.923" />
 
 </android.support.constraint.ConstraintLayout>
