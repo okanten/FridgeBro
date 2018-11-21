@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onResume();
         if (firebaseAuthStateListener != null){
             firebaseAuth.addAuthStateListener(firebaseAuthStateListener);
-            Log.i("Triggered", "" + getRecyclerView().toString());
+            Log.i("Triggered", "" + getRecyclerView());
         }
     }
 
@@ -231,9 +231,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Bundle bundle = new Bundle();
             bundle.putParcelableArrayList("productList", queuedItems);
             bundle.putInt("position", queuedItems.indexOf(item));
-            bundle.putInt("requestCode", 120);
+            bundle.putInt("requestCode", 400);
             intent.putExtras(bundle);
-            startActivityForResult(intent, 120);
+            startActivityForResult(intent, 400);
             queuedItems.remove(item);
             shoppingListFragment.deleteItem(item);
         }
@@ -284,6 +284,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (resultCode == RESULT_OK) {
 
             switch (requestCode) {
+
                 case 100:
                     productList = data.getParcelableArrayListExtra("productList");
                     Integer position = data.getIntExtra("pos", 0);
@@ -299,33 +300,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     getRecyclerView().updateAdapter(productList);
                     break;
 
-                case 120:
-                    Item hasDateSet = data.getParcelableExtra("modifiedItem");
-                    pushToFirebase(hasDateSet, getDataReferenceProductlist());
-                    setDateForItemsBeforeSending();
-                    break;
-
-                case RC_SIGN_IN:
-                    FirebaseUser user = firebaseAuth.getCurrentUser();
-                    Intent refresh = new Intent(this, MainActivity.class);
-                    startActivity(refresh);
-                    this.finish();
-                    Toast.makeText(this, "Logget inn som " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
-                    break;
-
-                case 300:
                 case 200:
+                case 300:
                     productList = data.getParcelableArrayListExtra("productList");
                     Item recentlyAddedItem = productList.get(productList.size() - 1);
                     firebaseAuth = FirebaseAuth.getInstance();
                     firebaseDatabase = FirebaseDatabase.getInstance();
                     // Vi trenger en placeholder verdi for at sortering skal funke. Derfor setter vi alle items som ikke har expDate til å være 99/99/9999
                     if (recentlyAddedItem.getExpDate().equals("")) {
-                            recentlyAddedItem.setExpDate("99/99/9999");
+                        recentlyAddedItem.setExpDate("99/99/9999");
                     }
                     Log.i("dateAsDate", String.valueOf(recentlyAddedItem.getExpDateAsDate()));
                     pushToFirebase(recentlyAddedItem, getDataReference());
                     break;
+
+                case 400:
+                    Item hasDateSet = data.getParcelableExtra("modifiedItem");
+                    pushToFirebase(hasDateSet, getDataReferenceProductlist());
+                    setDateForItemsBeforeSending();
+                    break;
+
+                case RC_SIGN_IN:
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                Intent refresh = new Intent(this, MainActivity.class);
+                startActivity(refresh);
+                this.finish();
+                Toast.makeText(this, "Logget inn som " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
+                break;
+
             }
         } else {
             switch (requestCode) {
