@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (!queuedItems.isEmpty()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("123");
-            builder.setMessage("Noen av varen(e) du vil flytte til kjøleskap mangler dato. Vil du fortsette?");
+            builder.setMessage("Noen av varen(e) du vil flytte til kjøleskap mangler dato. Vil du fortsette uten å sette dato?");
 
             builder.setPositiveButton("Fortsett", new DialogInterface.OnClickListener() {
                 @Override
@@ -199,18 +199,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    /*
-                    for (Item item: queuedItems) {
-                        Intent intent = new Intent(getApplicationContext(), AddActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putParcelableArrayList("productList", queuedItems);
-                        bundle.putInt("position", queuedItems.indexOf(item));
-                        bundle.putInt("requestCode", 120);
-                        intent.putExtras(bundle);
-                        startActivityForResult(intent, 120);
-                        queuedItems.remove(item);
-                        shoppingListFragment.deleteItem(item);
-                    }*/
+                    setDateForItemsBeforeSending();
                 }
             });
 
@@ -234,6 +223,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
     }
+
+    private void setDateForItemsBeforeSending() {
+        if(!queuedItems.isEmpty()) {
+            Item item = queuedItems.get(0);
+            Intent intent = new Intent(getApplicationContext(), AddActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putParcelableArrayList("productList", queuedItems);
+            bundle.putInt("position", queuedItems.indexOf(item));
+            bundle.putInt("requestCode", 120);
+            intent.putExtras(bundle);
+            startActivityForResult(intent, 120);
+            queuedItems.remove(item);
+            shoppingListFragment.deleteItem(item);
+        }
+    }
+
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem Item) {
@@ -309,10 +314,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         if (requestCode == 120) {
             if (resultCode == RESULT_OK) {
-                ArrayList<Item> queuedItems = data.getParcelableArrayListExtra("productList");
-                Integer position = data.getIntExtra("pos", 0);
-                Item hasBeenEdited = queuedItems.get(position);
-                pushToFirebase(hasBeenEdited, getDataReferenceProductlist());
+                Item hasDateSet = data.getParcelableExtra("modifiedItem");
+                pushToFirebase(hasDateSet, getDataReferenceProductlist());
+                setDateForItemsBeforeSending();
             }
         }
         if (requestCode == RC_SIGN_IN){
