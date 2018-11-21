@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.icu.text.IDNA;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.request.RequestOptions;
 
+import com.google.android.gms.common.api.Api;
 import com.google.gson.JsonObject;
 
 import net.dongliu.requests.Requests;
@@ -421,10 +423,13 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
                     }
                 }
             } else {
-                Log.d("lolipop", "rJson var tom");
-                Intent failedIntent = new Intent();
-                setResult(50, failedIntent);
-                finish();
+                if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP || Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1) {
+                    Toast.makeText(AddActivity.this, "Kunne ikke finne produkt/strekkode. " +
+                            "Lolipop har for øyeblikket problemer med denne funksjonen",
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    makeToast("Kunne ikke finne produkt/strekkode");
+                }
             }
         }
     }
