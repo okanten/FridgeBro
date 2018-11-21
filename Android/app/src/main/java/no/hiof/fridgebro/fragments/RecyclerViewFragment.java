@@ -4,6 +4,10 @@ package no.hiof.fridgebro.fragments;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,8 +15,10 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,6 +35,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.collection.LLRBNode;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -154,10 +161,60 @@ public class RecyclerViewFragment extends Fragment {
             }
         }
 
+        swipeSetup();
+
         return v;
     }
 
 
+    private void swipeSetup() {
+        ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.LEFT, ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int pos = viewHolder.getAdapterPosition();
+                switch (direction) {
+                    case ItemTouchHelper.RIGHT:
+                        deleteItem(pos);
+                        break;
+                }
+            }
+
+            @Override
+            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                final ColorDrawable bg = new ColorDrawable(Color.RED);
+                bg.setBounds(0, viewHolder.itemView.getTop(), (int) (viewHolder.itemView.getLeft() + dX), viewHolder.itemView.getBottom());
+                bg.draw(c);/*
+                Drawable deleteIcon = ContextCompat.getDrawable(getContext(), R.mipmap.baseline_delete_black_24);
+                int intrinsicWidth = deleteIcon.getIntrinsicWidth();
+                int intrinsicHeight = deleteIcon.getIntrinsicHeight();
+                int itemHeight = viewHolder.itemView.getBottom() - viewHolder.itemView.getTop();
+                int deleteIconTop = viewHolder.itemView.getTop() + (itemHeight - intrinsicHeight);
+                int deleteIconMargin = (itemHeight - intrinsicHeight) / 2;
+                int deleteIconLeft = viewHolder.itemView.getRight() - deleteIconMargin - intrinsicWidth;
+                int deleteIconRight = viewHolder.itemView.getRight() - deleteIconMargin;
+                int deleteIconBottom = deleteIconTop + intrinsicHeight;
+                //deleteIcon.setBounds((int) (viewHolder.itemView.getRight() - dX), viewHolder.itemView.getTop(), (int) (viewHolder.itemView.getRight() - dY), viewHolder.itemView.getBottom());
+                deleteIcon.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom);
+                deleteIcon.draw(c);*/
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+
+            }
+        };
+
+
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+    }
+
+    private void moveSingleItemToFridge(Item item) {
+
+    }
 
     private void createDatabaseReadListener(){
         if (childEventListener == null) {
