@@ -248,10 +248,11 @@ public class RecyclerViewFragment extends Fragment {
                     Item removedItem = dataSnapshot.getValue(Item.class);
                     String itemkey = dataSnapshot.getKey();
                     removedItem.setItemName(itemkey);
-                    int position = productListKeys.indexOf(itemkey);
+
+                    /*int position = productListKeys.indexOf(itemkey);
                     productList.remove(position);
                     productListKeys.remove(position);
-                    adapter.notifyItemRemoved(position);
+                    adapter.notifyItemRemoved(position);*/
                 }
 
                 @Override
@@ -301,7 +302,11 @@ public class RecyclerViewFragment extends Fragment {
             } else {
                 deleteReference = dataReference.child(firebaseAuth.getCurrentUser().getUid()).child("Productlist").child(deleteItem.getItemUid());
             }
+            adapter.notifyItemRemoved(productList.indexOf(deleteItem));
+            productList.remove(deleteItem);
+
             deleteReference.removeValue();
+
         } catch (ArrayIndexOutOfBoundsException OoB) {
             Log.d("RCVF - Delete Item (p)", OoB.getLocalizedMessage());
         }
@@ -318,6 +323,10 @@ public class RecyclerViewFragment extends Fragment {
             } else {
                 deleteReference = dataReference.child(firebaseAuth.getCurrentUser().getUid()).child("Productlist").child(item.getItemUid());
             }
+            adapter.notifyItemRemoved(productList.indexOf(item));
+            productList.remove(item);
+
+
             deleteReference.removeValue();
         } catch (ArrayIndexOutOfBoundsException OoB) {
             Log.d("RCVF - Delete Item (i)", OoB.getLocalizedMessage());
@@ -328,12 +337,15 @@ public class RecyclerViewFragment extends Fragment {
     public void sortListByPrice() {
         if(!priceSortedAsc) {
             Collections.sort(productList);
+            adapter.notifyDataSetChanged();
             priceSortedAsc = true;
         } else {
             Collections.reverse(productList);
+            adapter.notifyDataSetChanged();
             priceSortedAsc = false;
         }
-        adapter.notifyDataSetChanged();
+        recyclerView.scrollToPosition(0);
+
     }
 
     public void sortListAlphabetically() {
@@ -354,6 +366,7 @@ public class RecyclerViewFragment extends Fragment {
             });
             alphaSortedAsc = false;
         }
+        recyclerView.scrollToPosition(0);
         adapter.notifyDataSetChanged();
 
     }
