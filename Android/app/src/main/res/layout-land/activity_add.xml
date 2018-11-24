@@ -142,10 +142,10 @@
         android:text="Lagre"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.51"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgItem"
-        app:layout_constraintVertical_bias="0.824" />
+        app:layout_constraintVertical_bias="0.933" />
 
     <TextView
         android:id="@+id/lblProductName"
@@ -169,17 +169,17 @@
     <ProgressBar
         android:id="@+id/loadingJsonProgressbar"
         style="?android:attr/progressBarStyle"
-        android:layout_width="4dp"
-        android:layout_height="34dp"
+        android:layout_width="38dp"
+        android:layout_height="29dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/btnSave"
+        app:layout_constraintBottom_toTopOf="@+id/btnSave"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.499"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/expDate"
-        app:layout_constraintVertical_bias="0.304" />
+        app:layout_constraintTop_toBottomOf="@+id/expDate" />
 
 </android.support.constraint.ConstraintLayout>
