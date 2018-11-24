@@ -8,10 +8,10 @@
 
     <EditText
         android:id="@+id/txtPrice"
-        android:layout_width="217dp"
+        android:layout_width="234dp"
         android:layout_height="42dp"
-        android:layout_marginStart="172dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginStart="224dp"
+        android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="@string/add_default_price"
         android:imeOptions="actionDone"
@@ -23,9 +23,9 @@
 
     <EditText
         android:id="@+id/txtISBN"
-        android:layout_width="217dp"
+        android:layout_width="233dp"
         android:layout_height="42dp"
-        android:layout_marginStart="172dp"
+        android:layout_marginStart="224dp"
         android:layout_marginTop="72dp"
         android:ems="10"
         android:hint="@string/add_default_product_name"
@@ -37,48 +37,43 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
-        android:id="@+id/btnScan"
+        android:id="@+id/btnShowInfo"
         android:layout_width="55dp"
         android:layout_height="42dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="4dp"
-        android:contentDescription="@string/add_contentDesc_camera"
-        app:layout_constraintBottom_toBottomOf="@+id/txtISBN"
+        android:layout_marginBottom="8dp"
+        android:contentDescription="@string/add_contentDesc_info"
+        app:layout_constraintBottom_toBottomOf="@+id/txtPrice"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.333"
-        app:layout_constraintStart_toEndOf="@+id/txtISBN"
-        app:layout_constraintTop_toTopOf="@+id/txtISBN"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@android:drawable/ic_menu_camera" />
+        app:layout_constraintStart_toEndOf="@+id/txtPrice"
+        app:layout_constraintTop_toTopOf="@+id/txtPrice"
+        app:layout_constraintVertical_bias="0.32"
+        app:srcCompat="@android:drawable/ic_menu_info_details" />
 
     <ImageButton
         android:id="@+id/btnSearch"
         android:layout_width="55dp"
         android:layout_height="42dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="4dp"
         android:contentDescription="@string/add_contentDesc_search"
-        app:layout_constraintBottom_toBottomOf="@+id/txtPrice"
+        app:layout_constraintBottom_toBottomOf="@+id/txtISBN"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.333"
-        app:layout_constraintStart_toEndOf="@+id/txtPrice"
-        app:layout_constraintTop_toTopOf="@+id/txtPrice"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/txtISBN"
+        app:layout_constraintTop_toTopOf="@+id/txtISBN"
         app:srcCompat="@android:drawable/ic_menu_search" />
 
     <ImageButton
         android:id="@+id/btnPickDate"
         android:layout_width="55dp"
         android:layout_height="42dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="4dp"
+        android:layout_marginBottom="8dp"
         android:contentDescription="@string/add_contentDesc_date"
         app:layout_constraintBottom_toBottomOf="@+id/expDate"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.333"
         app:layout_constraintStart_toEndOf="@+id/expDate"
         app:layout_constraintTop_toTopOf="@+id/expDate"
         app:layout_constraintVertical_bias="0.32"
@@ -86,10 +81,10 @@
 
     <EditText
         android:id="@+id/expDate"
-        android:layout_width="217dp"
+        android:layout_width="236dp"
         android:layout_height="42dp"
-        android:layout_marginStart="172dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="224dp"
+        android:layout_marginTop="16dp"
         android:ems="10"
 
         android:hint="@string/add_default_expdate"
@@ -138,8 +133,8 @@
 
     <Button
         android:id="@+id/btnSave"
-        android:layout_width="220dp"
-        android:layout_height="48dp"
+        android:layout_width="234dp"
+        android:layout_height="52dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
@@ -147,10 +142,10 @@
         android:text="Lagre"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.46"
+        app:layout_constraintHorizontal_bias="0.51"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgItem"
-        app:layout_constraintVertical_bias="0.836" />
+        app:layout_constraintVertical_bias="0.824" />
 
     <TextView
         android:id="@+id/lblProductName"
@@ -170,5 +165,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.32" />
+
+    <ProgressBar
+        android:id="@+id/loadingJsonProgressbar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="4dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/btnSave"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.499"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/expDate"
+        app:layout_constraintVertical_bias="0.304" />
 
 </android.support.constraint.ConstraintLayout>
