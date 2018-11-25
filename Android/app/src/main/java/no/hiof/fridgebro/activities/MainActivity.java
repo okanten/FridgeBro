@@ -343,12 +343,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     break;
 
                 case RC_SIGN_IN:
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                Intent refresh = new Intent(this, MainActivity.class);
-                startActivity(refresh);
-                this.finish();
-                Toast.makeText(this, "Logget inn som " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
-                break;
+                    FirebaseUser user = firebaseAuth.getCurrentUser();
+                    Intent refresh = new Intent(this, MainActivity.class);
+                    startActivity(refresh);
+                    this.finish();
+                    Toast.makeText(this, "Logget inn som " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
+                    break;
 
             }
         } else {
