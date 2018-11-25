@@ -27,8 +27,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.SettingsActivity" />
-        <activity android:name=".activities.ShoppingListActivity" />
         <activity
             android:name=".activities.AddActivity"
             android:label="@string/add_activity_title_new"
