@@ -3,7 +3,9 @@ package no.hiof.fridgebro.fragments;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -50,11 +52,15 @@ import no.hiof.fridgebro.adapters.RecyclerViewAdapter;
 import no.hiof.fridgebro.activities.AddActivity;
 import no.hiof.fridgebro.models.Item;
 
+import static android.content.Context.MODE_PRIVATE;
+import static no.hiof.fridgebro.activities.MainActivity.REQUEST_CODE_NEW_ITEM_MANUAL;
+import static no.hiof.fridgebro.activities.MainActivity.REQUEST_CODE_NEW_ITEM_SCANNER;
+import static no.hiof.fridgebro.activities.MainActivity.SHARED_PREF_FILE;
+
 
 public class RecyclerViewFragment extends Fragment {
-
-
     private ArrayList<Item> productList = new ArrayList<>();
+    private SharedPreferences pref;
 
 
     private RecyclerView recyclerView;
@@ -77,8 +83,6 @@ public class RecyclerViewFragment extends Fragment {
         // Required empty public constructor
     }
 
-
-
     public RecyclerViewFragment newInstance(boolean isOnShoppingList) {
         RecyclerViewFragment rcvFrag = new RecyclerViewFragment();
         Bundle bundle = new Bundle();
@@ -98,9 +102,17 @@ public class RecyclerViewFragment extends Fragment {
             createDatabaseReadListener();
         }
 
+        try {
+            pref = getContext().getSharedPreferences(SHARED_PREF_FILE, MODE_PRIVATE);
+        } catch (NullPointerException npe) {
+            Log.d("prefs" , "Couldnt get prefs");
+            npe.printStackTrace();
+        }
+
+        isOnShoppingList = pref.getBoolean("isOnShoppingList", false);
+
         setHasOptionsMenu(true);
 
-        isOnShoppingList = getArguments().getBoolean("shoppingList", false);
         View v;
         if (isOnShoppingList) {
             v = inflater.inflate(R.layout.fragment_shoppinglist, container, false);
@@ -131,7 +143,7 @@ public class RecyclerViewFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putParcelableArrayList("productList", productList);
                 intent.putExtras(bundle);
-                ((Activity) Objects.requireNonNull(getContext())).startActivityForResult(intent, 200);
+                ((Activity) Objects.requireNonNull(getContext())).startActivityForResult(intent, REQUEST_CODE_NEW_ITEM_MANUAL);
             }
         });
         fabScanner.setOnClickListener(new View.OnClickListener() {
@@ -142,7 +154,7 @@ public class RecyclerViewFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putParcelableArrayList("productList", productList);
                 intent.putExtras(bundle);
-                ((Activity) Objects.requireNonNull(getContext())).startActivityForResult(intent, 300);
+                ((Activity) Objects.requireNonNull(getContext())).startActivityForResult(intent, REQUEST_CODE_NEW_ITEM_SCANNER);
             }
         });
 
@@ -188,21 +200,8 @@ public class RecyclerViewFragment extends Fragment {
             public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
                 final ColorDrawable bg = new ColorDrawable(Color.RED);
                 bg.setBounds(0, viewHolder.itemView.getTop(), (int) (viewHolder.itemView.getLeft() + dX), viewHolder.itemView.getBottom());
-                bg.draw(c);/*
-                Drawable deleteIcon = ContextCompat.getDrawable(getContext(), R.mipmap.baseline_delete_black_24);
-                int intrinsicWidth = deleteIcon.getIntrinsicWidth();
-                int intrinsicHeight = deleteIcon.getIntrinsicHeight();
-                int itemHeight = viewHolder.itemView.getBottom() - viewHolder.itemView.getTop();
-                int deleteIconTop = viewHolder.itemView.getTop() + (itemHeight - intrinsicHeight);
-                int deleteIconMargin = (itemHeight - intrinsicHeight) / 2;
-                int deleteIconLeft = viewHolder.itemView.getRight() - deleteIconMargin - intrinsicWidth;
-                int deleteIconRight = viewHolder.itemView.getRight() - deleteIconMargin;
-                int deleteIconBottom = deleteIconTop + intrinsicHeight;
-                //deleteIcon.setBounds((int) (viewHolder.itemView.getRight() - dX), viewHolder.itemView.getTop(), (int) (viewHolder.itemView.getRight() - dY), viewHolder.itemView.getBottom());
-                deleteIcon.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom);
-                deleteIcon.draw(c);*/
+                bg.draw(c);
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-
             }
         };
 
@@ -212,9 +211,6 @@ public class RecyclerViewFragment extends Fragment {
         itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
-    private void moveSingleItemToFridge(Item item) {
-
-    }
 
     private void createDatabaseReadListener(){
         if (childEventListener == null) {
@@ -334,7 +330,7 @@ public class RecyclerViewFragment extends Fragment {
     }
 
 
-    public void sortListByPrice() {
+    public void sortListByDate() {
         if(!priceSortedAsc) {
             Collections.sort(productList);
             adapter.notifyDataSetChanged();
@@ -381,7 +377,6 @@ public class RecyclerViewFragment extends Fragment {
     public ArrayList<Item> getProductList() {
         return productList;
     }
-
 
 
 }

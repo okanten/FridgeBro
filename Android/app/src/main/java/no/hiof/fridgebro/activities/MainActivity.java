@@ -1,9 +1,9 @@
 package no.hiof.fridgebro.activities;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -34,15 +34,23 @@ import no.hiof.fridgebro.fragments.RecyclerViewFragment;
 import no.hiof.fridgebro.models.Item;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+    public static final String SHARED_PREF_FILE = "SharedPrefs";
+    public static final int REQUEST_CODE_EDIT_ITEM = 100;
+    public static final int REQUEST_CODE_NEW_ITEM_MANUAL = 200;
+    public static final int REQUEST_CODE_NEW_ITEM_SCANNER = 300;
+    public static final int REQUEST_CODE_ADD_DATE = 400;
+
+    private SharedPreferences pref;
+    private SharedPreferences.Editor editor;
     private ArrayList<Item> productList = new ArrayList<>();
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
 
     private Toolbar mToolbar;
-    private RecyclerViewFragment recyclerViewFragment;
+    private RecyclerViewFragment fridgeListFragment;
     private RecyclerViewFragment shoppingListFragment;
 
-    private boolean isOnShoppingList = false;
+    private boolean isOnShoppingList;
 
     private static final int RC_SIGN_IN = 1;
     private FirebaseAuth firebaseAuth;
@@ -51,9 +59,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference dataReference;
 
-    private boolean queueItem;
-    private boolean isNextLoop;
-    private boolean paused = true;
     private ArrayList<Item> queuedItems = new ArrayList<>();
 
 
@@ -64,7 +69,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Log.i("Triggered", "onCreate triggered");
 
+        Log.d("prefs", "getting prefs");
+        pref = getApplicationContext().getSharedPreferences(SHARED_PREF_FILE, MODE_PRIVATE);
+        Log.d("prefs", pref.toString());
 
+        isOnShoppingList = pref.getBoolean("isOnShoppingList", false);
+        Log.d("prefs", "isOnShoppingList: " + isOnShoppingList);
         setContentView(R.layout.activity_main);
 
         mToolbar = findViewById(R.id.nav_action);
@@ -81,10 +91,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         if (savedInstanceState == null) {
-            if (recyclerViewFragment == null && !isOnShoppingList) {
-                recyclerViewFragment = new RecyclerViewFragment().newInstance(isOnShoppingList);
+            if (fridgeListFragment == null && !isOnShoppingList) {
+                fridgeListFragment = new RecyclerViewFragment(); //.newInstance(isOnShoppingList);
             } else if (shoppingListFragment == null && isOnShoppingList) {
-                shoppingListFragment = new RecyclerViewFragment().newInstance(isOnShoppingList);
+                shoppingListFragment = new RecyclerViewFragment(); //.newInstance(isOnShoppingList);
             }
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     getRecyclerView()).commit();
@@ -100,7 +110,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         firebaseDatabase = FirebaseDatabase.getInstance();
 
         createAuthenticationListener();
-
 
     }
 
@@ -153,13 +162,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.sortDate:
-                getRecyclerView().sortListByPrice();
+                getRecyclerView().sortListByDate();
+                pref.edit().putBoolean("sortedByDate", true).apply();
                 break;
             case R.id.sortAlphabetical:
                 getRecyclerView().sortListAlphabetically();
+                pref.edit().putBoolean("sortedByAlphabetical", true).apply();
                 break;
             case R.id.moveToFridge:
                 moveToFridge();
+                break;
         }
 
         if(mToggle.onOptionsItemSelected(item)){
@@ -231,9 +243,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Bundle bundle = new Bundle();
             bundle.putParcelableArrayList("productList", queuedItems);
             bundle.putInt("position", queuedItems.indexOf(item));
-            bundle.putInt("requestCode", 400);
+            bundle.putInt("requestCode", REQUEST_CODE_ADD_DATE);
             intent.putExtras(bundle);
-            startActivityForResult(intent, 400);
+            startActivityForResult(intent, REQUEST_CODE_ADD_DATE);
             queuedItems.remove(item);
             shoppingListFragment.deleteItem(item);
         }
@@ -244,16 +256,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem Item) {
         switch (Item.getItemId()) {
             case R.id.nav_fridgelist:
-                isOnShoppingList = false;
+                pref.edit().putBoolean("isOnShoppingList", false).apply();
                 // Må sjekke om rcv er null i tilfelle brukeren roterer telefonen og bytter fra shoppingList til fridge.
-                if (recyclerViewFragment == null) {
-                    recyclerViewFragment = new RecyclerViewFragment().newInstance(isOnShoppingList);
+                if (fridgeListFragment == null) {
+                    fridgeListFragment = new RecyclerViewFragment(); //.newInstance(isOnShoppingList);
                 }
                 break;
             case R.id.nav_shoppinglist:
-                isOnShoppingList = true;
+                pref.edit().putBoolean("isOnShoppingList", true).apply();
                 if (shoppingListFragment == null) {
-                    shoppingListFragment = new RecyclerViewFragment().newInstance(isOnShoppingList);
+                    shoppingListFragment = new RecyclerViewFragment(); //.newInstance(isOnShoppingList);
                 }
                 break;
             case R.id.nav_signout:
@@ -261,6 +273,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 AuthUI.getInstance().signOut(this);
                 return true;
         }
+
+        isOnShoppingList = pref.getBoolean("isOnShoppingList", false);
+
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 getRecyclerView()).commit();
@@ -284,11 +299,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (resultCode == RESULT_OK) {
 
             switch (requestCode) {
-
-                case 100:
+                case REQUEST_CODE_EDIT_ITEM:
                     productList = data.getParcelableArrayListExtra("productList");
                     Integer position = data.getIntExtra("pos", 0);
-                    // TODO: Se på en annen løsning
                     productList.set(position, productList.get(productList.size() - 1));
                     productList.remove(productList.size() - 1);
                     Item editItem = productList.get(position);
@@ -300,8 +313,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     getRecyclerView().updateAdapter(productList);
                     break;
 
-                case 200:
-                case 300:
+                case REQUEST_CODE_NEW_ITEM_MANUAL:
+                case REQUEST_CODE_NEW_ITEM_SCANNER:
                     productList = data.getParcelableArrayListExtra("productList");
                     Item recentlyAddedItem = productList.get(productList.size() - 1);
                     firebaseAuth = FirebaseAuth.getInstance();
@@ -314,7 +327,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     pushToFirebase(recentlyAddedItem, getDataReference());
                     break;
 
-                case 400:
+                case REQUEST_CODE_ADD_DATE:
                     Item hasDateSet = data.getParcelableExtra("modifiedItem");
                     pushToFirebase(hasDateSet, getDataReferenceProductlist());
                     setDateForItemsBeforeSending();
@@ -362,7 +375,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (isOnShoppingList) {
             return shoppingListFragment;
         } else {
-            return recyclerViewFragment;
+            return fridgeListFragment;
         }
     }
 
