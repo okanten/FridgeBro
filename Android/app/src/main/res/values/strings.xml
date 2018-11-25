@@ -58,6 +58,6 @@
 
     <!-- MoveToFridge -->
     <string name="move_set_title">Sette dato?</string>
-    <string name="move_set_message">%s du vil flytte til kjøleskap mangler dato. Vil du sette dato?</string>
+    <string name="move_set_message">%1$s du vil flytte til kjøleskap mangler dato. Vil du sette dato?</string>
 
 </resources>
