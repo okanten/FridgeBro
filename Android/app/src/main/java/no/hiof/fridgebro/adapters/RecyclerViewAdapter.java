@@ -32,6 +32,8 @@ import no.hiof.fridgebro.activities.AddActivity;
 import no.hiof.fridgebro.fragments.RecyclerViewFragment;
 import no.hiof.fridgebro.models.Item;
 
+import static no.hiof.fridgebro.activities.MainActivity.REQUEST_CODE_EDIT_ITEM;
+
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
@@ -156,7 +158,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 bundle.putParcelableArrayList("productList", productList);
                 bundle.putInt("position", viewHolder.getAdapterPosition());
                 intent.putExtras(bundle);
-                ((Activity) mContext).startActivityForResult(intent, 100);
+                ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE_EDIT_ITEM);
             }
         });
     }
@@ -180,8 +182,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return super.getItemViewType(position);
     }
 
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         ImageView image;
         TextView text;
         TextView price;
@@ -190,7 +191,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         CheckBox checkBox;
 
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
             if (isOnShoppingList) {
                 image = itemView.findViewById(R.id.shoppingListImageView);
