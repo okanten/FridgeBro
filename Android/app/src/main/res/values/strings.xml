@@ -19,6 +19,8 @@
     <string name="default_price">0</string>
     <string name="default_barcode">5000112637397</string>
 
+    <string name="no_internet_message">Du har ikke tilgang til internett. Endringer gjort uten internett vil ikke bli lagret.</string>
+
 
     <!-- drawer menu -->
 
@@ -44,8 +46,8 @@
     <!-- menu_buttons strings -->
 
     <string name="menu_button_search">Søk</string>
-    <string name="menu_button_sortAlph">Sorter etter utløpsdato</string>
-    <string name="menu_button_sortDate">Sorter etter pris</string>
+    <string name="menu_button_sortAlph">Sorter alfabetisk</string>
+    <string name="menu_button_sortDate">Sorter etter dato</string>
     <string name="menu_button_moveToFridge">Flytt markert til kjøleskap</string>
 
     <string name="info_text">
