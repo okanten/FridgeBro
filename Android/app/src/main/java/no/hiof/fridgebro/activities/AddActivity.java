@@ -2,9 +2,11 @@ package no.hiof.fridgebro.activities;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.icu.text.IDNA;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.app.FragmentManager;
@@ -35,6 +37,7 @@ import com.google.gson.JsonObject;
 import net.dongliu.requests.Requests;
 import net.dongliu.requests.Session;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
@@ -44,11 +47,12 @@ import no.hiof.fridgebro.adapters.RecyclerViewAdapter;
 import no.hiof.fridgebro.fragments.ContextMenuFragment;
 import no.hiof.fridgebro.fragments.InfoFragment;
 import no.hiof.fridgebro.fragments.RecyclerViewFragment;
+import no.hiof.fridgebro.interfaces.InternetCheck;
 import no.hiof.fridgebro.models.Item;
 import no.hiof.olaka.*;
 
 
-public class AddActivity extends AppCompatActivity implements DialogInterface.OnDismissListener {
+public class AddActivity extends AppCompatActivity implements DialogInterface.OnDismissListener, InternetCheck {
 
     private EditText txtISBN;
     private EditText txtPrice;
@@ -346,6 +350,12 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
         super.onBackPressed();
     }
 
+    @Override
+    public boolean isInternetEnabled() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
+    }
+
 
     public class asyncLoadJson extends AsyncTask<String, Integer, ArrayList<JsonObject>> {
         private ArrayList<Item> queryResult = new ArrayList<>();
@@ -357,8 +367,19 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
             loadingJsonProgressbar.setVisibility(View.VISIBLE);
             btnSearch.setEnabled(false);
             Log.d("lolipop", "progressbar enabled");
-
+            if (!isInternetEnabled())
+                cancel(true);
         }
+
+        @Override
+        protected void onCancelled() {
+            makeToast("Ingen internett-tilgang. Kan ikke gjennomføre søk.");
+            loadingJsonProgressbar.setVisibility(View.GONE);
+            btnSearch.setEnabled(true);
+            super.onCancelled();
+        }
+
+
 
         @Override
         protected ArrayList<JsonObject> doInBackground(String... strings) {

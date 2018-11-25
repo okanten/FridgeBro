@@ -1,9 +1,11 @@
 package no.hiof.fridgebro.activities;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -26,15 +28,18 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 
 import no.hiof.fridgebro.R;
 import no.hiof.fridgebro.fragments.RecyclerViewFragment;
+import no.hiof.fridgebro.interfaces.InternetCheck;
 import no.hiof.fridgebro.models.Item;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, InternetCheck{
     public static final String SHARED_PREF_FILE = "SharedPrefs";
     public static final int REQUEST_CODE_EDIT_ITEM = 100;
     public static final int REQUEST_CODE_NEW_ITEM_MANUAL = 200;
@@ -69,6 +74,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
 
         Log.i("Triggered", "onCreate triggered");
+
+        if (!isInternetEnabled()) {
+            Toast.makeText(this, R.string.no_internet_message, Toast.LENGTH_SHORT).show();
+        }
 
         Log.d("prefs", "getting prefs");
         pref = getApplicationContext().getSharedPreferences(SHARED_PREF_FILE, MODE_PRIVATE);
@@ -400,5 +409,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DatabaseReference getDataReferenceProductlist() {
         return firebaseDatabase.getReference("Users").child(firebaseAuth.getCurrentUser().getUid()).child("Productlist");
     }
+
+    @Override
+    public boolean isInternetEnabled() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null;
+    }
+
 
 }
