@@ -317,7 +317,6 @@ public class NorgesGruppenAPI {
                         .params(params)
                         .send().readToText();
 
-        Log.d("lolipop", "getSingleItem: ");
         JsonParser parser = new JsonParser();
         JsonObject jsonObj = parser.parse(responseFromNG).getAsJsonObject()
                 .get("products").getAsJsonObject()

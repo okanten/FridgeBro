@@ -383,25 +383,17 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
 
         @Override
         protected ArrayList<JsonObject> doInBackground(String... strings) {
-            Log.d("lolipop", "doInBackground");
-
             try {
                 for (String isbn : strings) {
-                    Log.d("lolipop", "loop gjennom streng");
-
                     try {
-                        Log.d("lolipop", "Try hente ut json");
-
                         rJson = ng.getFullJson(isbn);
-                        System.out.println(rJson.size());
                     } catch (Exception e) {
-                        Toast.makeText(AddActivity.this, "Noe galt skjedde under søk. Vennligst redefiner søkeord", Toast.LENGTH_SHORT).show();
                         Log.d("NullPointerException", e.getMessage());
+                        Toast.makeText(AddActivity.this,
+                                "Noe galt skjedde under søk. Vennligst redefiner søkeord",
+                                Toast.LENGTH_SHORT).show();
                     }
                 }
-                System.out.println(rJson.size());
-                Log.d("lolipop", "return rJson");
-
                 return rJson;
             } catch (RuntimeException re) {
                 return null;
@@ -409,42 +401,35 @@ public class AddActivity extends AppCompatActivity implements DialogInterface.On
         }
 
         protected void onPostExecute(ArrayList<JsonObject> rJson) {
-            Log.d("lolipop", "onPostExecute");
-
             loadingJsonProgressbar.setVisibility(View.GONE);
             btnSearch.setEnabled(true);
             if (rJson != null) {
                 for (int i = 0; i < rJson.size(); i++) {
-                    Log.d("lolipop", "for loop for rJson.size");
-
-                    //productList.add(new Item("Test 1", "1", "11111", "https://i.redd.it/oir304dowbs11.jpg", "TestBrand", "03/03/2019"));
                     try {
-                        Log.d("lolipop", "Prøver å legge til item");
-                        queryResult.add(new Item(ng.getTitle(null, rJson.get(i)), ng.getPrice(null, rJson.get(i)), ng.getISBN(null, rJson.get(i)), ng.getImageURL(null, rJson.get(i)), ng.getBrand(null, rJson.get(i))));
-                        Log.d("lolipop", "Legger til item");
-
+                        queryResult.add(new Item(ng.getTitle(null, rJson.get(i)),
+                                ng.getPrice(null, rJson.get(i)),
+                                ng.getISBN(null, rJson.get(i)),
+                                ng.getImageURL(null, rJson.get(i)),
+                                ng.getBrand(null, rJson.get(i))));
                     } catch (Exception npe) {
                         Log.d("NullPointerException", npe.getMessage());
                     }
                 }
                 if (queryResult != null && queryResult.size() == 1) {
-                    Log.d("lolipop", "Kun ett item");
                     setNewValues(queryResult, 0);
-
                 } else if (queryResult.size() > 1) {
-                    Log.d("lolipop", "Prøver å åpne ny dialog");
                     openItemPickerDialog(queryResult);
                 } else {
                     makeToast("Kunne ikke finne produkt/strekkode");
                     if (fromScanner) {
-                        Log.d("lolipop", "fromScanner = true");
                         Intent failedIntent = new Intent();
                         setResult(Activity.RESULT_CANCELED, failedIntent);
                         finish();
                     }
                 }
             } else {
-                if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP || Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1) {
+                if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP
+                        || Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1) {
                     Toast.makeText(AddActivity.this, "Kunne ikke finne produkt/strekkode. " +
                             "Lolipop har for øyeblikket problemer med denne funksjonen",
                             Toast.LENGTH_LONG).show();
