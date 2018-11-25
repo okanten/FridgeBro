@@ -28,6 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 
 import no.hiof.fridgebro.R;
 import no.hiof.fridgebro.fragments.RecyclerViewFragment;
@@ -195,10 +196,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (!queuedItems.isEmpty()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("123");
-            builder.setMessage("Noen av varen(e) du vil flytte til kjøleskap mangler dato. Vil du fortsette uten å sette dato?");
+            builder.setTitle(R.string.move_set_title);
+            String grammar = (queuedItems.size() > 1) ? "Noen av varene" : "Én av varene";
+            builder.setMessage(String.format(Locale.getDefault(), getResources().getString(R.string.move_set_message), grammar));
+            builder.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    setDateForItemsBeforeSending();
+                }
+            });
 
-            builder.setPositiveButton("Fortsett", new DialogInterface.OnClickListener() {
+            builder.setNegativeButton("Nei", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     for (Item item: queuedItems) {
@@ -208,12 +216,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             });
 
-            builder.setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    setDateForItemsBeforeSending();
-                }
-            });
 
             AlertDialog dialog = builder.create();
             dialog.show();
@@ -221,8 +223,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         shoppingListFragment.getAdapter().getCurrentSelectedItems().clear();
         shoppingListFragment.getAdapter().notifyDataSetChanged();
-
-
     }
 
     private void removeFromFirebase(Item item, DatabaseReference dataReference) {
