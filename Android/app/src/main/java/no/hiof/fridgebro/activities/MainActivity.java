@@ -102,9 +102,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (savedInstanceState == null) {
             if (fridgeListFragment == null && !isOnShoppingList) {
-                fridgeListFragment = new RecyclerViewFragment(); //.newInstance(isOnShoppingList);
+                fridgeListFragment = new RecyclerViewFragment();
             } else if (shoppingListFragment == null && isOnShoppingList) {
-                shoppingListFragment = new RecyclerViewFragment(); //.newInstance(isOnShoppingList);
+                shoppingListFragment = new RecyclerViewFragment();
             }
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     getRecyclerView()).commit();
@@ -266,13 +266,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 pref.edit().putBoolean("isOnShoppingList", false).apply();
                 // Må sjekke om rcv er null i tilfelle brukeren roterer telefonen og bytter fra shoppingList til fridge.
                 if (fridgeListFragment == null) {
-                    fridgeListFragment = new RecyclerViewFragment(); //.newInstance(isOnShoppingList);
+                    fridgeListFragment = new RecyclerViewFragment();
                 }
                 break;
             case R.id.nav_shoppinglist:
                 pref.edit().putBoolean("isOnShoppingList", true).apply();
                 if (shoppingListFragment == null) {
-                    shoppingListFragment = new RecyclerViewFragment(); //.newInstance(isOnShoppingList);
+                    shoppingListFragment = new RecyclerViewFragment();
                 }
                 break;
             case R.id.nav_signout:
