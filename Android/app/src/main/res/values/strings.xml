@@ -1,12 +1,10 @@
 <resources>
     <string name="app_name">FridgeBro</string>
-    <string name="shopping_list">Shopping list</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="productimage">productimage</string>
     <string name="removeitem">removeitem</string>
-    <string name="fridge">Fridge</string>
     <string name="add_activity_title_new">Legg til ny vare</string>
     <string name="add_activity_title_edit">Endre vare</string>
     <string name="produkt">Produkt</string>
@@ -21,7 +19,18 @@
     <string name="default_price">0</string>
     <string name="default_barcode">5000112637397</string>
 
-    <string name="logout">Logg ut</string>
+
+    <!-- drawer menu -->
+
+    <string name="drawer_fridge">Fridge</string>
+    <string name="drawer_shopping">Handleliste</string>
+
+    <string name="drawer_lists">Lister</string>
+    <string name="drawer_other">Annet</string>
+    <string name="drawer_logout">Logg ut</string>
+    <!--string name="drawer_fridge">Kjøleskap</string>
+    <string name="drawer_shopping">Handleliste</string-->
+
     <!-- AddActivity string -->
 
     <string name="add_default_product_name">Produktnavn / strekkode</string>
@@ -46,7 +55,9 @@
     </string>
 
     <string name="info_attribution">Innhold hentet med søk tilhører NorgesGruppen</string>
-    <string name="annet">Annet</string>
-    <string name="lister">Lister</string>
+
+    <!-- MoveToFridge -->
+    <string name="move_set_title">Sette dato?</string>
+    <string name="move_set_message">%s du vil flytte til kjøleskap mangler dato. Vil du sette dato?</string>
 
 </resources>

@@ -3,28 +3,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <item android:title="@string/lister">
+    <item android:title="@string/drawer_lists">
     <menu>
     <group android:id="@+id/grp1" android:checkableBehavior="single">
         <item
             android:id="@+id/nav_fridgelist"
             android:icon="@drawable/ic_shoppinglist"
-            android:title="@string/fridge" />
+            android:title="@string/drawer_fridge" />
         <item
             android:id="@+id/nav_shoppinglist"
             android:icon="@drawable/ic_shoppinglist"
-            android:title="@string/shopping_list" />
+            android:title="@string/drawer_shopping" />
     </group>
     </menu>
     </item>
 
-    <item android:title="@string/annet">
+    <item android:title="@string/drawer_other">
     <menu>
     <group android:id="@+id/grp2">
         <item
             android:id="@+id/nav_signout"
             android:icon="@android:drawable/ic_lock_power_off"
-            android:title="@string/logout" />
+            android:title="@string/drawer_logout" />
     </group>
     </menu>
     </item>
